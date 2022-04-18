@@ -1,0 +1,332 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Petty-Cash</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form  (ngSubmit)="uploadFiles()" #pettyCashForm="ngForm" novalidate>
+    <ion-grid>
+      <!-- First name -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+              [color]="amount.invalid && amount.touched ? 'danger' : ''"
+            >
+            Amount *
+            </ion-label>
+            <ion-input
+            name="amount"
+            [(ngModel)]="pettyCash.amount"
+            required
+            #amount="ngModel"
+         >
+         </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- catagory -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+              [color]="category.invalid && category.touched ? 'danger' : ''"
+            >
+            Category *
+            </ion-label>
+            <ion-select
+            [(ngModel)]="pettyCash.category"
+            name="category"
+            #category="ngModel"
+          >
+            <ion-select-option value="Jail Receipt">Jail Receipt</ion-select-option>
+            <ion-select-option value="Other">Other</ion-select-option>
+          </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!-- Other -->
+      <ion-row *ngIf="pettyCash.category === 'Other'">
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+              [color]="otherCategory.invalid && otherCategory.touched ? 'danger' : ''"
+            >
+            Other Category *
+            </ion-label>
+            <ion-input
+            [(ngModel)]="pettyCash.otherCategory"
+            [required]="pettyCash.category === 'Other'"
+            #otherCategory="ngModel"
+            name="otherCategory"
+          >
+        </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!--  -->
+ <!-- </ion-auto-complete> -->
+  <!-- <ion-searchbar
+ debounce="500"
+ (ionChange)="onDefSearch($event)"
+ placeholder="Enter defendant name"
+>
+</ion-searchbar>
+<ion-list>
+<ion-item *ngFor="let def of defendants" (click)="medClicked(def)">
+ {{ def.name.first }} {{ def.name.last }}
+</ion-item>
+</ion-list> -->
+ 
+      <!-- <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+              [color]="defendantId.invalid && defendantId.touched ? 'danger' : ''"
+            >
+            Defendant 
+            </ion-label>
+
+            <ion-select
+            [(ngModel)]="pettyCash.defendantId"
+            name="defendantId"
+            id="defendantId"
+            (ionChange)="onDefendantChange()"
+            (search)="onDefSearch($event)"
+            [required]="pettyCash.category === 'Jail Receipt'"
+            #defendantId="ngModel"
+            >
+              <ion-select-option *ngFor="let def of defendants" [value]="def._id">{{ def.name.first }} {{ def.name.last }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>  -->
+      <!--  -->
+     <ion-row>
+       <ion-col>
+        <ion-item>
+          <ion-label> Defendant <span *ngIf="pettyCash.category === 'Jail Receipt'">*</span></ion-label>
+          <ionic-selectable
+            [items]="defendants"
+            itemValueField="_id"
+            itemTextField="name"
+            [canSearch]="true"
+            [isOnSearchEnabled]="true"
+            (onSearch)="onDefSearch($event)"
+            (onChange)="medClicked($event)">
+                    </ionic-selectable>
+        </ion-item>
+       </ion-col>
+     </ion-row>
+    
+        <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+              [color]="bondId.invalid && bondId.touched ? 'danger' : ''"
+            >
+            Bond <span *ngIf="pettyCash.category === 'Jail Receipt'">*</span> 
+            </ion-label>
+
+            <ion-select
+            [(ngModel)]="pettyCash.bondId"
+            name="bondId" 
+            (ionChange)="onBondIdChange()"
+            [required]="pettyCash.category === 'Jail Receipt'"
+            #bondId="ngModel"
+            >
+              <ion-select-option *ngFor="let bond of bonds" [value]="bond._id">
+                <span *ngIf="bond.power">
+                  {{ bond.power.prefix.name }}-{{ bond.power.number }}
+                </span>
+                <span *ngIf="!bond.power && bond.bondNumber">
+                  {{ bond.bondNumber }}
+                </span>
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!-- List View -->
+
+      <ion-list *ngIf="jailReceipt">
+        <ion-row>
+          <ion-col>
+            <p class="ion-text-center" style="color: red;">
+              Jail receipt has already been uploaded for this bond.
+            </p>
+          </ion-col>
+        </ion-row>
+        <ion-row class="defendant"*ngFor="let file of jailReceipt.files; let i = index" href="" (click)="openFile(file)"
+        [routerLink]="">
+          <ion-col class="left">
+            <div *ngIf="i === 0">{{ jailReceipt.name }}</div>
+            <div *ngIf="i > 0">{{ jailReceipt.name }} - {{ i+1 }}</div>
+            <div *ngIf="jailReceipt.uploadedBy">
+              {{ jailReceipt.uploadedBy.name.first }} {{ jailReceipt.uploadedBy.name.last }}
+            </div>
+          </ion-col>
+    
+          <ion-col class="ion-text-end right">
+            <div class="text-muted">
+              <em>
+                {{ jailReceipt.createdAt | date: 'MM/dd/yyyy @ hh:mm a' }}
+              </em>
+            </div>
+          </ion-col>
+        </ion-row>
+   
+      </ion-list>
+ <!--  -->
+      <!--  -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+              [color]="documentName.invalid && documentName.touched ? 'danger' : ''"
+            >
+            Receipt Name
+            </ion-label>
+            <ion-input
+            name="documentName"
+           [(ngModel)]="document.name"
+            [required]="files.length > 0"
+            #documentName="ngModel"
+          >
+        </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div>
+            <label for="actual-btn">Add Files</label>
+            <input id="actual-btn" type="file" multiple (change)="onFileChange($event)" hidden/>
+          </div>
+        </ion-col>
+      </ion-row>
+
+<!-- relacement -->
+<ion-list  *ngIf="!jailReceipt && pettyCashReceipts.length > 0">
+  <p class="ion-text-center red-text">
+    PETTY CASH RECEIPT
+  </p>
+  <ion-row class="defendant"*ngFor="let doc of pettyCashReceipts">
+    <ion-col class="left">
+      <a *ngFor="let file of doc.files; let i = index" href="" (click)="openFile(file)"
+      [routerLink]="">
+      <div *ngIf="i === 0">{{ doc.name }}</div>
+      <div *ngIf="i > 0">{{ doc.name }} - {{ i+1 }}</div>
+    </a>
+    </ion-col>
+
+    <ion-col class="ion-text-end right">
+      <div *ngIf="doc.uploadedBy">
+        {{ doc.uploadedBy.name.first }} {{ doc.uploadedBy.name.last }}
+      </div>
+      <div class="text-muted">
+        <em>
+          {{ doc.createdAt | date: 'MM/dd/yyyy @ hh:mm a' }}
+        </em>
+      </div>
+      <!-- <button nbButton size="tiny" status="danger" type="button" (click)="deleteDocument(doc._id)">
+        Delete
+      </button> -->
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngIf="pettyCashReceipts.length === 0" class="ion-text-center ion-margin-top"
+  style="font-size: .8rem; color: #555555;">
+  <ion-col>
+    <em>No receipt found.</em>
+  </ion-col>
+</ion-row>
+
+</ion-list>
+<!-- table -->
+
+<!-- <div class="row" *ngIf="!jailReceipt && pettyCashReceipts.length > 0">
+  <div class="col-12">
+    <table class="table table-sm table-bordered table-hover">
+      <thead>
+        <tr>
+          <th colspan="3" class="text-center">PETTY CASH RECEIPT</th>
+        </tr>
+        <tr>
+          <th>Document Name</th>
+          <th>Uploaded By</th>
+          <th></th> 
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let doc of pettyCashReceipts">
+          <td>
+            <a *ngFor="let file of doc.files; let i = index" href="" (click)="openFile(file)"
+              [routerLink]="">
+              <div *ngIf="i === 0">{{ doc.name }}</div>
+              <div *ngIf="i > 0">{{ doc.name }} - {{ i+1 }}</div>
+            </a>
+          </td>
+          <td>
+            <div *ngIf="doc.uploadedBy">
+              {{ doc.uploadedBy.name.first }} {{ doc.uploadedBy.name.last }}
+            </div>
+            <div class="text-muted">
+              <em>
+                {{ doc.createdAt | date: 'MM/dd/yyyy @ hh:mm a' }}
+              </em>
+            </div>
+          </td>
+          <td>
+            <button nbButton size="tiny" status="danger" type="button" (click)="deleteDocument(doc._id)">
+              Delete
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="pettyCashReceipts.length === 0">
+          <td colspan="3" class="text-muted text-center">
+            <em>No receipt found.</em>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> -->
+<!--  -->
+<ion-item>
+  <ion-label position="stacked">Description</ion-label>
+  <ion-textarea
+  name="description"
+  [(ngModel)]="pettyCash.description"
+   >
+  </ion-textarea>
+</ion-item>
+
+<ng2-pdfjs-viewer #externalPdfViewer [externalWindow]="true"></ng2-pdfjs-viewer>
+
+      <!--  -->
+      <ion-row class="ion-margin">
+        <ion-col >
+          <ion-button expand="block" type="submit" size='small' color="success">
+            Save
+           </ion-button>
+         </ion-col>
+       </ion-row>
+      <!--  -->
+    </ion-grid>
+  </form>
+</ion-content>

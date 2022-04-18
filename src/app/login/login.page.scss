@@ -1,0 +1,38 @@
+h1.login-title{
+  margin-top: 10%;
+}
+
+.logo{
+  width: 150px;
+  margin-top: 6rem;
+}
+
+
+input:focus{
+  background-color: black;
+}
+
+.login-button{
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;;
+}
+
+@media (min-height: 600px) {
+
+  .logo{
+    margin-top: 8rem;
+  }
+}
+
+@media (min-height: 700px) {
+  .logo{
+    margin-top: 9rem;
+  }
+}
+
+@media (min-height: 800px) {
+  .logo{
+    margin-top: 11rem;
+  }
+}

@@ -1,0 +1,466 @@
+<form 
+#bondInfoForm="ngForm"
+(ngSubmit)="onSubmit()"
+novalidate
+class="bond-info-form"
+>
+  <ion-grid>
+
+    <!-- BOND TYPE -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Bond Type *</ion-label>
+          <ion-select name="type" [(ngModel)]="bond.type">
+            <ion-select-option class="select-interface-optio" value="standard">Standard</ion-select-option>
+            <ion-select-option value="cash">Cash</ion-select-option>
+            <ion-select-option value="rewrite">Rewrite</ion-select-option>
+            <ion-select-option value="referral">Referral</ion-select-option>
+            <ion-select-option value="transfer-posting">Transfer Posting</ion-select-option>
+            <ion-select-option value="transfer-requesting">Transfer Requesting</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- Cash Licence -->
+    <ion-row *ngIf="bond.type === 'cash'">
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating"
+          [color]="cashLicenseId.invalid && cashLicenseId.touched ? 'danger':''">Cash License *</ion-label>
+          <ion-select name="cashLicenseId" [(ngModel)]="bond.cashLicenseId"
+          required
+          #cashLicenseId="ngModel" [value]="bond.cashLicenseId">
+            <ion-select-option *ngFor="let surety of cashSureties" [value]="surety._id">
+              {{ surety.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- BOND NUMBER -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Bond Number</ion-label>
+          <ion-input 
+          type="text" 
+          name="bondNumber" 
+          [(ngModel)]="bond.number"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <!-- BOND DATE -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating"
+          [color]="bondDate.invalid && bondDate.touched ? 'danger':''"
+          >Bond Posting Date *</ion-label>
+          <ion-datetime 
+          type="text" 
+          name="bondDate"  
+          [(ngModel)]="postingDate"
+          required
+          #bondDate="ngModel"
+          ></ion-datetime>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating"
+          >Bond Posting Time *</ion-label>
+          <ion-datetime 
+          type="text" 
+          name="bondTime" 
+          displayFormat="h:mm a"
+          pickerFormat="h:mm a"
+          [(ngModel)]="postingTime"
+          #bondTime="ngModel"
+          ></ion-datetime>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+     <!-- FILING AGENT -->
+     <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating"
+          [color]="filingAgent.invalid && filingAgent.touched ? 'danger':''">Filing Agent *</ion-label>
+          <ion-select name="filingAgentId" [(ngModel)]="filingAgentId"
+          required
+          (ionChange)="onAgentSelected()"
+          #filingAgent="ngModel" [value]="filingAgentId">
+            <ion-select-option *ngFor="let agent of agents.data" [value]="agent._id">
+              {{ agent.name.first }} {{ agent.name.last }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <!-- BOND AMOUNT -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label
+          [color]="bondAmount.invalid && bondAmount.touched ? 'danger':''"
+          position="floating">Bond Amount *</ion-label>
+          <ion-input 
+          type="text" 
+          name="bondAmount" 
+          [(ngModel)]="bond.bondAmount"
+          (ionChange)="calculateValue($event)"
+          (click)="isCalculatePremium = true"
+          (ionBlur)="onBondAmountBlur()"
+          required
+          #bondAmount="ngModel"
+          [color]="bondAmount.invalid && bondAmount.touched ? 'danger':''"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <!-- PREMIUM AMOUNT -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label [color]="premiumAmount.invalid && premiumAmount.touched ? 'danger':''" 
+            position="floating">
+            Premium Amount *
+          </ion-label>
+          <ion-input
+          name="premiumAmount" 
+          [(ngModel)]="bond.premiumAmount"
+          required
+          #premiumAmount="ngModel"
+          [color]="premiumAmount.invalid && premiumAmount.touched ? 'danger':''"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <!-- INITIAL AMOUNT -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label [color]="initialAmount.invalid && initialAmount.touched ? 'danger':''" 
+            position="floating">
+            Initial Amount *
+          </ion-label>
+          <ion-input
+          name="initialAmount"
+          [(ngModel)]="bond.initialAmount"
+          required
+          #initialAmount="ngModel"
+          [color]="initialAmount.invalid && initialAmount.touched ? 'danger':''"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- INITIAL AMOUNT -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Filing Fee
+          </ion-label>
+          <ion-input
+          name="filingFee"
+          [(ngModel)]="bond.filingFee"
+          #filingFee="ngModel"
+          [color]="filingFee.invalid && filingFee.touched ? 'danger':''"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <!-- INITIAL AMOUNT -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label 
+            position="floating">
+            State Tax Fee
+          </ion-label>
+          <ion-input
+          name="stateTaxFee"
+          [(ngModel)]="bond.stateTaxFee"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+   
+
+    
+    <!-- STATE -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating"
+          [color]="state.invalid && state.touched ? 'danger':''">State *</ion-label>
+          <ion-select name="state" [(ngModel)]="bond.state"
+            (ionChange)="getCounties()"
+            required
+            #state="ngModel"
+          >
+            <ion-select-option *ngFor="let state of states" [value]="state.state">
+              {{ state.state }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    
+    <!-- COUNTY -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating"
+          [color]="county.invalid && county.touched ? 'danger':''">County *</ion-label>
+          <ion-select name="county" [(ngModel)]="bond.county"
+          required
+          (ionChange)="getCourts()"
+          #county="ngModel">
+            <ion-select-option *ngFor="let county of counties" [value]="county.county">
+              {{ county.county }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- COURT -->
+    <ion-row>
+      <ion-col>
+        <ion-button
+          size="small"
+          color="success"
+          (click)="openCourtFormModal()"
+          class="ion-margin-top ion-float-right"
+        >
+          Add Court
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating"
+          [color]="court.invalid && court.touched ? 'danger':''">Court *</ion-label>
+          <ion-select name="courtId" [(ngModel)]="courtId"
+          required
+          #court="ngModel">
+            <ion-select-option *ngFor="let court of courts.data" [value]="court._id">
+              {{ court.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <!-- FACILITES -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating"
+          [color]="facility.invalid && facility.touched ? 'danger':''">Facility *</ion-label>
+          <ion-select name="facilityId" [(ngModel)]="facilityId"
+          required
+          #facility="ngModel">
+            <ion-select-option *ngFor="let facility of facilities.data" [value]="facility._id">
+              {{ facility.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <!-- CHARGES -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Charges</ion-label>
+          <ionic-selectable [isMultiple]="true"
+            [items]="charges.data" itemValueField="name" itemTextField="name" [canSearch]="true"
+            (onChange)="portChange($event)">
+          </ionic-selectable>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <div *ngIf="bond.type !== 'cash'">
+    <h6>ADD POWER</h6>
+    
+    <!-- SURETIES -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating"
+          [color]="surity.invalid && surity.touched ? 'danger':''"
+          >Surety <span *ngIf="userStore.getAgency().powerRequired">*</span></ion-label>
+          <ion-select name="suretyId" [(ngModel)]="powerObj.suretyId" 
+          [required]="userStore.getAgency().powerRequired || bond.powerPending"
+          #surity="ngModel"
+          (ionChange)="onSuretyChange()"
+          [disabled]="powerObj.reserved" [value]="powerObj.suretyId">
+            <ion-select-option *ngFor="let surety of sureties.data" [value]="surety._id">
+              {{ surety.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <!-- PREFIX -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating" [color]="prefix.invalid && prefix.touched ? 'danger':''">Prefix<span *ngIf="userStore.getAgency().powerRequired">*</span></ion-label>
+          <ion-select name="prefixId" [(ngModel)]="powerObj.prefixId"
+          [required]="(userStore.getAgency().powerRequired && !bond.powerPending) || (powerObj.suretyId && !bond.powerPending)"
+          [disabled]="powerObj.reserved"
+          #prefix="ngModel"
+          (ionChange)="onPrefixChange()" [value]="powerObj.prefixId">
+            <ion-select-option *ngFor="let prefix of prefixes" [value]="prefix._id">
+              {{ prefix.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <!-- POWER NUMBER -->
+
+   
+    <ion-row >
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating" [color]="power.invalid && power.touched ? 'danger':''">Power Number <span *ngIf="userStore.getAgency().powerRequired">*</span></ion-label>
+          <ion-select name="powerId" [(ngModel)]="powerObj.powerId"
+          [required]="(userStore.getAgency().powerRequired && !bond.powerPending) || (powerObj.suretyId && !bond.powerPending)"
+          #power="ngModel"
+          [disabled]="powerObj.reserved">
+            <ion-select-option *ngFor="let power of powerNumbers" [value]="power._id">
+              {{ power.number }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Power Pending</ion-label>
+          <ion-checkbox [(ngModel)]="bond.powerPending" [ngModelOptions]="{standalone: true}"></ion-checkbox>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+
+
+    <ion-row *ngIf="powerObj.reserved">
+      <ion-col>
+        <ion-button size="small" type="button" (click)="modifyPower()" color="warning" expand="block">
+          MODIFY POWER
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+    <h6>CASE INFORMATION</h6>
+
+    <!-- CASE NUMBER -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Case Number</ion-label>
+          <ion-input 
+          type="text" 
+          name="caseNumber" 
+          [(ngModel)]="bond.caseNumber"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <!-- APPLICATION NUMBER -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Application Number</ion-label>
+          <ion-input 
+          type="text" 
+          name="applicationNumber" 
+          [(ngModel)]="bond.applicationNumber"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    
+    <!-- NYCID NUMBER -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">NYCID Number</ion-label>
+          <ion-input 
+          type="text" 
+          name="nycidNumber" 
+          [(ngModel)]="bond.nycidNumber"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <!-- INDICTMENT NUMBER -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Indictment Number</ion-label>
+          <ion-input 
+          type="text" 
+          name="indictmentNumber" 
+          [(ngModel)]="bond.indictmentNumber"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- DOCKET NUMBER -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Docket Number</ion-label>
+          <ion-input 
+          type="text" 
+          name="docketNumber" 
+          [(ngModel)]="bond.docketNumber"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <!-- BOOKING NUMBER -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Booking Number</ion-label>
+          <ion-input 
+          type="text" 
+          name="bookingNumber" 
+          [(ngModel)]="bond.bookingNumber"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-margin-top">
+      <ion-col>
+        <ion-button type="submit" color="success" expand="block">
+          Next
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+
+  </ion-grid>
+</form>

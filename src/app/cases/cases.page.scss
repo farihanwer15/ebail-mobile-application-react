@@ -1,0 +1,29 @@
+.defendant{
+  border-bottom: .3px solid #555555;
+  padding: .5rem;
+}
+
+.defendant .right{
+  line-height: 17px;
+}
+
+.defendant .date{
+  font-size: .8rem;
+  color: #999999;
+}
+
+.defendant .name{
+  font-size: .85rem;
+  margin-bottom: .3rem;
+}
+
+.defendant .email, .defendant .contacts{
+  font-size: .8rem;
+  color: #999999;
+  margin-bottom: .3rem;
+}
+
+.defendant .status{
+  font-size: .65rem;
+  margin-top: .4rem;
+}

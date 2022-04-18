@@ -1,0 +1,116 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Arrest Alerts</ion-title>
+  </ion-toolbar>
+</ion-header>
+<!-- <ion-row>
+  <ion-col>
+    <ion-button expand="block" size="small" (click)="openFormModal()" color="success">
+      Add Petty Cash
+    </ion-button>
+  </ion-col>
+</ion-row> -->
+
+<ion-content>
+
+  <table class="table table-style ion-margin-bottom">
+    <ion-item class="ion-no-padding">
+      <tr>
+        <th class="tab-header">
+          <b>Enabled Alerts:</b> {{ stats.arrestAlertsEnabled}}
+        </th>
+        <th class="tab-header">
+          <b>Disabled Alerts:</b> {{ stats.arrestAlertsDisabled}}
+        </th>
+        <th class="tab-header">
+          <b>Never Monitored:</b> {{ stats.neverMonitored}}
+        </th>
+        <th class="tab-header">
+          <b>Total Defendants:</b> {{ stats.totalDefendants}}
+        </th>
+      </tr>
+    </ion-item>
+  </table>
+
+  <ion-list>
+    <ion-row class="patty-cash" *ngFor="let def of defendants">
+      <ion-col class="left">
+        <div class="name">
+          {{ def.name.first}} {{ def.name.last }}
+        </div>
+        <div>
+          <em class="sub-items">DOB: {{ def.dob | date: 'MM/dd/yyyy' : '+0000' }}</em>
+        </div>
+        <div class="date" *ngIf="def.monitoring && def.monitoring.updatedAt">
+          Last Update: {{ def.monitoring.updatedAt | date: "MM/dd/yyyy" }}
+        </div>
+        <div>
+          <span class="date" *ngIf="def.monitoring">
+            Order Date {{ def.monitoring.orderDate | date: "MM/dd/yyyy "}}
+          </span>
+          <div class="sub-items" *ngIf="def.monitoring && def.monitoring.enabledBy">
+            <em>{{ def.monitoring.enabledBy.name.first }} {{ def.monitoring.enabledBy.name.last }}</em>
+          </div>
+        </div>
+        <div>
+          <span class="date" *ngIf="def.monitoring && def.monitoring.disabledAt">
+            {{ def.monitoring.disabledAt | date: "MM/dd/yyyy" }}
+          </span>
+          <div class="sub-items" *ngIf="def.monitoring && def.monitoring.disabledBy">
+            <em>{{ def.monitoring.disabledBy.name.first }} {{ def.monitoring.disabledBy.name.last }}</em>
+          </div>
+        </div>
+      </ion-col>
+
+      <ion-col class="ion-text-end right">
+        <div style="display: flex; flex-direction: column;">
+          <span class="badge-aligns">
+            Monitoring:
+            <ion-badge color="success" class="status" *ngIf="def.monitoring && def.monitoring.status === 'enabled'">ON
+            </ion-badge>
+            <ion-badge color="warning" class="status"
+              *ngIf="(def.monitoring && def.monitoring.status) === 'disabled' && (!def.monitoring.acknowledged || def.monitoring.acknowledged === true)">
+              OFF</ion-badge>
+            <ion-badge color="danger" class="status" *ngIf="!def.monitoring">NEVER MONITORED</ion-badge>
+            <ion-badge color="danger" class="status" *ngIf="def.monitoring && def.monitoring.acknowledged === false">
+              NEW
+              ALERT</ion-badge>
+            </span>
+          <ion-item class="ion-no-padding">
+            <ion-label class="ion-no-margin">Arrest Alerts</ion-label>
+            <ion-toggle [(ngModel)]="def.monitoringCheck" [value]="def.monitoringCheck"
+              (click)='onMonitoringToggle(def)' name="monitoringCheck"></ion-toggle>
+          </ion-item>
+          <ion-item class="ion-no-padding">
+            <ion-label class="ion-no-margin">inCustody</ion-label>
+            <ion-toggle color="danger" [(ngModel)]="def.inCustody" [value]="def.inCustody"
+              (click)='onCustodyToggle(def)' name="inCustody"></ion-toggle>
+          </ion-item>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="defendants.length === 0" class="ion-text-center ion-margin-top"
+      style="font-size: .8rem; color: #555555;">
+      <ion-col>
+        <em>No record found.</em>
+      </ion-col>
+    </ion-row>
+
+  </ion-list>
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
+<!-- <ion-col size="2" style="display: flex;justify-content: center;align-items: center;">
+  <div class="filter-icon" (click)="openFormModal()">
+    <ion-icon src="assets/icons/filter-outline.svg"></ion-icon>
+  </div>
+</ion-col> -->

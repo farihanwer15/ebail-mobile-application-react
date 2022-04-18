@@ -1,0 +1,47 @@
+.tab-header {
+    font-size: 13px;
+    letter-spacing: 0.7px;
+}
+
+.sub-items{
+    font-size: .6rem;   
+}
+
+.patty-cash {
+    border-bottom: 1px solid #333333;
+    padding: .5rem;
+}
+
+ .name{
+    font-size: .85rem;
+}
+.date{
+    font-size: .7rem;    
+}
+.patty-cash .cash{
+    font-size: .8rem;
+    color: #999999;
+}
+
+.patty-cash .date{
+    font-size: .8rem;
+    color: #999999;
+}
+
+.patty-cash .email {
+    font-size: .8rem;
+    color: #999999;
+    margin-bottom: .3r
+}
+
+.patty-cash .status{
+    font-size: 12px;
+    margin: 0 10px;
+}
+
+.badge-aligns {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    font-size: small;
+}

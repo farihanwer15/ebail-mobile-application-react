@@ -1,0 +1,107 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Power Filter Form</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col size="12">
+      <ion-item class="ion-no-padding">
+        <ion-label position="floating">Defendant Name</ion-label>
+        <ion-input [(ngModel)]="filters.defendantName" name="defendantName" id="defendantName"></ion-input>
+      </ion-item>
+    </ion-col>
+
+    <ion-col size="12">
+      <ion-item class="ion-no-padding">
+        <ion-label position="floating">Enter power number</ion-label>
+        <div class="form-group">
+          <ion-input type="text" fieldSize="small" [(ngModel)]="filters.powerNumbers" name="powerNumbers"></ion-input>
+        </div>
+      </ion-item>
+    </ion-col>
+
+    <ion-col size="12">
+      <ion-item class="ion-no-padding">
+        <ion-label position="floating">Agent</ion-label>
+        <ion-select [(ngModel)]="filters.agentId" name="agentId">
+          <ion-select-option [value]="">All</ion-select-option>
+          <ion-select-option *ngFor="let member of staffMembers.data" [value]="member._id">
+            {{ member.name.first | uppercase }} {{ member.name.last | uppercase }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+
+    <ion-col size="12">
+      <ion-item class="ion-no-padding">
+        <ion-label position="floating">Surety</ion-label>
+        <ion-select [(ngModel)]="filters.suretyId" name="suretyId" (ionChange)="onSuretyChange()">
+          <ion-select-option [value]="">All</ion-select-option>
+          <ion-select-option *ngFor="let surety of sureties" [value]="surety._id">
+            {{ surety.name }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+
+    <!-- surity -->
+    <ion-col size="12">
+      <ion-item class="ion-no-padding">
+        <ion-label position="floating">Prefix</ion-label>
+        <ion-select [(ngModel)]="filters.prefixId" name="prefixId">
+          <ion-select-option *ngIf="!filters.suretyId" [value]="-1">Please select a surety</ion-select-option>
+          <ion-select-option [value]="">All</ion-select-option>
+          <ion-select-option *ngFor="let prefix of prefixes" [value]="prefix._id">
+            {{ prefix.name }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <!--  -->
+
+    <ion-col size="12">
+      <ion-item class="ion-no-padding">
+        <ion-label position="floating">Status</ion-label>
+        <ion-select (ionChange)="onStatusChange()" [(ngModel)]="filters.status" name="status">
+          <ion-select-option value="">All</ion-select-option>
+          <ion-select-option value="available">Available</ion-select-option>
+          <ion-select-option value="assigned">Assigned</ion-select-option>
+          <ion-select-option value="executed">Executed</ion-select-option>
+          <ion-select-option value="expiring-soon">Expiring Soon</ion-select-option>
+          <ion-select-option value="voided">Voided</ion-select-option>
+          <ion-select-option value="waiting">Waiting for Acceptance</ion-select-option>
+          <ion-select-option value="unused-expired">Unused & Expired</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+
+    <ion-col size="12">
+      <ion-item class="ion-no-padding">
+        <ion-label position="floating">Order By</ion-label>
+        <ion-select size="small" placeholder="Select Sorting Order" [(ngModel)]="filters.orderBy" name="orderBy">
+          <ion-select-option value="ASC">Ascending</ion-select-option>
+          <ion-select-option value="DESC">Descending</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <!--  -->
+  <ion-row class="ion-margin">
+    <ion-col>
+      <ion-button expand="block" size='small' (click)="search()" color="success">
+        Search
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  <!-- <ion-row class="ion-margin">
+    <ion-col >
+      <ion-button expand="block" size='small' (click)="reset()" color="success">
+        Reset Search
+       </ion-button>
+     </ion-col>
+   </ion-row> -->
+</ion-content>

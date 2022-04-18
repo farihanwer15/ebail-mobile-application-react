@@ -1,0 +1,25 @@
+<div class="court-dates">
+  <ion-row *ngFor="let courtDate of courtDates" class="court-date" (click)="openActionSheet(courtDate)">
+    <ion-col class="left">
+      <div class="date">
+        {{ courtDate.date | date: 'MM/dd/yyyy @ hh:mm a' }}
+      </div>
+      <div class="purpose">
+        {{ courtDate.purpose }}
+      </div>
+    </ion-col>
+    <ion-col class="right">
+      <div class="room">
+        <em>Room #:</em> {{ courtDate.roomNumber }}
+      </div>
+      <div class="office">
+        <em>Office #:</em> {{ courtDate.officeNumber }}
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row *ngIf="courtDates.length === 0" style="color: #666666">
+    <ion-col class="ion-text-center">
+      <em>No court date found.</em>
+    </ion-col>
+  </ion-row>
+</div>

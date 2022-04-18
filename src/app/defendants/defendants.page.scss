@@ -1,0 +1,50 @@
+.defendant{
+  border-bottom: .3px solid #555555;
+  padding: .5rem;
+}
+
+.defendant .right{
+  line-height: 17px;
+}
+
+.defendant .date{
+  font-size: .8rem;
+  color: #999999;
+}
+
+.defendant .name{
+  font-size: .85rem;
+  margin-bottom: .3rem;
+}
+
+.defendant .email, .defendant .contacts{
+  font-size: .8rem;
+  color: #999999;
+  margin-bottom: .3rem;
+}
+.lead-status{
+  background-color: #17A2B8;
+}
+.defendant .status{
+  font-size: .65rem;
+  margin-top: .4rem;
+}
+.defendant .arrest-status{
+  font-size: .65rem;
+  margin-top: .1rem;
+}
+.defendant .left{
+  line-height: 17px;
+}
+.filter-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #3171e0;
+  color: #fff;
+  height: 28px;
+  width: 28px;
+  border-radius: 14px;
+}
+
+

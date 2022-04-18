@@ -1,0 +1,142 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Check Ins
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <ion-row class="checkin-item" *ngFor="let checkin of checkins" (click)="openActionSheet(checkin)">
+        <ion-col>
+          <div class="checkin-string">
+            {{ checkin.defendant.name.first }} {{ checkin.defendant.name.middle }} {{ checkin.defendant.name.last }}
+            {{ checkin.defendant.name.suffix }}
+          </div>
+
+          <div class="checkin-type">
+            <b>Checkin Type:</b> {{ checkin.type }}
+          </div>
+
+          <div class="checkin">
+            <div class="checkin-date">
+              <span *ngIf="checkin.notificationType !== 'Check in anytime'">
+                {{ checkin.startDate | date: 'MM/dd/yyyy hh:mm a' : timezone}} - {{ checkin.endDate | date: 'MM/dd/yyyy
+                hh:mm a' : timezone}}
+              </span>
+              <span *ngIf="checkin.notificationType === 'Check in anytime'">
+                {{ checkin.startDate | date: 'MM/dd/yyyy' : timezone}} - {{ checkin.endDate | date: 'MM/dd/yyyy' :
+                timezone}}
+              </span>
+            </div>
+
+            <div class="frequency" *ngIf="!checkin.imediateCheckin">
+              <b>Frequency: </b> {{ checkin.frequency }}
+            </div>
+
+            <ion-text color="primary" *ngIf="checkin.imediateCheckin">
+              <b>IMMEDIATE CHECK IN</b>
+            </ion-text>
+
+            <ion-text color="warning" *ngIf="checkin.callOnly" class="text-warning">
+              <b>CALL ONLY CHECK IN</b>
+            </ion-text>
+
+            <ion-text color="danger" *ngIf="checkin.lastMissedCheckin">
+              <span *ngIf="checkin.notificationType !== 'Check in anytime'">
+                <b>Missed Check In:</b> {{ checkin.lastMissedCheckin.date | date: 'MM/dd/yyyy @ hh:mm a' : timezone }}
+              </span>
+              <span *ngIf="checkin.notificationType === 'Check in anytime'">
+                <b>Missed Check In:</b> {{ checkin.lastMissedCheckin.date | date: 'MM/dd/yyyy' : timezone }}
+              </span>
+            </ion-text>
+
+            <ion-text color="success" *ngIf="checkin.nextCheckin">
+              <span *ngIf="checkin.notificationType !== 'Check in anytime'">
+                <b>Next Check In:</b> {{ checkin.nextCheckin.date | date: 'MM/dd/yyyy @ hh:mm a' : timezone }}
+              </span>
+              <span *ngIf="checkin.notificationType === 'Check in anytime'">
+                <b>Next Check In:</b> {{ checkin.nextCheckin.date | date: 'MM/dd/yyyy' : timezone }}
+              </span>
+            </ion-text>
+          </div>
+        </ion-col>
+
+        <ion-col class="ion-text-end">
+          <div class="defendant">
+            <span *ngIf="checkin.bond && checkin.bond.power">
+              <b>Bond: </b> {{ checkin.bond.power.prefix.name }}-{{ checkin.bond.power.number }}
+            </span>
+            <span *ngIf="checkin.bond && !checkin.bond.power && checkin.bond.bondNumber">
+              <b>Bond: </b> {{ checkin.bond.bondNumber }}
+            </span>
+          </div>
+
+          <div class="defendant">
+            <span *ngIf="checkin.email"><b>Method: </b> Email</span>
+            <span *ngIf="checkin.sms"><b>Method: </b> SMS</span>
+          </div>
+
+          <div>
+            <div class="badge">
+              <ion-badge color="primary" class="status" *ngIf="!checkin.canceledAt && !checkin.completedAt">SCHEDULED
+              </ion-badge>
+              <ion-badge color="success" class="status" *ngIf="checkin.completedAt && !checkin.canceledAt">COMPLETED
+              </ion-badge>
+              <ion-badge color="danger" class="status" *ngIf="checkin.canceledAt">CANCELED</ion-badge>
+
+              <div class="icons" *ngIf="checkin?.lastCheckin && (checkin?.lastCheckin?.location || checkin?.lastCheckin?.images?.length)">
+                <span style="margin-right: .5rem;">
+                  <ion-icon name="pin" *ngIf="checkin.lastCheckin.location"
+                  (click)="openMapWindow($event,checkin.lastCheckin.location)"
+                  [color]="checkin.lastCheckin.location ? 'primary': 'light'"></ion-icon>
+                </span>
+                  
+                <a *ngFor="let image of checkin.lastCheckin.images" (click)="imageView($event,image)">
+                  <ion-icon color="primary" name="image"></ion-icon>
+                </a>
+              </div>
+            </div>
+
+            <span *ngIf="checkin.canceledBy" class="status">
+              Canceled By: {{ checkin.canceledBy.name.first }} {{ checkin.canceledBy.name.last }}
+            </span>
+          </div>
+
+          <div>
+            <span *ngIf="checkin.createdByUser" class="status">
+              <b>Added By: </b> {{ checkin.createdByUser.name.first }} {{ checkin.createdByUser.name.last }}
+            </span>
+          </div>
+
+          <div>
+            <span class="status">
+              <b>Created Date: </b> {{ checkin.createdAt | date: 'MM/dd/yyyy' : timezone}}
+            </span>
+          </div>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row *ngIf="checkins.length <= 0" class="ion-text-center ion-margin-top"
+        style="font-size: .8rem; color: #555555;">
+        <ion-col>
+          <em>No check in found!</em>
+        </ion-col>
+      </ion-row>
+
+    </ion-col>
+    </ion-row>
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+</ion-content>

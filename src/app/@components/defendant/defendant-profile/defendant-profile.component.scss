@@ -1,0 +1,116 @@
+.defendant-profile{
+  padding: .5rem;
+  color: #888;
+    // font-size: .8rem;
+}
+
+.defendant-profile .header{
+  border-bottom: 1px solid #333;
+  margin-bottom: .5rem;
+}
+
+.avatar img{
+  border-radius: 50%;
+  max-width: 90px;
+}
+
+.defendant-profile .name{
+  font-size: .8rem;
+  margin-top: .4rem;
+}
+
+.defendant-profile .dob{
+  font-size: 0.75rem;
+  margin-top: 0.2rem;
+  color: #999;
+}
+
+.defendant-profile .status{
+  margin-top: .4rem;
+}
+
+.defendant-profile .status ion-badge{
+  font-size: .75rem;
+}
+
+.defendant-profile .details{
+  font-size: .9rem;
+  color: #999999;
+}
+
+.defendant-profile .stats{
+  font-size: .9rem;
+  color: #999999;
+  border-bottom: .3px solid #555555;
+  margin-bottom: .5rem;
+  padding-bottom: .5rem;
+}
+
+.defendant-profile .stats ion-badge{
+  font-size: .75rem;
+}
+
+.bond-button {
+  margin: 0px;
+  margin-bottom: 7px;
+}
+
+.bond-buttons {
+  background-color: #3B5DBD;
+  color: white;
+  text-align: center;
+  padding: .7rem !important;
+  width: 100%;
+  border-radius: .5rem;
+  font-size: .85rem;
+  margin: 0px;
+}
+
+.custom-button {
+	background-color: #222;
+  color: white;
+	text-align: center;
+	border: 1px solid #444;
+  padding: .7rem !important;
+  border-radius: .5rem;
+  width: 100%;
+  font-size: .95rem;
+}
+.arest-button {
+  color: white;
+	text-align: center;
+  padding: .7rem !important;
+  border-radius: .5rem;
+  width: 100%;
+  font-size: .85rem;
+}
+
+.edit-button-dark {
+  border: 1px solid #444;
+  background-color: #222;
+  width: 100%;
+  border-radius: .3rem;
+  color: white;
+  font-size: .8rem;
+  padding: .4rem;
+}
+
+.edit-button-light {
+    background-color: #3B5DBD;
+    width: 100%;
+    border-radius: .3rem;
+    color: white;
+    font-size: .8rem;
+    padding: .4rem;
+}
+
+.arrest-toggle {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 0 7px;
+}
+
+.align {
+  display: flex;
+}

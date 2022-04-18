@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Cases</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+
+    <ion-row class="defendant" *ngFor="let def of bonds"
+      (click)="openBondDetailsModal(def)">
+      <ion-col class="left">
+        <div class="name">
+          {{ def.name.first }} {{ def.name.last }}
+        </div>
+        <div class="date" *ngIf="def.bonds.power">
+          Power #: {{ def.bonds.power.prefix.name }}-{{ def.bonds.power.number }}
+        </div>
+        <div>
+          
+          <ion-badge color="tertiary" class="status" style="margin-right: .5rem;" *ngIf="def.bonds.recovery && def.bonds.recovery.status === 'Recovered'">
+            {{ def.bonds.recovery.status | uppercase}}
+          </ion-badge>
+          
+          <ion-badge color="light" class="status" *ngIf="def.bonds.recovery && def.bonds.recovery.closedDate">
+            CLOSED
+          </ion-badge>
+
+          <ion-badge color="primary" class="status" *ngIf="def.bonds.recovery && def.bonds.recovery.acceptedAt && !def.bonds.recovery.closedDate">
+            ACCEPTED
+          </ion-badge>
+          <ion-badge color="warning" class="status" *ngIf="def.bonds.recovery && !def.bonds.recovery.acceptedAt && !def.bonds.recovery.closedDate">
+            PENDING ACCEPTANCE
+          </ion-badge>
+        </div>
+      </ion-col>
+
+      <ion-col class="ion-text-end right">
+        <div class="email">
+          {{ def.email }}
+        </div>
+        <div class="contacts">
+          {{ getPhone(def) }}
+        </div>
+      </ion-col>
+    </ion-row>
+
+
+    <ion-row *ngIf="bonds.length < 1" class="ion-text-center ion-margin-top"
+      style="font-size: .8rem; color: #555555;">
+      <ion-col>
+        <em>No cases found.</em>
+      </ion-col>
+    </ion-row>
+
+  </ion-list>
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

@@ -1,0 +1,112 @@
+<div *ngFor="let contract of contracts" [ngClass]="darkMode ? 'main-sec-dark' : 'main-sec-light'">
+  <ion-row *ngIf="contract.structure && contract.status === 'Draft'">
+    <div (click)="openActionSheet(contract._id)" class="main">
+      <div [ngClass]="darkMode ? 'header-dark' : 'header-light'">
+        <ion-col class="left">
+          <div class="type">
+            <p class="cont-name">{{ contract.structure.folderName }} </p>
+            <ion-badge class="badge-top" color="primary">DRAFT</ion-badge>
+          </div>
+        </ion-col>
+
+        <ion-col class="right">
+          <p style="margin-top: -12px;">
+            {{ contract.createdAt | date: "MM/dd/yyyy @ hh:mm a" }}
+          </p>
+          <div *ngIf="contract && contract.structure && contract.structure.addedByUser" class="text-muted">
+            <em>Created By: {{ contract.structure.addedByUser.name.first }} {{
+              contract.structure.addedByUser.name.last}}</em>
+          </div>
+        </ion-col>
+      </div>
+    </div>
+    <!-- lower part -->
+
+    <ion-row *ngFor="let party of contract?.structure?.parties; let i = index" class="collateral">
+      <ion-col class="left">
+        <span>
+          {{ party.name.first }} {{ party.name.last }}
+        </span>
+        <span class="text-muted" *ngIf="party.role === 'agent'">(Agent</span>
+        <span class="text-muted" *ngIf="party.relation === 'Self'">(Defendant</span>
+        <span class="text-muted" *ngIf="party.role !== 'agent' && party.relation !== 'Self'">(Indemnitor</span>
+        <span class="text-muted"> | Party # {{ i+1 }})</span>
+        <div>
+          {{ party.email }}
+        </div>
+        <div *ngFor="let contact of party.contacts">
+          {{ contact.value }}
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-row>
+
+  <!-- sent part -->
+  <ion-row *ngIf="contract.status !== 'Draft'">
+    <div (click)="openSentActionSheet(contract)" [ngClass]="darkMode ? 'header-dark' : 'header-light'">
+      <ion-col class="left">
+        <div class="type">
+          <p class="cont-name">{{ contract.folderName }}</p>
+          <ion-badge class="badge-top" color="success">SENT</ion-badge>
+        </div>
+      </ion-col>
+
+      <ion-col class="right">
+        <div>
+          <div>
+            <p style="margin-top: -12px;">{{ contract.createdAt | date: "MM/dd/yyyy @ hh:mm a" }}</p>
+          </div>
+          <div *ngIf="contract && contract.structure && contract.structure.addedByUser" class="text-muted">
+            <em>Created By: {{ contract.structure.addedByUser.name.first }} {{
+              contract.structure.addedByUser.name.last
+              }}</em>
+          </div>
+        </div>
+      </ion-col>
+    </div>
+    <!-- lower part -->
+    <ion-row *ngFor="let party of contract?.parties; let i = index" class="collateral">
+      <ion-col class="left">
+        <p>{{ party.firstName }} {{ party.lastName }}</p>
+        <em class="text-muted" *ngIf="party.role === 'agent'">(Agent</em>
+        <em class="text-muted" *ngIf="party.role === 'Defendant'">(Defendant</em>
+        <em class="text-muted" *ngIf="party.role === 'indemnitor'">(Indemnitor</em>
+        <em class="text-muted"> | Party # {{ i+1 }})</em>
+        <!-- <a [routerLink]="" class="ml-2" *ngIf="party.role === 'agent' && party.signatureStatus !== 'signed'
+          && (!contract.addedByUser || userStore.getUser().id === contract.addedByUser._id)"><b>Sign</b></a> -->
+          <a [routerLink]="" class="ml-3"
+          *ngIf="party.signatureStatus !== 'signed' && ((party.role === 'agent' && (!party._id || userStore.getUser().id === party._id)) || 
+          (contract.inPersonSignature && party.role !== 'agent'))"
+            (click)="signDocument(contract, i)"><b>Sign</b></a>
+        <a [routerLink]="" class="ml-2" nbTooltip="Click to send this contract link to this party for signatures."
+          *ngIf="party.role !== 'agent' && party.signatureStatus !== 'signed'"
+          (click)="sendContractLink(contract._id, party.partyId)">
+          <br>
+          <b>Send Contract Link</b>
+        </a>
+      </ion-col>
+
+      <ion-col class="right">
+        <div>
+          <p>{{ party.emailId }}</p>
+        </div>
+        <div *ngFor="let contact of party.contacts">
+          <p>{{ contact.value }}</p>
+        </div>
+        <div>
+          <ion-badge *ngIf="party.signatureStatus === 'pending'" class="badge" color="warning">PENDING</ion-badge>
+          <ion-badge *ngIf="party.signatureStatus === 'signed'" class="badge" color="success">SIGNED</ion-badge>
+          <ion-badge *ngIf="party.signatureStatus === 'viewed'" class="badge" color="primary">VIEWED</ion-badge>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-row>
+</div>
+
+<ng2-pdfjs-viewer #externalPdfViewer [externalWindow]="true"></ng2-pdfjs-viewer>
+
+<ion-row *ngIf="contracts.length === 0">
+  <ion-col class="ion-text-center" style="color: #666666;">
+    <em>No Contract added</em>
+  </ion-col>
+</ion-row>

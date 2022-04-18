@@ -1,0 +1,78 @@
+.contact-table {
+    --ion-grid-column-padding: 4px;
+    border-collapse: collapse;
+    border-style: hidden;
+    
+    ion-row:first-child {
+      font-weight: bold;
+    }
+    ion-col {
+      border: .5px solid #726d6d;
+      border-bottom: 0;
+      border-right: 0;
+    }
+    ion-col:last-child {
+      border-right: .5px solid #726d6d;
+    }
+    
+    ion-row:last-child {
+      border-bottom: .5px solid #726d6d;
+    }
+
+    span {
+      font-size: 11px;
+    }
+
+    .button {
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      background-color: red;
+    }
+  }
+
+  .address-table {
+    --ion-grid-column-padding: 4px;
+    border-collapse: collapse;
+    border-style: hidden;
+    
+    ion-row:first-child {
+      font-weight: bold;
+    }
+    ion-col {
+      border: .5px solid #726d6d;
+      border-bottom: 0;
+      border-right: 0;
+    }
+    ion-col:last-child {
+      border-right: 0.5px solid #726d6d;
+    }
+    
+    ion-row:last-child {
+      border-bottom: .5px solid #726d6d;
+    }
+
+    span {
+      font-size: 11px;
+    }
+
+    .button {
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      background-color: red;
+    }
+
+    .button-succes {
+      color: white;
+      padding: 5px 10px;
+      margin: 5px;
+      border-radius: 5px;
+      background-color: #24AE5B;
+    }
+  }
+
+  .btn-size {
+    font-size: 9px;
+    padding: 6px;
+  }

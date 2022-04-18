@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Send Sign Up Email</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-top">
+  <ion-row class="ion-margin-top ion-padding-top">
+    <ion-col>
+      <small>
+        Looks like you still need to signup for a merchant account!
+      </small>
+      <small>
+        Don't worry we can send you a quick email on how to set one up. <br>
+        Just click "Send Sign Up Email" button below.
+      </small>
+    </ion-col>
+  </ion-row>
+  <hr />
+  <ion-row class="ion-margin-top ion-padding-top">
+    <ion-col>
+      <ion-button size="small" expand="block" color="success" (click)="sendEmail()">
+        Send Sign Up Email
+      </ion-button>
+    </ion-col>
+
+    <ion-col>
+      <ion-button size="small" expand="block" fill="outline" color="danger" (click)="closeModal()">
+        Skip & Close
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-content>

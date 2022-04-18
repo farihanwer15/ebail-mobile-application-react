@@ -1,0 +1,309 @@
+<ion-grid>
+  <ion-row *ngIf="userStore.getUser() && userStore.getUser().roles.recoveryAgent && !bond.recovery.acceptedAt">
+    <ion-col size="12">
+      <ion-button size="small" color="primary" expand="block" (click)="acceptRecoveryCase()">
+        Accept Case
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngIf="userStore.getUser() && userStore.getUser().roles.recoveryAgent">
+    <ion-col size="12">
+      <ion-button size="small" color="success" expand="block" (click)="openNotesModal()">
+        View Notes
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngIf="bond.voidedAt">
+    <ion-col>
+      <div class="ion-text-center" style="color: #d0d0d0">VOIDED</div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngIf="!bond.voidedAt && bond.activatedAt && !bond.exoneration && !bond.forfeiture">
+    <ion-col>
+      <div class="ion-text-center" style="color: #8BC34A">ACTIVATED</div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngIf="!bond.voidedAt && bond.forfeiture && bond.forfeiture.status === 'opened' && !bond.exoneration">
+    <ion-col>
+      <div class="ion-text-center" style="color: #ffa9a3">FORFEITURE OPEN</div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngIf="!bond.voidedAt && bond.exoneration">
+    <ion-col>
+      <div class="ion-text-center" style="color: #83c8ff">EXONERATED</div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngIf="bond && bond.revoke && bond.revoke.status === 'revoked'">
+    <ion-col>
+      <div class="ion-text-center" style="color: #ffa9a3">
+        REVOKED
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngIf="inCustody">
+    <ion-col>
+      <div class="ion-text-center" style="color: #ffa9a3">
+        IN CUSTODY
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <h6 class="ion-text-center">
+        BASIC INFORMATION
+      </h6>
+    </ion-col>
+  </ion-row>
+  <!-- missing data -->
+  <ion-row class="bond-info" *ngIf="bond.reportedToSurety">
+    <ion-col class="reported-cell" size='12'>
+      <div class="bedge-flex">
+        <ion-badge class="bedge" color="success">REPORTED TO SURETY</ion-badge>
+      </div>
+    </ion-col>
+    <ion-col class="reported-cell" size='12'>
+      <div>
+        <b>Report Date: </b> {{ bond.reportedToSurety.reportedAt | date: 'MM/dd/yyyy hh:mm a'}}
+      </div>
+    </ion-col>
+    <ion-col class="reported-cell" size='12'>
+      <div>
+        <b>Reported By: </b>
+        <span *ngIf="bond.reportedToSurety && bond.reportedToSurety.reportedBy">
+          {{ bond.reportedToSurety.reportedBy.name.first }} {{ bond.reportedToSurety.reportedBy.name.last }}
+        </span>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row class="bond-info" *ngIf="bond.exoneration">
+    <ion-col class="exonerated-cell" size='12'>
+      <div class="bedge-flex">
+        <b>Exoneration Status: </b>
+        <ion-badge class="bedge" color="success">{{bond.exoneration.status | uppercase }}</ion-badge>
+      </div>
+    </ion-col>
+    <ion-col class="exonerated-cell" size='12'>
+      <div>
+        <b>Disposition:</b> {{ bond.exoneration.disposition }}
+      </div>
+    </ion-col>
+    <ion-col class="exonerated-cell" size='12'>
+      <div>
+        <b>Discharged Date: </b>
+        <span *ngIf="bond.exoneration.dischargedDate">
+          {{ bond.exoneration.dischargedDate | date: 'MM/dd/yyyy' }}</span>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row class="bond-info" *ngIf="bond.exoneration && bond.exoneration.description">
+    <ion-col class="exonerated-cell" size='12'>
+      <div>
+        <b>Exoneration Description: </b> {{ bond.exoneration.description }}
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row class="bond-info" *ngIf="bond.forfeiture" style="background-color: #ffebeb;">
+    <ion-col class="forfeiture-cell" size='12'>
+      <div class="bedge-flex">
+        <b>Forfeiture Status: </b>
+        <ion-badge class="bedge" *ngIf="bond.forfeiture.status === 'opened'" color="danger">OPEN</ion-badge>
+        <ion-badge class="bedge" *ngIf="bond.forfeiture.status === 'released'" color="success">{{bond.forfeiture.status | uppercase }}</ion-badge>
+        <ion-badge class="bedge" *ngIf="bond.forfeiture.status === 'reinstated'" color="secondary">{{ bond.forfeiture.status | uppercase }}</ion-badge>
+
+      </div>
+    </ion-col>
+    <ion-col class="forfeiture-cell" size='12'>
+      <div>
+        <b>Forfeiture Date: </b> {{ bond.forfeiture.date | date: 'MM/dd/yyyy' : "+0000" }}
+      </div>
+    </ion-col>
+    <ion-col class="forfeiture-cell" size='12'>
+      <div>
+        <b>Satisfy Date: </b> {{ bond.forfeiture.satisfyDate | date: 'MM/dd/yyyy' : "+0000" }}
+      </div>
+    </ion-col>
+    <ion-col class="forfeiture-cell" size='12'>
+      <div>
+        <b>Fort. Mailing Date: </b> <span *ngIf="bond.forfeiture.mailingDate">{{ bond.forfeiture.mailingDate | date: 'MM/dd/yyyy' }}</span>
+      </div>
+    </ion-col>
+  </ion-row>
+  <!--  -->
+  <ion-row class="bond-info">
+    <ion-col size="12">
+      <div class="bedge-flex">
+        <b>Application Uploaded:</b>
+        <ion-badge class="bedge" *ngIf="!defAppUploaded" color="danger">NO</ion-badge>
+        <ion-badge *ngIf="defAppUploaded" class="bedge" color="success">Yes</ion-badge>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <!-- end -->
+
+  <ion-row class="bond-info" *ngIf="bond">
+    <ion-col size="12" *ngIf="bond.power && bond.power.prefix">
+      <b>Power Number:</b> {{ bond.power.prefix.name }}-{{ bond.power.number }}
+    </ion-col>
+    <ion-col size="12">
+      <b>Bond Date:</b> {{ bond.bondDate | date:'MM/dd/yyyy' : "+0000" }}
+    </ion-col>
+    <ion-col size="12">
+      <b>Bond Type:</b> {{ bond.type }}
+    </ion-col>
+    <ion-col size="12" *ngIf="bond.bondNumber">
+      <b>Bond Number:</b> {{ bond.bondNumber }}
+    </ion-col>
+    <ion-col size="12">
+      <b>Bond Amount:</b> {{ bond.bondAmount | currency }}
+    </ion-col>
+    <ion-col size="12">
+      <b>Premium Amount:</b> {{ bond.premiumAmount | currency }}
+    </ion-col>
+    <ion-col size="12">
+      <b>Initial Amount:</b> {{ bond.initialAmount | currency }}
+    </ion-col>
+    <ion-col size="12">
+      <b>Filing Fee:</b> {{ bond.filingFee | currency }}
+    </ion-col>
+    <ion-col size="12" *ngIf="bond.stateTaxFee">
+      <b>State Tax Fee:</b> {{ bond.stateTaxFee | currency }}
+    </ion-col>
+    <ion-col size="12" *ngIf="bond.filingAgent">
+      <b>Posting Agent: </b>{{ bond.filingAgent.name.first }} {{ bond.filingAgent.name.last }}
+    </ion-col>
+    <ion-col size="12" *ngIf="bond.filingAgent">
+      <b>Created By: </b>{{ bond.postingUser.name.first }} {{ bond.postingUser.name.last }}
+    </ion-col>
+    <ion-col size="12" *ngIf="bond.postingTimeExists">
+      <b>Posted Date: </b>{{ bond.bondDate | date: 'MM/dd/yyyy' : timezone }}
+    </ion-col>
+    <ion-col size="12" *ngIf="!bond.postingTimeExists">
+      <b>Posted Date: </b>{{ bond.bondDate | date: 'MM/dd/yyyy' : '+0000' }}
+    </ion-col>
+    <ion-col size="12" *ngIf="bond.postingTimeExists">
+      <b>Posted Time: </b>{{ bond.bondDate | date: 'hh:mm a' : timezone}}
+    </ion-col>
+    <ion-col size="12" *ngIf="!bond.postingTimeExists">
+      <b>Posted Time: </b>--:--
+    </ion-col>
+    <ion-col size="12">
+      <b>State:</b> {{ bond.state }}
+    </ion-col>
+    <ion-col size="12">
+      <b>County:</b> {{ bond.county }}
+    </ion-col>
+
+    <ion-col size="12">
+      <b>Court:</b> <span *ngIf="bond.court">{{ bond.court.name }}</span>
+    </ion-col>
+    <ion-col size="12">
+      <b>Facility:</b> {{ bond.facility.name }}
+    </ion-col>
+    <ion-col size="12">
+      <b>Charges:</b>
+      <span *ngFor="let charge of bond.charges">
+        {{ charge + ' ' }}
+      </span>
+    </ion-col>
+    <ion-col size="12" *ngIf="bond.surety">
+      <b>Surety:</b> {{ bond.surety.name }}
+    </ion-col>
+    <ion-col size="12" *ngIf="bond.caseNumber">
+      <b>Case Number:</b> {{ bond.caseNumber }}
+    </ion-col>
+    <ion-col size="12" *ngIf="bond.applicationNumber">
+      <b>Application Number:</b> {{ bond.applicationNumber }}
+    </ion-col>
+    <ion-col size="12" *ngIf="bond.NYCIDNumber">
+      <b>NYCID Number:</b> {{ bond.NYCIDNumber }}
+    </ion-col>
+    <ion-col size="12" *ngIf="bond.indictmentNumber">
+      <b>Indictment Number:</b> {{ bond.indictmentNumber }}
+    </ion-col>
+    <ion-col size="12" *ngIf="bond.docketNumber">
+      <b>Docket Number:</b> {{ bond.docketNumber }}
+    </ion-col>
+    <ion-col size="12" *ngIf="bond.bookingNumber">
+      <b>Booking Number:</b> {{ bond.bookingNumber }}
+    </ion-col>
+
+    <ion-col size="12">
+      <b>Next Court Date:</b> <span *ngIf="nextCourtDate"> {{nextCourtDate | date:'MM/dd/yyyy' }}</span> <span *ngIf="!nextCourtDate">-</span>
+    </ion-col>
+
+  </ion-row>
+
+  <!-- RECEIPTS -->
+  <div *ngIf="receipts && showReceipts()">
+    <ion-row>
+      <ion-col>
+        <h6 class="ion-text-center ion-padding-top ion-no-margin">
+          RECEIPTS
+        </h6>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <app-bond-receipts [bondId]="bond._id" [powerNumber]="bond?.power?.number"></app-bond-receipts>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <!-- COURT DATES -->
+  <ion-row class="ion-margin-top">
+    <ion-col>
+      <h6 style="margin-top: .5rem;">
+        COURT DATES
+      </h6>
+    </ion-col>
+    <ion-col>
+      <ion-button color="success ion-float-right" size="small" (click)="openAddCourtDateModal()"
+        *ngIf="userStore.getUser() && !userStore.getUser().roles.recoveryAgent">
+        Add Court Date
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <app-court-dates [bondId]="bond._id" [courtDates]="courtDates"></app-court-dates>
+    </ion-col>
+  </ion-row>
+
+  <!-- INDEMNITORS -->
+  <!-- <ion-row>
+    <ion-col>
+      <h6 class="ion-text-center">
+        INDEMNITORS
+      </h6>
+    </ion-col>
+  </ion-row>
+  <ion-row *ngIf="bond">
+    <ion-col>
+      <app-bond-indemnitors [indemnitors]="bondIndemnitors"></app-bond-indemnitors>
+    </ion-col>
+  </ion-row> -->
+
+  <!-- COLLATERALS -->
+  <ion-row>
+    <ion-col>
+      <h6 class="ion-text-center">
+        COLLATERAL
+      </h6>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <app-bond-collaterals [collaterals]="collaterals"></app-bond-collaterals>
+    </ion-col>
+  </ion-row>
+
+</ion-grid>

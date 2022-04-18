@@ -1,0 +1,430 @@
+<ion-grid *ngIf="isPaymentPlanComplete()">
+
+  <ion-row>
+    <ion-col>
+      <p class="ion-text-center text-muted">
+        <em>
+          Payment plan has already been generated for this bond.<br />
+          Please cancel the invoices in order to create a new plan.
+        </em>
+      </p>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button color="danger" (click)="cancelAllInvoices()">
+        Cancel All Invoices
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+<ion-grid *ngIf="!isPaymentPlanComplete()" class="payment-form">
+  <form novalidate #paymentForm="ngForm" (ngSubmit)="onSubmit()">
+
+    <ion-row>
+      <ion-col>
+        <h5 *ngIf="bond.premiumAmount">
+          <small>Bond Premium Amount:</small>
+          {{ bond.premiumAmount | currency }}
+        </h5>
+      </ion-col>
+    </ion-row>
+
+    <!-- INITIAL PAYMENT AMOUNT -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label [color]="
+              initialAmount.invalid && initialAmount.touched ? 'danger' : ''
+            " position="floating">
+            Initial Amount + Other Charges *
+          </ion-label>
+          <ion-input name="initialAmount" [(ngModel)]="initialPayment.amount" required #initialAmount="ngModel"
+            (ngModelChange)="onInitialAmountChange()" [color]="
+              initialAmount.invalid && initialAmount.touched ? 'danger' : ''
+            "></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- STATUS -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label [color]="status.invalid && status.touched ? 'danger' : ''" position="float">
+            Status *
+          </ion-label>
+          <ion-select name="status" [(ngModel)]="initialPayment.status" required #status="ngModel">
+            <ion-select-option value="paid">Paid</ion-select-option>
+            <ion-select-option value="pending">Pending</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- INITIAL PAYMENT PAYER -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label [color]="
+              selectedPayer.invalid && selectedPayer.touched ? 'danger' : ''
+            " position="floating">
+            Initial Payment Payer *
+          </ion-label>
+          <ion-select name="initialSelectedPayer" #selectedPayer="ngModel" required
+            [(ngModel)]="initialPayment.selectedPayer">
+            <ion-select-option *ngFor="let indem of defIndemnitors" [value]="indem._id">
+              {{ indem.name.first }} {{ indem.name.last }}
+            </ion-select-option>
+            <ion-select-option value="custom">Enter Details</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- CUSTOM PAYER DETAILS -->
+    <div *ngIf="initialPayment.selectedPayer === 'custom'">
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label [color]="
+                initialPayerName.invalid && initialPayerName.touched
+                  ? 'danger'
+                  : ''
+              " position="floating">
+              Enter Payer Name *
+            </ion-label>
+            <ion-input name="initialPayerName" [(ngModel)]="initialPayment.payer.name" required
+              #initialPayerName="ngModel" [color]="
+                initialPayerName.invalid && initialPayerName.touched
+                  ? 'danger'
+                  : ''
+              "></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label [color]="
+                initialPayerEmail.invalid && initialPayerEmail.touched
+                  ? 'danger'
+                  : ''
+              " position="floating">
+              Enter Payer Email *
+            </ion-label>
+            <ion-input name="initialPayerEmail" [(ngModel)]="initialPayment.payer.name" required
+              #initialPayerEmail="ngModel" [color]="
+                initialPayerEmail.invalid && initialPayerEmail.touched
+                  ? 'danger'
+                  : ''
+              "></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <!-- INITIAL PAYMENT DUE DATE -->
+    <ion-row *ngIf="initialPayment.status === 'pending'">
+      <ion-col>
+        <ion-item>
+          <ion-label [color]="dueDate.invalid && dueDate.touched ? 'danger' : ''" position="floating">
+            Due Date *
+          </ion-label>
+          <ion-datetime name="dueDate" #dueDate="ngModel" required [(ngModel)]="initialPayment.dueDate"
+            (ionChange)="onInitialPaymentDueDateChange()">
+          </ion-datetime>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="initialPayment.status === 'pending'">
+      <ion-col>
+        <ion-item>
+          <ion-label>
+            Save Card Token
+          </ion-label>
+          <ion-toggle [(ngModel)]="initialPayment.saveCard" name="saveCard"></ion-toggle>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <div *ngIf="initialPayment.status === 'paid'">
+      <!-- PAYMENT RECEIVED DATE -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label [color]="
+                receivedDate.invalid && receivedDate.touched ? 'danger' : ''
+              " position="floating">
+              Received Date *
+            </ion-label>
+            <ion-datetime name="receivedDate" #receivedDate="ngModel" required
+              [(ngModel)]="initialPayment.receivedDate">
+            </ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- RECEIVED BY -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label [color]="
+                receivedByUserId.invalid && receivedByUserId.touched
+                  ? 'danger'
+                  : ''
+              " position="floating">
+              Received By *
+            </ion-label>
+            <ion-select name="receivedByUserId" #receivedByUserId="ngModel" required
+              [(ngModel)]="initialPayment.receivedByUserId">
+              <ion-select-option *ngFor="let agent of agents" [value]="agent._id">
+                {{ agent.name.first }} {{ agent.name.last }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- PAYMENT METHOD -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label [color]="method.invalid && method.touched ? 'danger' : ''" position="floating">
+              Payment Method *
+            </ion-label>
+            <ion-select name="method" #method="ngModel" required [(ngModel)]="initialPayment.method">
+              <ion-select-option value="Cash">Cash</ion-select-option>
+              <ion-select-option value="Credit Card">Credit Card</ion-select-option>
+              <ion-select-option value="Check">Check</ion-select-option>
+              <ion-select-option value="Certified Check">Certified Check</ion-select-option>
+              <ion-select-option value="Money Order">Money Order</ion-select-option>
+              <ion-select-option value="Wire Transfer">Wire Transfer</ion-select-option>
+              <ion-select-option value="Direct Deposit">Direct Deposit</ion-select-option>
+              <ion-select-option value="Other">Other</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- PAYMENT TYPE -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label [color]="type.invalid && type.touched ? 'danger' : ''" position="floating">
+              Payment Type *
+            </ion-label>
+            <ion-select name="type" #type="ngModel" required [(ngModel)]="initialPayment.type">
+              <ion-select-option value="Premium">Premium</ion-select-option>
+              <ion-select-option value="Premium-Deposited">Premium-Deposited</ion-select-option>
+              <ion-select-option value="Payment Fees">Payment Fees</ion-select-option>
+              <ion-select-option value="Account Receivable">Account Receivable</ion-select-option>
+              <ion-select-option value="Account Receivable-Deposited">Account Receivable-Deposited</ion-select-option>
+              <ion-select-option value="Credit">Credit</ion-select-option>
+              <ion-select-option value="Adjustment">Adjustment</ion-select-option>
+              <ion-select-option value="Write Off">Write Off</ion-select-option>
+              <ion-select-option value="Interest Payment">Interest Payment</ion-select-option>
+              <ion-select-option value="Forfeiture Payment">Forfeiture Payment</ion-select-option>
+              <ion-select-option value="Premium Collection">Premium Collection</ion-select-option>
+              <ion-select-option value="Other Collection">Other Collection</ion-select-option>
+              <ion-select-option value="Refund">Refund</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- COMMENTS -->
+      <ion-row *ngIf="initialPayment.status === 'pending'">
+        <ion-col>
+          <ion-item>
+            <ion-label [color]="comments.invalid && comments.touched ? 'danger' : ''" position="floating">
+              Comments
+            </ion-label>
+            <ion-textarea name="comments" #comments="ngModel" required [(ngModel)]="initialPayment.comments">
+              {{ initialPayment.comments }}
+            </ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </div>
+
+
+    <hr>
+
+    <!-- REMAINING PAYMENTS / INSTALLMENTS -->
+
+    <ion-row>
+      <ion-col>
+        <h5>
+          <small class="text-muted">Remaining Amount: </small>
+          {{ remainingAmount | currency }}
+        </h5>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="remainingAmount <= 0 ">
+      <ion-col>
+        <h6>No amount left for installments.</h6>
+      </ion-col>
+    </ion-row>
+
+    <span *ngIf="remainingAmount > 0">
+      <!-- PAYMENT METHOD -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label [color]="
+          remainingPayMethod.invalid && remainingPayMethod.touched
+            ? 'danger'
+            : ''
+        " position="floating">
+              Payment Method *
+            </ion-label>
+            <ion-select 
+            (ionChange)="onRemainingPaymentMethodChange()"
+            name="remainingPayMethod" #remainingPayMethod="ngModel" required
+              [(ngModel)]="remainingPayment.method">
+              <ion-select-option value="single-invoice">Single Invoice</ion-select-option>
+              <ion-select-option value="installments">Installments</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- REMAINING PAYMENT PAYER -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label [color]="
+          remSelectedPayer.invalid && remSelectedPayer.touched
+            ? 'danger'
+            : ''
+        " position="floating">
+              Payer *
+            </ion-label>
+            <ion-select name="remSelectedPayer" #remSelectedPayer="ngModel" required
+              [(ngModel)]="remainingPayment.selectedPayer">
+              <ion-select-option *ngFor="let indem of defIndemnitors" [value]="indem._id">
+                {{ indem.name.first }} {{ indem.name.last }}
+              </ion-select-option>
+              <!-- <ion-select-option value="custom">Enter Details</ion-select-option> -->
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- REMAINING PAYMENT DUE DATE -->
+      <ion-row *ngIf="remainingPayment.method === 'single-invoice'">
+        <ion-col>
+          <ion-item>
+            <ion-label [color]="remDueDate.invalid && remDueDate.touched ? 'danger' : ''" position="floating">
+              Due Date *
+            </ion-label>
+            <ion-datetime name="remDueDate" #remDueDate="ngModel" required [(ngModel)]="remainingPayment.dueDate">
+            </ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <div *ngIf="remainingPayment.method === 'installments'">
+        <!-- FREQUENCY -->
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label [color]="frequency.invalid && frequency.touched ? 'danger' : ''" position="floating">
+                Frequency *
+              </ion-label>
+              <ion-select name="remSelectedPayer" #frequency="ngModel" required [(ngModel)]="remainingPayment.frequency"
+                (ionChange)="onInstallmentFrequencyChange()">
+                <ion-select-option value="weekly">Weekly</ion-select-option>
+                <ion-select-option value="biweekly">Bi-Weekly</ion-select-option>
+                <ion-select-option value="monthly">Monthly</ion-select-option>
+                <ion-select-option value="custom">Custom</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <!-- INSTALLMENT START DATE -->
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label [color]="startDate.invalid && startDate.touched ? 'danger' : ''" position="floating">
+                Installments Start Date *
+              </ion-label>
+              <ion-datetime name="startDate" #startDate="ngModel" required [(ngModel)]="remainingPayment.startDate"
+                (ionChange)="onStartDateChange()">
+              </ion-datetime>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <!-- AMOUNT PER INSTALLMENT -->
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label [color]="
+            amountPerInstallment.invalid && amountPerInstallment.touched
+              ? 'danger'
+              : ''
+          " position="floating">
+                Amount per Installment *
+              </ion-label>
+              <ion-input name="amountPerInstallment" #amountPerInstallment="ngModel" required
+                [(ngModel)]="remainingPayment.amountPerInstallment" (ngModelChange)="onInstallmentAmountChange()">
+              </ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <h6>
+              TOTAL INSTALLMENTS: {{ remainingPayment.installments.length }}
+            </h6>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let inst of remainingPayment.installments; let i = index">
+          <ion-col>
+            <ion-datetime [(ngModel)]="inst.dueDate" [name]="'dueDate' + i" [value]="inst.dueDate"></ion-datetime>
+          </ion-col>
+          <ion-col class="ion-text-right">
+            {{ inst.amount | currency }}
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>
+              Process Payment Automatically
+            </ion-label>
+            <ion-toggle [(ngModel)]="remainingPayment.autoProcessPayments" name="autoProcessPayments"></ion-toggle>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </span>
+
+
+    <ion-row class="ion-margin-top">
+      <ion-col>
+        <ion-button color="success" expand="block" type="submit">
+          Next
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button color="light" fill="outline" expand="block" type="button" (click)="previousStep()">
+          Previous
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-grid>

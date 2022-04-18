@@ -1,0 +1,39 @@
+<ion-row *ngFor="let collateral of collaterals" class="collateral" (click)="openActionSheet(collateral)">
+  <ion-col class="left">
+    <div class="type">
+      {{ collateral.type }}test
+    </div>
+    <div class="amount">
+      {{ collateral.amount | currency }}
+    </div>
+    <div class="owners">
+      <span *ngFor="let owner of collateral.owners">
+        {{ owner.name.first + ' ' + owner.name.last + ' ' }}
+      </span>
+    </div>
+  </ion-col>
+
+  <ion-col class="right">
+    <div *ngIf="collateral.receivedDate">
+      Received Date: {{ collateral.receivedDate | date: 'MM/dd/yyyy' }}
+    </div>
+    <div *ngIf="collateral.seizedDate">
+      Seized Date: {{ collateral.seizedDate | date: 'MM/dd/yyyy' }}
+    </div>
+    <div *ngIf="collateral.returnedDate">
+      Returned Date: {{ collateral.returnedDate | date: 'MM/dd/yyyy' }}
+    </div>
+    <div *ngIf="collateral.heldBy">
+      Held By: {{ collateral.heldBy }}
+    </div>
+    <div *ngIf="collateral.receiptNumber">
+      Receipt Number: {{ collateral.receiptNumber }}
+    </div>
+  </ion-col>
+</ion-row>
+
+<ion-row *ngIf="collaterals.length === 0">
+  <ion-col class="ion-text-center" style="color: #666666;">
+    <em>No collateral added</em>
+  </ion-col>
+</ion-row>

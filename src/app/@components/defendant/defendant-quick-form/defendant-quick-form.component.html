@@ -1,0 +1,204 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Defendant</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form novalidate (ngSubmit)="onSubmit()" #defendantForm="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col class="ion-text-center">
+          <ion-text color="medium">
+            <h6>Indemnitor Details</h6>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">First Name *</ion-label>
+            <ion-input
+              name="indemLastName"
+              [(ngModel)]="indemnitor.name.first"
+              required
+              #indemFirstName="ngModel"
+              [color]="
+                indemFirstName.invalid && indemFirstName.touched ? 'danger' : ''
+              "
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Last Name *</ion-label>
+            <ion-input
+              name="indemFirstName"
+              [(ngModel)]="indemnitor.name.last"
+              required
+              #indemLastName="ngModel"
+              [color]="
+                indemLastName.invalid && indemLastName.touched ? 'danger' : ''
+              "
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input
+              name="indemEmail"
+              [(ngModel)]="indemnitor.email"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Phone Number</ion-label>
+            <ion-input
+              name="indemPhone"
+              [(ngModel)]="indemnitor.phone"
+              [brmasker]="{mask:'999-999-9999', len:12,type:'num'}"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Relation with Defendant *</ion-label>
+            <ion-input
+              name="indemRelation"
+              [(ngModel)]="indemnitor.relation"
+              required
+              #indemRelation="ngModel"
+              [color]="
+                indemRelation.invalid && indemRelation.touched ? 'danger' : ''
+              "
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <hr>
+
+      <!-- DEFENDANT DETAILS -->
+      <ion-row>
+        <ion-col class="ion-text-center">
+          <ion-text color="medium">
+            <h6>Defendant Details</h6>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">First Name *</ion-label>
+            <ion-input
+              name="defFirstName"
+              [(ngModel)]="defendant.name.first"
+              required
+              #defFirstName="ngModel"
+              [color]="
+              defFirstName.invalid && defFirstName.touched ? 'danger' : ''
+              "
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Last Name *</ion-label>
+            <ion-input
+              name="defLastName"
+              [(ngModel)]="defendant.name.last"
+              required
+              #defLastName="ngModel"
+              
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input
+              name="defEmail"
+              [(ngModel)]="defendant.email"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Phone Number</ion-label>
+            <ion-input
+              name="defPhone"
+              [(ngModel)]="defendant.phone"
+              [brmasker]="{mask:'999-999-9999', len:12,type:'num'}"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Date of Birth *</ion-label>
+            <ion-datetime
+              name="dob"
+              [(ngModel)]="defendant.dob"
+              required
+              #dob="ngModel"
+            ></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Status
+            </ion-label>
+            <ion-select name="status" [(ngModel)]="defendant.status">
+              <ion-select-option value="prospect">Prospect</ion-select-option>
+              <ion-select-option value="on-boarded">On Board</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="ion-margin-top">
+        <ion-col>
+          <ion-button color="success" expand="block" type="submit">
+            Save
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

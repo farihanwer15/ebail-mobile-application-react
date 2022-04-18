@@ -1,0 +1,18 @@
+<ion-row *ngFor="let indem of indemnitors" class="indemnitors">
+  <ion-col class="left">
+    <div class="name">
+      {{ indem.name.first }} {{ indem.name.last }}
+    </div>
+    <div class="relation">
+      {{ indem.relation }}
+    </div>
+  </ion-col>
+  <ion-col class="right">
+    <div class="phone">
+      {{ getPhone(indem) }}
+    </div>
+    <div class="email">
+      {{ indem.email }}
+    </div>
+  </ion-col>
+</ion-row>

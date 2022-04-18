@@ -1,0 +1,124 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Defendant Filter Form</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">Name, Email or Phone #</ion-label>
+        <ion-input type="text" [(ngModel)]="filters.name" name="filterName"></ion-input>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">Date of birth</ion-label>
+        <ion-datetime [(ngModel)]="filters.dob"></ion-datetime>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">Status</ion-label>
+        <ion-select [(ngModel)]="filters.status" name="status">
+          <ion-select-option value="on-boarded">On Boarded</ion-select-option>
+          <ion-select-option value="prospect">Prospect</ion-select-option>
+          <ion-select-option value="declined">Declined</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">Sorting Order</ion-label>
+        <ion-select [(ngModel)]="filters.sortBy" name="sortBy">
+          <ion-select-option value="recently-added">Recently Added</ion-select-option>
+          <ion-select-option value="recently-added-bond">Recently Added Bond</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">Monitoring Status</ion-label>
+        <ion-select [(ngModel)]="filters.monitoringStatus" name="monitoringStatus">
+          <ion-select-option value="">All</ion-select-option>
+          <ion-select-option value="disabled">OFF</ion-select-option>
+          <ion-select-option value="enabled">ON</ion-select-option>
+          <ion-select-option value="never-monitored">Never Monitored</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row *ngIf="userStore.getUser().agency.parentAgency">
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">Agency</ion-label>
+
+        <ion-select [(ngModel)]="filters.agencyId" name="agencyId">
+          <ion-select-option [value]="userStore.getUser().agencyId">
+            {{ userStore.getUser().agency.dba }}
+          </ion-select-option>
+          <ion-select-option *ngFor="let agency of subAgencies" [value]="agency._id">
+            {{ agency.dba }}
+          </ion-select-option>
+        </ion-select>
+
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <div>
+          <ion-label position="floating">From date</ion-label>
+          <div>
+            <ion-datetime [(ngModel)]="filters.createdAt.start" name="fromDate"></ion-datetime>
+          </div>
+        </div>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <div>
+          <ion-label position="floating">To date</ion-label>
+          <div>
+            <ion-datetime [(ngModel)]="filters.createdAt.end" name="toDate"></ion-datetime>
+          </div>
+        </div>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <ion-button size="small" color="success" (click)="search()" expand="block">
+        Search
+      </ion-button>
+    </ion-col>
+    <ion-col>
+      <ion-button size="small" color="danger" (click)="close()" expand="block">
+        Close
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+</ion-content>

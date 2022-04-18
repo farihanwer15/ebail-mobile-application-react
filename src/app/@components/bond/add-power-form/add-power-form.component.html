@@ -1,0 +1,142 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Power Form</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form novalidate  #powerForm="ngForm">
+    <!-- <nb-alert status="danger" *ngIf="errors.length > 0">
+      <div *ngFor="let error of errors">{{ error }}</div>
+    </nb-alert> -->
+
+    <!-- <nb-alert status="success" *ngIf="successMsg !== ''">
+      {{ successMsg }}
+    </nb-alert> -->
+
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-label [color]="suretyId.invalid && suretyId.touched ? 'danger' : ''" position="floating">Select Surety *</ion-label>
+          <ion-select placeholder="Select Surety" size="small" [(ngModel)]="power.suretyId" name="surety"
+            (ionChange)="loadPrefixes()" required #suretyId="ngModel">
+            <ion-select-option *ngFor="let surety of sureties" [value]="surety._id">
+              {{ surety.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-item>
+          <ion-label [color]="prefixId.invalid && prefixId.touched ? 'danger' : ''" position="floating">Select Prefix *</ion-label>
+          <ion-select placeholder="Select Prefix" size="small" [(ngModel)]="power.prefixId" name="prefix"
+            (ionChange)="onPrefixSelect()" required #prefixId="ngModel">
+            <ion-select-option *ngFor="let prefix of prefixes" [value]="prefix._id">
+              {{ prefix.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <hr />
+      <ion-col size="12" class="ion-text-center" *ngIf="selectedPrefix">
+        <ion-text color="success">
+          <small>
+          <b>Prefix Amount:</b>
+          <span>
+            {{ selectedPrefix.amount | currency }}
+          </span>
+        </small>
+        </ion-text>
+      </ion-col>
+      <hr />
+
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">
+            Starting Power Number *
+          </ion-label>
+          <ion-input type="text" placeholder="Enter starting power #" [(ngModel)]="power.startingPower"
+            id="starting-power-number" name="startingNumber" (keyup)="onPowerNumberChange()" required
+            #startingNumber="ngModel" [color]="startingNumber.invalid && startingNumber.touched ? 'danger' : ''">
+          </ion-input>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">
+            Ending Power Number *
+          </ion-label>
+          <ion-input type="text" placeholder="Enter ending power #" [(ngModel)]="power.endingPower"
+            id="ending-power-number" name="endingNumber" (keyup)="onPowerNumberChange()" required
+            #endingNumber="ngModel" [color]="endingNumber.invalid && endingNumber.touched ? 'danger' : ''">
+          </ion-input>
+        </ion-item>
+      </ion-col>
+
+      <hr />
+      <ion-col size="12" class="ion-text-center">
+        <ion-text color="success">
+          <small>
+            <b>Quantity:</b> {{ quantity }}
+          </small>
+          </ion-text>
+      </ion-col>
+      <hr />
+
+      <ion-col size="12">
+        <ion-item>
+          <ion-label [color]="receivedDateRef.invalid && receivedDateRef.touched ? 'danger' : ''" position="floating">Date Recieved *</ion-label>
+          <ion-datetime placeholder="Recieved Date" [(ngModel)]="power.receivedDate" name="receivedDate"
+            autocomplete="off" required #receivedDateRef="ngModel">
+          </ion-datetime>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-item>
+          <ion-label [color]="expiryDateRef.invalid && expiryDateRef.touched ? 'danger' : ''" position="floating">Date of Expiration *</ion-label>
+          <ion-datetime placeholder="Expiration date" [(ngModel)]="power.expiryDate" name="expiryDate"
+            autocomplete="off" required #expiryDateRef="ngModel">
+          </ion-datetime>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">Assign Agent</ion-label>
+          <ion-select placeholder="Select Agent" size="small" [(ngModel)]="power.assignedAgentId"
+            name="assignedAgentId">
+            <ion-select-option *ngFor="let member of staff.data" [value]="member._id">
+              {{ member.name.first | uppercase }} {{ member.name.last | uppercase }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">Office</ion-label>
+          <ion-select placeholder="Select Office" size="small" [(ngModel)]="power.officeId" name="officeId">
+            <ion-select-option *ngFor="let office of offices.data" [value]="office._id">
+              {{ office.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-button (click)="onSubmit()" expand="block" color="success" size="small" type="submit">
+          Save
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>

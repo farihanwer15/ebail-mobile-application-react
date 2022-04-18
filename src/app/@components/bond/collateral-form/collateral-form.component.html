@@ -1,0 +1,276 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Collateral</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="onSubmit()" #collateralForm="ngForm" novalidate>
+    <ion-grid>
+      <!-- TYPE -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+              [color]="type.invalid && type.touched ? 'danger' : ''"
+            >
+              Type *
+            </ion-label>
+            <ion-select
+              name="type"
+              [(ngModel)]="collateral.type"
+              required
+              #type="ngModel"
+            >
+              <ion-select-option value="Cash">Cash</ion-select-option>
+              <ion-select-option value="Check">Check</ion-select-option>
+              <ion-select-option value="Credit Card"
+                >Credit Card</ion-select-option
+              >
+              <ion-select-option value="Indemnity Agreement"
+                >Indemnity Agreement</ion-select-option
+              >
+              <ion-select-option value="Mobile Home"
+                >Mobile Home</ion-select-option
+              >
+              <ion-select-option value="Money Order"
+                >Money Order</ion-select-option
+              >
+              <ion-select-option value="Other">Other</ion-select-option>
+              <ion-select-option value="Promissory Note"
+                >Promissory Note</ion-select-option
+              >
+              <ion-select-option value="Real Property"
+                >Real Property</ion-select-option
+              >
+              <ion-select-option value="Signature">Signature</ion-select-option>
+              <ion-select-option value="Trust Deed"
+                >Trust Deed</ion-select-option
+              >
+              <ion-select-option value="Vehicle Vessel"
+                >Vehicle Vessel</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- AMOUNT -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+              [color]="amount.invalid && amount.touched ? 'danger' : ''"
+            >
+              Amount *
+            </ion-label>
+
+            <ion-input
+              name="amount"
+              [(ngModel)]="collateral.amount"
+              required
+              #amount="ngModel"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- OWNER -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+            >
+              Select Owner
+            </ion-label>
+
+            <ion-select
+              name="selectedOwner"
+              [(ngModel)]="selectedOwner"
+              (ionChange)="addOwner()"
+            >
+              <ion-select-option
+                *ngFor="let indem of bondIndemnitors"
+                [value]="indem._id"
+              >
+                {{ indem?.name?.first }} {{ indem?.name?.last }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- SELECTED OWNERS -->
+
+      <ion-row *ngFor="let owner of collateral.owners" class="owner">
+        <ion-col size="8">
+          <div class="name">
+            {{ owner?.name?.first }} {{ owner?.name?.last }}
+          </div>
+          <div class="email">
+            {{ owner.email }}
+          </div>
+        </ion-col>
+        <ion-col size="4">
+          <ion-button color="danger" size="small" expand="block" (click)="removeOwner(owner)">
+            Remove
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="collateral.owners.length === 0">
+        <ion-col class="ion-text-center" style="color: #666666;font-size:.8rem">
+          <em>Select owner from above dropdown to add.</em>
+        </ion-col>
+      </ion-row>
+
+      <!-- RECEIVED DATE -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Received Date
+            </ion-label>
+
+            <ion-datetime
+              name="receivedDate"
+              [(ngModel)]="collateral.receivedDate"
+            >
+            </ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- SEIZED DATE -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Seized Date
+            </ion-label>
+
+            <ion-datetime name="seizedDate" [(ngModel)]="collateral.seizedDate">
+            </ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- RETURNED DATE -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Returned Date
+            </ion-label>
+
+            <ion-datetime
+              name="returnedDate"
+              [(ngModel)]="collateral.returnedDate"
+            >
+            </ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- RCEIPT NUMBER -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Receipt Number
+            </ion-label>
+
+            <ion-input
+              name="receiptNumber"
+              [(ngModel)]="collateral.receiptNumber"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- RELEASE CONDITION -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Release Condition
+            </ion-label>
+
+            <ion-input
+              name="releaseCondition"
+              [(ngModel)]="collateral.releaseCondition"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- PROMISSORY COLLECTED -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+            >
+              Promissory Collected
+            </ion-label>
+
+            <ion-select
+              name="promissoryCollected"
+              [(ngModel)]="collateral.promissoryCollected"
+            >
+              <ion-select-option value="false">No</ion-select-option>
+              <ion-select-option value="true">Yes</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- HELD BY -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Held By
+            </ion-label>
+
+            <ion-input name="heldBy" [(ngModel)]="collateral.heldBy">
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- COMMENTS -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Comments
+            </ion-label>
+
+            <ion-textarea name="description" [(ngModel)]="collateral.description">
+              <!-- {{ collateral.description }} -->
+            </ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" color="success" class="ion-float-right">
+            Save
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

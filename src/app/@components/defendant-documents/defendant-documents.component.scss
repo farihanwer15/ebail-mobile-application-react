@@ -1,0 +1,29 @@
+.doc-name {
+    text-decoration: none;
+    color: #777;
+    font-size: .9rem;
+    max-width: 80px;
+}
+
+.doc-date {
+    color: #888;
+    font-size: .75rem;
+}
+.content-center {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+.warning-align {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -4px;
+  }
+  
+  .warning {
+    color: red;
+    font-size: .7rem;
+    text-align: center;
+    font-style: italic;
+  }

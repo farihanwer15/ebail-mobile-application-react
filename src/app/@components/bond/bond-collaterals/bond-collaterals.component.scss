@@ -1,0 +1,19 @@
+.collateral{
+  font-size: .9rem;
+  margin-bottom: .5rem;
+}
+
+.collateral .type{
+  color: #999999;
+}
+
+.collateral .amount, .collateral .owners{
+  font-size: .8rem;
+  color: #666666;
+}
+
+.collateral .right{
+  text-align: right;
+  font-size: .8rem;
+  color: #888888;
+}

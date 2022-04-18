@@ -1,0 +1,169 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Court Filter Form</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">Defendant Name</ion-label>
+        <ion-input [(ngModel)]="filters.defendantName"></ion-input>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">Posting Agent</ion-label>
+        <ion-select [(ngModel)]="filters.agentId" name="agentId">
+          <ion-select-option value="">All</ion-select-option>
+          <ion-select-option
+            *ngFor="let member of staffMembers.data"
+            [value]="member._id"
+          >
+            {{ member.name.first | uppercase }}
+            {{ member.name.last | uppercase }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">Court Date Status</ion-label>
+        <ion-select [(ngModel)]="filters.status">
+          <ion-select-option value="">All</ion-select-option>
+          <ion-select-option value="empty">Empty Court Dates</ion-select-option>
+          <ion-select-option value="upcoming"
+            >Upcoming Court Dates</ion-select-option
+          >
+          <ion-select-option value="passed"
+            >Passed Court Dates</ion-select-option
+          >
+          <ion-select-option value="revoked">Revoked</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">From Date</ion-label>
+        <ion-datetime
+          [(ngModel)]="filters.courtDate.start"
+          name="fromDate"
+        ></ion-datetime>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">To Date</ion-label>
+        <ion-datetime
+          [(ngModel)]="filters.courtDate.end"
+          name="toDate"
+        ></ion-datetime>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngIf="userStore.getUser().agency.parentAgency">
+    <ion-col>
+      <ion-item>
+         <ion-label position="floating">Agency</ion-label>
+          <ion-select
+            [(ngModel)]="filters.agencyId"
+            (ionChange)="onAgencyChange()"
+          >
+            <ion-select-option [value]="userStore.getUser().agencyId">
+              {{ userStore.getUser().agency.dba }}
+            </ion-select-option>
+            <ion-select-option
+              *ngFor="let agency of subAgencies"
+              [value]="agency._id"
+            >
+              {{ agency.dba }}
+            </ion-select-option>
+          </ion-select>
+       </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">State</ion-label>
+        <ion-select [(ngModel)]="filters.state" (ionChange)="getCounties()">
+          <ion-select-option value="">All</ion-select-option>
+          <ion-select-option *ngFor="let state of states" [value]="state.state">
+            {{ state.state }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">County</ion-label>
+        <ion-select [(ngModel)]="filters.county" (ionChange)="getCourts()">
+          <ion-select-option value="-1" *ngIf="!filters.state">
+            Please select a state
+          </ion-select-option>
+          <ion-select-option value="" *ngIf="filters.state"
+            >All</ion-select-option
+          >
+          <ion-select-option
+            *ngFor="let county of counties"
+            [value]="county.county"
+          >
+            {{ county.county }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">Court</ion-label>
+        <ion-select [(ngModel)]="filters.courtId">
+          <ion-select-option *ngFor="let court of courts" [value]="court._id">
+            {{ court.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label>Include Revoked Bonds</ion-label>
+        <ion-checkbox [(ngModel)]="filters.inlcludeRevoked"></ion-checkbox>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row class="ion-margin">
+    <ion-col >
+      <ion-button expand="block" size='small' (click)="search()" color="success">
+        Search
+       </ion-button>
+     </ion-col>
+   </ion-row>
+</ion-content>

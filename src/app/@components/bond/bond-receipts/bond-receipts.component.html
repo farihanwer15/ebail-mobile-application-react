@@ -1,0 +1,180 @@
+<ion-grid class="bond-receipts">
+  <ion-col *ngIf='isIos' size="12" class="warning-align ion-padding-start ion-padding-end">
+    <span class="warning">
+      To view PDFs please turn off pop-up block within Settings > Safari > Pop-Up Blocker
+    </span>
+  </ion-col>
+  <!-- POWER RECEIPT -->
+  <ion-row>
+    <ion-col size="6">
+      <div class="title">Power Receipt</div>
+    </ion-col>
+    <ion-col size="6">
+      <div class="date">
+        {{ powerReceipt.createdAt | date: 'MM/dd/yyyy @ hh:mm a' }}
+        <ion-button *ngIf="!powerReceipt._id"
+        color="success ion-float-right" size="small" (click)="openDocumentUploader('Power Receipt')">
+          Add
+        </ion-button>
+      </div>
+    </ion-col> 
+    <ion-col size="10">
+      
+      <div *ngIf="powerReceipt.files.length > 0">
+        <span *ngFor="let file of powerReceipt.files" (click)="presentActionSheet(file)">
+          <a [routerLink]="" href="">
+            <img
+            *ngIf="file.extension === 'jpg' || file.extension === 'jpeg' || file.extension === 'png'"
+              class="receipt-thumb mr-2"
+              src="assets/images/image-icon.png"
+            />
+            <img
+            *ngIf="file.extension === 'pdf'"
+              class="receipt-thumb mr-2"
+              src="assets/images/pdf-icon.png"
+            />
+          </a>
+          
+        </span>
+        
+      </div>
+    </ion-col>
+    <ion-col size="2" *ngIf="powerReceipt._id">
+      <ion-button color="medium" fill="clear" size="default" (click)="deleteReceipt(powerReceipt._id)">
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+  <!-- JAIL RECEIPT -->
+  <ion-row>
+    <ion-col size="6">
+      <div class="title">Jail Receipt</div>
+    </ion-col>
+    <ion-col size="6">
+      <div class="date">
+        {{ jailReceipt.createdAt | date: 'MM/dd/yyyy @ hh:mm a' }}
+        <ion-button *ngIf="!jailReceipt._id"
+        color="success ion-float-right" size="small" (click)="openDocumentUploader('Jail Receipt')">
+          Add
+        </ion-button>
+      </div>
+    </ion-col>
+    <ion-col size="10">
+      
+      <div *ngIf="jailReceipt.files.length > 0">
+        <span *ngFor="let file of jailReceipt.files" (click)="presentActionSheet(file)">
+          <a [routerLink]="" href="">
+            <img
+            *ngIf="file.extension === 'jpg' || file.extension === 'jpeg' || file.extension === 'png'"
+              class="receipt-thumb mr-2"
+              src="assets/images/image-icon.png"
+            />
+            <img
+            *ngIf="file.extension === 'pdf'"
+              class="receipt-thumb mr-2"
+              src="assets/images/pdf-icon.png"
+            />
+          </a>
+          
+        </span>
+        
+      </div>
+    </ion-col>
+    <ion-col size="2" *ngIf="jailReceipt._id">
+      <ion-button color="medium" fill="clear" size="default" (click)="deleteReceipt(jailReceipt._id)" >
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+  
+  <!-- APPEARANCE BOND -->
+  <ion-row>
+    <ion-col size="6">
+      <div class="title">Appearance Bond</div>
+    </ion-col>
+    <ion-col size="6">
+      <div class="date">
+        {{ appBond.createdAt | date: 'MM/dd/yyyy @ hh:mm a' }}
+        <ion-button *ngIf="!appBond._id"
+        color="success ion-float-right" size="small" (click)="openDocumentUploader('Appearance Bond')">
+          Add
+        </ion-button>
+      </div>
+    </ion-col>
+    <ion-col size="10">
+      
+      <div *ngIf="appBond.files.length > 0">
+        <span *ngFor="let file of appBond.files" (click)="presentActionSheet(file)">
+          <a [routerLink]="" href="">
+            <img
+            *ngIf="file.extension === 'jpg' || file.extension === 'jpeg' || file.extension === 'png'"
+              class="receipt-thumb mr-2"
+              src="assets/images/image-icon.png"
+            />
+            <img
+            *ngIf="file.extension === 'pdf'"
+              class="receipt-thumb mr-2"
+              src="assets/images/pdf-icon.png"
+            />
+          </a>
+          
+        </span>
+        
+      </div>
+    </ion-col>
+    <ion-col size="2" *ngIf="appBond._id">
+        <ion-button color="medium" fill="clear" size="default" (click)="deleteReceipt(appBond._id)">
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+    </ion-col>
+  </ion-row>
+
+  
+  <!-- RATE DEVAIATION -->
+  <ion-row>
+    <ion-col size="6">
+      <div class="title">Rate Deviation</div>
+    </ion-col>
+    <ion-col size="6">
+      <div class="date">
+        {{ rateDev.createdAt | date: 'MM/dd/yyyy @ hh:mm a' }}
+        <ion-button *ngIf="!rateDev._id"
+        color="success ion-float-right" size="small" (click)="openDocumentUploader('Rate Deviation')">
+          Add
+        </ion-button>
+      </div>
+    </ion-col>
+    <ion-col size="10">
+      
+      <div *ngIf="rateDev.files.length > 0">
+        <span *ngFor="let file of rateDev.files" (click)="presentActionSheet(file)">
+          <a [routerLink]="" href="">
+            <img
+            *ngIf="file.extension === 'jpg' || file.extension === 'jpeg' || file.extension === 'png'"
+              class="receipt-thumb mr-2"
+              src="assets/images/image-icon.png"
+            />
+            <img
+            *ngIf="file.extension === 'pdf'"
+              class="receipt-thumb mr-2"
+              src="assets/images/pdf-icon.png"
+            />
+          </a>
+          
+        </span>
+        
+      </div>
+    </ion-col>
+    <ion-col size="2" *ngIf="rateDev._id">
+        <ion-button color="medium" fill="clear" size="default" (click)="deleteReceipt(rateDev._id)">
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+    </ion-col>
+  </ion-row>
+
+  <ng2-pdfjs-viewer #externalPdfViewer [externalWindow]="true"></ng2-pdfjs-viewer>
+
+
+</ion-grid>

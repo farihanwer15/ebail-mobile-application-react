@@ -1,0 +1,86 @@
+<ion-grid>
+  <ion-row>
+    <ion-col>
+      <app-bond-info [bond]="bond" [receipts]="false"></app-bond-info>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <h6>INVOICES</h6>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <app-bond-invoices [bondId]="bondId"></app-bond-invoices>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <h6 class="ion-text-center">
+        CONTRACTS
+      </h6>
+    </ion-col>
+  </ion-row>
+
+  
+  <app-contract-list [bondId]='bondId'></app-contract-list>
+
+  <!-- <ion-row *ngIf="bond.power && surety && surety.contractTemplates">
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">Select Contract Template</ion-label>
+        <ion-select
+        name="contractTemplateId"
+        [(ngModel)]="contractTemplateId">
+          <ion-select-option *ngFor="let template of surety.contractTemplates" [value]="template.templateId">
+            {{ template.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label>
+          Enable email Notification
+        </ion-label>
+        <ion-toggle [(ngModel)]="sendEmail" name="sendEmail"></ion-toggle>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label>
+          Enable SMS Notification
+        </ion-label>
+        <ion-toggle [(ngModel)]="sendSMS" name="sendSMS"></ion-toggle>
+      </ion-item>
+    </ion-col>
+  </ion-row> -->
+
+
+  <ion-row class="ion-margin-top">
+    <ion-col>
+      <ion-button color="success" expand="block" (click)="saveBond()">
+        Save Bond
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+  
+  <ion-row *ngIf="contractTemplateId">
+    <ion-col>
+      <ion-button expand="block" (click)="sendContract()" color="success">
+        Save & Send Contract
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>

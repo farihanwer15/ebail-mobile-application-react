@@ -1,0 +1,23 @@
+.court-dates{
+  font-size: .9rem;
+  padding: 0;
+}
+
+.court-dates .court-date{
+  border-bottom: .3px solid #555555;
+}
+
+.court-dates .date{
+  color: #999999;
+}
+
+.court-dates .court-name, .court-dates .purpose{
+  font-size: .8rem;
+  color: #666666;
+}
+
+.court-dates .right{
+  text-align: right;
+  color: #666666;
+  font-size: .8rem;
+}

@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Checkin Riminders</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row class="ion-padding-top ion-margin-top">
+    <ion-col>
+      <ion-grid class="contact-table">
+        <ion-row>
+          <ion-col class="ion-text-center">
+            <span>REMINDERS</span>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <span>Interval</span>
+          </ion-col>
+          <ion-col>
+            <span>Date</span>
+          </ion-col>
+          <ion-col>
+            <span>Status</span>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let interval of data">
+          <ion-col>
+            <span *ngIf="interval.name !== 'First thing day of'">{{ interval.name }}</span>
+            <span *ngIf="interval.name === 'First thing day of'">
+              Notification at 12:00 AM on the day of check in.
+            </span>
+          </ion-col>
+          <ion-col>
+            <span>
+              {{ helpersService?.getFormattedDate(interval.date, 'MM/DD/YYYY', timezone) }}
+            </span>
+            <span *ngIf="type!== 'Check in anytime'">
+              {{ helpersService?.getFormattedDate(interval.date, 'hh:mm A', timezone) }}
+            </span>
+          </ion-col>
+          <ion-col>
+            <span>
+              <ion-badge color="success" *ngIf="interval.sentAt">SENT</ion-badge>
+            </span>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-col>
+  </ion-row>
+</ion-content>

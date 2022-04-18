@@ -1,0 +1,172 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Make Payment</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form novalidate #paymentForm="ngForm" (ngSubmit)="onSubmit()">
+    <ion-row *ngIf="invoiceId || amount">
+      <ion-col class="ion-text-center">
+        <h5><small>Amount: </small> {{ payment.amount | currency }}</h5>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="!invoiceId || !amount">
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">Amount *</ion-label>
+        <ion-input
+          name="amount"
+          [(ngModel)]="payment.amount"
+          required
+          #amount="ngModel"
+          [color]="
+          amount.invalid && amount.touched ? 'danger' : ''
+          "
+        ></ion-input>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+    <hr>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Street Address</ion-label>
+          <ion-input
+            name="lin1"
+            [(ngModel)]="payment.address.line1"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">City</ion-label>
+          <ion-input
+            name="city"
+            [(ngModel)]="payment.address.city"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">State</ion-label>
+          <ion-input
+            name="state"
+            [(ngModel)]="payment.address.state"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+      
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Zipcode</ion-label>
+          <ion-input
+            name="zip"
+            [(ngModel)]="payment.address.zip"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <hr>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Name On Card *</ion-label>
+          <ion-input
+            name="cardName"
+            [(ngModel)]="payment.card.name"
+            required
+            #cardName="ngModel"
+            [color]="
+            cardName.invalid && cardName.touched ? 'danger' : ''
+            "
+            placeholder="Enter name on card..."
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <input type="hidden" id="account-number">
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Card Number *</ion-label>
+          <ion-input
+            name="accountNumber"
+            [(ngModel)]="payment.card.accountNumber"
+            type="number"
+            required
+            #accountNumber="ngModel"
+            [color]="accountNumber.invalid && accountNumber.touched ? 'danger' : ''"
+            (ionBlur)="onCardNumberBlur()"
+            placeholder="Enter card number..."
+            ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Expiration Date *</ion-label>
+          <ion-input
+            name="expiry"
+            [(ngModel)]="payment.card.accessory"
+            required
+            #accessory="ngModel"
+            maxlength="5"
+            [color]="
+            accessory.invalid && accessory.touched ? 'danger' : ''
+            "
+            placeholder="MM/YY"
+            [brmasker]="{mask: '99/99'}"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Security Code *</ion-label>
+          <ion-input
+            name="csc"
+            [(ngModel)]="payment.card.csc"
+            required
+            #csc="ngModel"
+            [color]="
+            csc.invalid && csc.touched ? 'danger' : ''
+            "
+            placeholder="CVV"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <hr>
+
+    
+    <ion-row class="ion-margin-top">
+      <ion-col>
+        <ion-button color="success" expand="block" type="submit">
+          Pay Now
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    
+  </form>
+</ion-content>

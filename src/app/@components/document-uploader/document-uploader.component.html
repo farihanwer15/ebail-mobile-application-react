@@ -1,0 +1,96 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Document</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row *ngIf="platform.is('cordova')">
+      <ion-col>
+        <ion-button color="primary" expand="block" (click)="takePicture()">
+          Take Picture
+        </ion-button>
+      </ion-col>
+
+      <ion-col>
+        <ion-button color="success" expand="block" (click)="showImageUploader()">
+          Upload Image
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <form novalidate (ngSubmit)="saveReceipt()" *ngIf="!platform.is('cordova')">
+
+      <ion-row class="ionPadding no-padding" sizeSm="12">
+        <ion-col sizeSm="6" class="no-padding">
+          <div class=" choose-file">
+            <label for="actual-btn">CHOOSE FILE</label>
+            <input type="file" id="actual-btn" (change)="processFile($event)" hidden />
+            <!-- <span id="file-chosen">No file selected</span> -->
+          </div>
+  
+        </ion-col>
+        <ion-col sizeSm="6" class="no-padding">
+          <ion-button  class="take-pic" size='small' expand="block" (click)="captureImage('power-receipt')">Take Picture</ion-button>
+        </ion-col>
+       
+      </ion-row>
+
+      <ion-grid  >
+        <ion-row class="img-style">
+          <ion-col class="no-padding"  size="6">
+            <ng-container *ngIf="image">
+              <ion-img (click)='imageView(image)' class="crop-img no-padding" [src]="image" *ngIf="image"></ion-img>
+              <ion-col size="12" class="warning-align ion-padding-start ion-padding-end">
+                <span class="warning">
+                  Click to view Image
+                </span>
+              </ion-col>
+
+            </ng-container>
+            <ng-container *ngIf="isPdfFile">
+              <ion-img (click)='ViewDoc()' class="crop-img no-padding" src="assets/images/pdf-icon.png" ></ion-img>
+              <ion-col size="12" class="warning-align ion-padding-start ion-padding-end">
+                <span class="warning">
+                  Click to view Pdf
+                </span>
+              </ion-col>
+            </ng-container>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <!-- <ion-row>
+        <ion-col>
+          <ion-button expand="block" (click)="recognizeImage()" [disabled]="!workerReady">Recognize image</ion-button>
+        </ion-col>
+      </ion-row> -->
+
+      <!-- <ion-card *ngIf="workerReady && captureProgress > 0">
+        <ion-card-header>
+          <ion-card-title>
+           <ng-container *ngIf="captureProgress === 100 else extracting">Extracted Power Number: </ng-container> <ng-template #extracting>Extracting: {{ captureProgress }}%</ng-template>
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <h1>{{extractedPowerNumber}}</h1>
+        </ion-card-content>
+      </ion-card> -->
+
+      <div class="ionPadding"  *ngIf="uploadedDocument">
+        <ion-button color='success' size='small' expand="block"  type='submit'>Save</ion-button>
+      </div>
+    </form>
+  </ion-grid>
+
+
+  <!-- <app-image-cropper *ngIf="image" [image]="image" (onImageCropped)="onImageCropped(image)"></app-image-cropper> -->
+  <ng2-pdfjs-viewer #externalPdfViewer [externalWindow]="true"></ng2-pdfjs-viewer>
+
+</ion-content>

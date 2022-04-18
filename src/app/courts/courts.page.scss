@@ -1,0 +1,49 @@
+.court-date{
+   border-bottom: .3px solid #555555;
+  padding: .5rem;
+}
+
+.court-date .date{
+  font-size: .9rem;
+}
+.court-date .court-name{
+  font-size: .8rem;
+  color: #999999;
+}
+
+.court-date .bond-amount{
+  color: #999999;
+  font-size: .75rem;
+}
+
+.court-date .defendant{
+  font-size: .8rem;
+  color: #999999;
+  margin-bottom: .3rem;
+}
+
+.court-date .power{
+  font-size: .8rem;
+  color: #999999;
+  margin-bottom: .3rem;
+}
+
+.court-date .validity{
+  font-size: .75rem;
+  color: #999999;
+}
+
+.court-date .status{
+  font-size: .65rem;
+}
+.filter-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #3171e0;
+  color: #fff;
+  height: 28px;
+  width: 28px;
+  border-radius: 14px;
+}
+

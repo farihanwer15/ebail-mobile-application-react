@@ -1,0 +1,177 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Powers
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-segment (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="powers">
+      <ion-label>Powers</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="waiting">
+      <ion-label>
+        Pending <ion-badge color="danger" *ngIf="waitingPowers.data.length > 0">{{ waitingPowers.data.length }}
+        </ion-badge>
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-grid>
+
+    <!-- POWERS LIST -->
+    <ion-row *ngIf="segment === 'powers'">
+      <ion-col>
+        <ion-row>
+          <ion-col size="12">
+            <div>
+              <ion-button expand="block" size="small" color="primary" (click)="addPowerForm()">
+                Add Power
+              </ion-button>
+            </div>
+          </ion-col>
+          <ion-col size="10">
+            <ion-searchbar debounce="500" (ionChange)="onSearchInput($event)" placeholder="Enter power number">
+            </ion-searchbar>
+          </ion-col>
+          <ion-col size="2" style="display: flex;justify-content: center;align-items: center;">
+            <div class="filter-icon" (click)="openFilterModal()">
+              <ion-icon src="assets/icons/filter-outline.svg"></ion-icon>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="power-item" *ngFor="let power of powers.data">
+          <ion-col>
+            <div class="power-string">
+              {{ power.prefix.name }} - {{ power.number }} <span class="prefix-amount">({{ power.prefix.amount |
+                currency }})</span>
+            </div>
+            <div class="surety">
+              {{ power.surety.name }}
+            </div>
+            <div class="validity">
+
+              {{ power.receivedDate | date: "MM/dd/yyy" }} -
+              {{ power.expiryDate | date: "MM/dd/yyy" }}
+            </div>
+          </ion-col>
+
+          <ion-col class="ion-text-end">
+            <div class="defendant" *ngIf="power.defendant && power.defendant.name">
+              {{ power.defendant.name.first }} {{ power.defendant.name.last }}
+            </div>
+            <div>
+              <ion-badge color="danger" class="status" *ngIf="power.executedAt && !power.voidedAt">EXECUTED</ion-badge>
+              <ion-badge color="medium" class="status" *ngIf="power.voidedAt">VOIDED</ion-badge>
+              <ion-badge color="success" class="status" *ngIf="!power.executedAt && !power.voidedAt">READY TO USE
+              </ion-badge>
+            </div>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row *ngIf="powers.data.length < 1" class="ion-text-center ion-margin-top"
+          style="font-size: .8rem; color: #555555;">
+          <ion-col>
+            <em>No powers found.</em>
+          </ion-col>
+        </ion-row>
+
+        <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+          <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </ion-col>
+    </ion-row>
+
+    <!-- POWERS WAITING ACCEPTANCE LIST -->
+    <ion-row *ngIf="segment === 'waiting'">
+      <ion-col>
+
+        <ion-row *ngIf="waitingPowers.data.length > 0">
+          <ion-col>
+            <ion-button color="primary" size="small" expand="block" (click)="acceptAllPowers()">
+              Accept All Powers
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="ion-align-items-end">
+          <ion-col size="5">
+            <ion-item class="ion-no-padding">
+              <ion-label position="floating">Sort By</ion-label>
+              <ion-select size="small" placeholder="Select Sorting Order" [(ngModel)]="sortFilters.sortBy"
+                name="sortBy">
+                <ion-select-option value="number">
+                  Power Number
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="5">
+            <ion-item class="ion-no-padding">
+              <ion-label position="floating">Order By</ion-label>
+              <ion-select size="small" placeholder="Select Sorting Order" [(ngModel)]="sortFilters.orderBy"
+                name="orderBy">
+                <ion-select-option value="ASC">Ascending</ion-select-option>
+                <ion-select-option value="DESC">Descending</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="2">
+            <div>
+              <ion-button color="primary" size="small" expand="block" (click)="getWaitingPowers()">
+                Sort
+              </ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <hr />
+
+        <ion-row class="power-item" *ngFor="let power of waitingPowers.data">
+          <ion-col>
+            <div class="power-string">
+              {{ power.prefix.name }} - {{ power.number }} <span class="prefix-amount">({{ power.prefix.amount |
+                currency }})</span>
+            </div>
+            <div class="surety">
+              {{ power.surety.name }}
+            </div>
+            <div class="validity">
+
+              {{ power.receivedDate | date: "MM/dd/yyy" }} -
+              {{ power.expiryDate | date: "MM/dd/yyy" }}
+            </div>
+          </ion-col>
+
+          <ion-col class="ion-text-end">
+            <ion-button color="success" (click)="acceptPower(power)" size="small">
+              Accept
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="waitingPowers.data.length < 1" class="ion-text-center ion-margin-top"
+          style="font-size: .8rem; color: #555555;">
+          <ion-col>
+            <em>No waiting powers found.</em>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+
+
+  </ion-grid>
+</ion-content>

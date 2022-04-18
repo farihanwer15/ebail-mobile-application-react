@@ -1,0 +1,59 @@
+.bond{
+  border-bottom: .3px solid #555555;
+  padding: .5rem;
+}
+
+.bond .right{
+  line-height: 17px;
+}
+
+.bond .date{
+  font-size: .8rem;
+  color: #999999;
+}
+
+.bond .days{
+  font-size: .8rem ;
+  color: #c5c0c0;
+}
+
+.bond .court-name{
+  font-size: .8rem;
+  color: #999999;
+}
+
+.bond .bond-amount{
+  color: #999999;
+  font-size: .75rem;
+}
+
+.bond .defendant{
+  font-size: .85rem;
+  margin-bottom: .3rem;
+}
+
+.bond .power{
+  font-size: .8rem;
+  color: #999999;
+  margin-bottom: .3rem;
+}
+
+.bond .validity{
+  font-size: .75rem;
+  color: #999999;
+}
+
+.bond .status{
+  font-size: .65rem;
+}
+
+.filter-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #3171e0;
+  color: #fff;
+  height: 28px;
+  width: 28px;
+  border-radius: 14px;
+}

@@ -1,0 +1,57 @@
+<ion-grid>
+  <ion-row>
+    <ion-col class="ion-no-padding ion-padding-start ion-padding-end">
+      <ion-button (click)="openDocumentForm()" expand="block" size="small">
+        Add Document
+      </ion-button>
+    </ion-col>
+    <ion-col *ngIf='isIos' size="12" class="warning-align ion-padding-start ion-padding-end">
+      <span class="warning">
+        To view PDFs please turn off pop-up block within Settings > Safari > Pop-Up Blocker
+      </span>
+    </ion-col>
+  </ion-row> 
+<!--  -->
+   <!-- <ion-row *ngFor="let doc of documents" (click)="presentActionSheet(doc)"
+  style="border-bottom: 1px solid #444444; margin-top: 5px; margin-bottom: 5px;">
+    <ion-col>
+      <a *ngFor="let file of doc.files; let i = index" href="" [routerLink]="" (click)="openFile(file)">
+        <div *ngIf="i === 0">{{ doc.name }}</div>
+        <div *ngIf="i > 0">{{ doc.name }} - {{ i+1 }}</div>
+      </a>
+    </ion-col>
+    <ion-col style="font-size: .8rem; color: #666666;">
+      <div *ngIf="doc.uploadedBy">{{ doc.uploadedBy.name.first }} {{ doc.uploadedBy.name.last }}</div>
+      <div><em>{{ doc.createdAt | date: 'MM/dd/yyyy hh:mm a'}}</em></div>
+    </ion-col>
+  </ion-row> -->
+
+  <ion-row>
+    <ion-col size="4" *ngFor="let doc of documents" (click)="presentActionSheet(doc)">
+      <span class="content-center">
+        <a class="doc-name" href="" *ngFor="let file of doc.files; let i = index" href="" [routerLink]="" >
+          <img width="50px" height="50px" *ngIf="file.extension === 'jpg' || file.extension === 'jpeg' || file.extension === 'png'"
+          class="receipt-thumb"
+          src="assets/images/image-icon.png">
+          <img width="50px" height="50px" *ngIf="file.extension === 'pdf'"
+          class="receipt-thumb"
+          src="assets/images/pdf-icon.png">
+          <ion-text>
+            <h5 class="doc-name ion-no-margin" *ngIf="i === 0">{{ doc.name }}</h5>
+            <div class="doc-date ion-no-margin">{{ doc.createdAt | date: 'MM/dd/yyyy'}}</div>
+          </ion-text>
+          <!-- <h3 *ngIf="i > 0">{{ doc.name }} - {{ i+1 }}</h3> -->
+          <!-- <p *ngIf="doc.uploadedBy">{{ doc.uploadedBy.name.first }} {{ doc.uploadedBy.name.last }}</p> -->
+        </a>
+      </span>
+    </ion-col>
+  </ion-row>
+  <ng2-pdfjs-viewer #externalPdfViewer [externalWindow]="true"></ng2-pdfjs-viewer>
+  <ion-row *ngIf="documents.length === 0">
+    <ion-col>
+      <p class="ion-text-center ion-text-medium">
+        <em>No documents found.</em>
+      </p>
+    </ion-col>
+  </ion-row>
+</ion-grid>

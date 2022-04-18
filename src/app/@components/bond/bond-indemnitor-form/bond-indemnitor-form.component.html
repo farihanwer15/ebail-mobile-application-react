@@ -1,0 +1,37 @@
+<ion-grid>
+  <ion-row *ngFor="let indem of indemnitors" class="indemnitor">
+    <ion-col size="8">
+      <div class="name">
+        {{ indem.name.first }} {{ indem.name.last }}
+      </div>
+      <div class="email">
+        {{ indem.email }}
+      </div>
+      <div class="phone">
+        <span *ngFor="let contact of indem.contacts">
+          {{ contact.value }}
+        </span>
+      </div>
+      <div class="relation">
+        {{ indem.relation }}
+      </div>
+    </ion-col>
+    <ion-col size="4">
+      <ion-button 
+      *ngIf="!isIndemnitorAdded(indem)"
+      expand="block" size="small" color="success" (click)="addIndemnitorToBond(indem)">
+        Add
+      </ion-button>
+      <ion-button 
+      *ngIf="!isIndemnitorAdded(indem)"
+      expand="block" size="small" color="success" (click)="editIndemnitor(indem)">
+        Edit
+      </ion-button>
+      <ion-button 
+      *ngIf="isIndemnitorAdded(indem)" 
+      expand="block" size="small" color="danger" (click)="removeIndemnitorFromBond(indem)">
+        Remove
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>

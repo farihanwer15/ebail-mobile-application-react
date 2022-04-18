@@ -1,0 +1,61 @@
+.drag-item {
+    background: #e5e8f8;
+    padding: .5rem;
+    border-radius: 3px;
+    border: 1px solid #dce2ff;
+    margin-bottom: .5rem;
+    font-size: .7rem;
+    font-weight: 600;
+  }
+  
+  .drag-item:hover{
+    // cursor: pointer;
+    cursor: move;
+  }
+  
+  .drag-container{
+    padding: 1rem;
+    // background: #808080;
+    border: 1px solid #808080;
+    border-radius: 3px;
+    min-height: 300px;
+  }
+  
+  .defendant-item{
+    background-color: #edffd9;
+    border-color: #91bd93;
+  }
+  
+  .party{
+    color: #607d8b;
+    font-size: 0.6rem;
+  }
+  
+  .email{
+    color: #607d8b;
+    font-size: 0.6rem;
+    font-weight: 500;
+  }
+  
+  .email-missing{
+    color: #e91e63;
+  }
+  
+  .agent-item{
+    margin-bottom: 0;
+    border-color: #ffdf80;
+    background-color: #fff4d1;
+  }
+
+  .name {
+    font-size: 0.7rem;
+  }
+
+  .relation{
+    font-size: .6rem;
+    color: #607d8b;
+    line-height: 10px;
+  }
+  .font-size { 
+    font-size: small;
+  }

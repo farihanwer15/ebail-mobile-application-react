@@ -1,0 +1,336 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Indemnitor</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="onSubmit()" #indemnitorForm="ngForm" novalidate>
+    <ion-grid>
+      <!-- First name -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+              [color]="firstName.invalid && firstName.touched ? 'danger' : ''"
+            >
+            First Name *
+            </ion-label>
+            <ion-input
+            name="firstName"
+            [(ngModel)]="indem.name.first"
+            required
+            #firstName="ngModel"
+         >
+         </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- AMOUNT -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+              [color]="lastName.invalid && lastName.touched ? 'danger' : ''"
+            >
+            Last Name *
+            </ion-label>
+            <ion-input
+            name="lastName"
+            [(ngModel)]="indem.name.last"
+            required
+            #lastName="ngModel"
+          >
+        </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!--  -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+              [color]="email.invalid && email.touched ? 'danger' : ''"
+            >
+            Email *
+            </ion-label>
+            <ion-input
+            name="email"
+            [(ngModel)]="indem.email"
+            required
+            #email="ngModel"
+          >
+        </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+     
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+            >
+            Gender 
+            </ion-label>
+
+            <ion-select
+              name="gender"
+              [(ngModel)]="indem.gender"
+            >
+              <ion-select-option value="male">Male</ion-select-option>
+              <ion-select-option value="female">Female</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!--  -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+            >
+            S.S.N
+            </ion-label>
+            <ion-input
+            name="ssn"
+            [(ngModel)]="indem.ssn"
+            #ssn="ngModel"
+          >
+        </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!--  -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Date Of Birth
+            </ion-label>
+
+            <ion-datetime
+              name="receivedDate"
+              [(ngModel)]="indem.dob"
+            >
+            </ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!--  -->
+
+      <div *ngIf="defendantId">
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+              [color]="relation.invalid && relation.touched ? 'danger' : ''"
+            >
+            Relation with Defendant *
+            </ion-label>
+            <ion-input
+            name="relation"
+            [(ngModel)]="indem.relation"
+            required
+            #relation="ngModel"
+          >
+        </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      </div>
+      <hr />
+
+       <!--  -->
+       <ion-row>
+        <ion-col>
+          <ion-button (click)="toggleContactForm(true)" color="primary" size="small" class="ion-float-right">
+            <ion-icon name="add"></ion-icon>
+            Add Contact
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="showContactForm">
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+              [color]="type.invalid && type.touched ? 'danger' : ''"
+            >
+            Type *
+            </ion-label>
+            <ion-input
+            name="type"
+           
+            [(ngModel)]="contact.type"
+            required
+            #type="ngModel"
+          >
+        </ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label
+              position="floating"
+              [color]="phone.invalid && phone.touched ? 'danger' : ''"
+              
+            >
+            Phone Number *
+            </ion-label>
+            <ion-input
+            name="phone"
+            [brmasker]="{mask:'999-999-9999', len:12,type:'num'}"
+            [(ngModel)]="contact.number"
+            required
+            #phone="ngModel"
+          >
+        </ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Primary</ion-label>
+            <ion-checkbox [(ngModel)]="contact.primary" [ngModelOptions]="{standalone: true}"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+          <ion-button class="btn-size" (click)="addContact()" color="success" size="tiny">
+            Save
+          </ion-button>
+          <ion-button class="btn-size" (click)="toggleContactForm(false)" color="danger" size="tiny">
+            cancel
+          </ion-button>
+        </ion-item>
+        </ion-col>
+
+      </ion-row>
+
+      <ion-row *ngIf="!showContactForm">
+       <ion-col>
+          <ion-grid class="contact-table">
+            <ion-row>
+              <ion-col class="ion-text-center">
+                <span>Contacts</span>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+              <span>Type</span>  
+              </ion-col>
+              <ion-col>
+                <span>Number</span>
+              </ion-col>
+              <ion-col>
+                <span>Primary</span>
+              </ion-col>
+              <ion-col></ion-col>
+            </ion-row>
+            <ion-row *ngFor="let contact of indem.contacts; let i = index;">
+              <ion-col>
+                <span>{{ contact.key }}</span>
+              </ion-col>
+              <ion-col>
+                <span>{{ contact.value }}</span>
+              </ion-col>
+              <ion-col class="ion-text-center">
+                <ion-badge color="success" *ngIf="contact.primary"><span>YES</span></ion-badge>
+                <ion-badge color="danger"  *ngIf="!contact.primary"><span>NO</span></ion-badge>
+              </ion-col>
+              <ion-col>
+                <span class="button" (click)="removeContact(i)">Remove</span>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="indem&&indem.contacts&&indem.contacts.length < 1 ">
+              <ion-col class="ion-text-center">
+                <span>No Contact Found</span>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+       </ion-col>
+      </ion-row>
+      <!--  -->
+
+      <ion-row>
+        <ion-col>
+          <ion-button  (click)="addNewAddress()" *ngIf="!showAltAddress" color="primary" size="small" class="ion-float-right">
+            <ion-icon name="add"></ion-icon>
+            Add Address
+          </ion-button>
+          <ion-button (click)="showAltAddress = false" *ngIf="showAltAddress" color="warning" size="small" class="ion-float-right">
+            <ion-icon name="list"></ion-icon>
+            Show Address
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ng-container *ngIf="showAltAddress">
+      <app-autocomplete-address (setAddress)="setAddress($event)" 
+      [address]="currentAltAddress"></app-autocomplete-address>
+      <ion-item class="ion-no-padding ion-justify-content-around">
+        <ion-label class="ion-padding-start">Primary</ion-label>
+        <ion-toggle  (ionChange)='onCheckChange($event)'></ion-toggle>
+      </ion-item>
+      <ion-button class="btn-size" (click)="addAddress()" color="primary" size="tiny">
+        Add Address
+      </ion-button>
+      </ng-container>
+      <ion-row *ngIf="!showAltAddress" >
+        <ion-col>
+           <ion-grid class="address-table">
+             <ion-row>
+               <ion-col>
+                 <span>Address</span>
+               </ion-col>
+               <ion-col></ion-col>
+             </ion-row>
+             <ng-container *ngIf="indem?.altAddresses?.length > 0; else noAltAddress">
+             <ion-row *ngFor="let address of indem.altAddresses; let i = index;">
+               <ion-col>
+                 <span>{{address?.line1}}</span>
+               </ion-col>
+               <ion-col class="ion-text-center">
+                 <div>
+                   <span class="button-succes" (click)="editAltAddress(address, i)">Edit</span>
+                   <span class="button" (click)="deleteAddress(i)">Delete</span>
+                 </div>
+               </ion-col>
+             </ion-row>
+            </ng-container>
+            <ng-template #noAltAddress>
+              <ion-row>
+                <ion-col class="ion-text-center">
+                  <span>No alternative address found!</span>
+                </ion-col>      
+
+              </ion-row>
+            </ng-template>
+           </ion-grid>
+        </ion-col>
+       </ion-row>
+
+      <hr />
+      <ion-list>  
+        <ion-item >  
+          <ion-label> Update Defendant Profile </ion-label>  
+          <ion-checkbox slot="end"  [(ngModel)]="indem.updateDefendantProfile" name="updateDefendantProfile"></ion-checkbox>  
+        </ion-item>  
+      </ion-list>  
+
+      <!-- OWNER -->
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" color="success" size="small" class="ion-float-right">
+            Save
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

@@ -1,0 +1,107 @@
+<ion-header>
+  <ion-toolbar>
+  
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title> Courts </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+  
+  <ion-row>
+    <ion-col size="9">
+      <ion-searchbar
+        debounce="500"
+        (ionChange)="onSearchInput($event)"
+        placeholder="Enter defendant name"
+      >
+      </ion-searchbar>
+    </ion-col>
+    <ion-col size="3"style="display: flex;justify-content:space-around;align-items: center;">
+      <div class="filter-icons" (click)="getCourtDates()">
+        <ion-icon name="search"></ion-icon>
+      </div>
+      <div class="filter-icons" (click)="openFilterModal()">
+        <ion-icon src="assets/icons/filter-outline.svg"></ion-icon>
+      </div>
+    </ion-col>
+    <!-- <ion-col size="2" style="display: flex;justify-content: center;align-items: center;">
+      <div class="filter-icon" (click)="openFilterModal()">
+        <ion-icon src="assets/icons/filter-outline.svg"></ion-icon>
+      </div>
+    </ion-col> -->
+  </ion-row>
+
+  <ion-row
+    class="court-date"
+    *ngFor="let row of courtDates.data"
+    (click)="openBondModal(row)"
+  >
+    <ion-col>
+      <div class="date" *ngIf="row.lastCourtDate">
+        {{ row.lastCourtDate.date | date: 'MM/dd/yyyy hh:mm a'}}
+      </div>
+      <div class="court-name" *ngIf="row.bonds.court">
+        {{ row.bonds.court.name }}
+      </div>
+      <div ngif="row.bonds" class="bond-amount">
+        {{ row.bonds.bondAmount | currency }}
+      </div>
+    </ion-col>
+
+    <ion-col class="ion-text-end">
+      <div class="defendant">{{ row.name.first }} {{ row.name.last }}</div>
+      <div class="power" *ngIf="row.bonds.power && row.bonds.power.prefix">
+        {{ row.bonds.power.prefix.name }}-{{ row.bonds.power.number }}
+      </div>
+      <div>
+        <ion-badge
+          color="danger"
+          class="status"
+          *ngIf="getCourtDateStatus(row.lastCourtDate) === 'passed'"
+          >PASSED</ion-badge
+        >
+        <ion-badge
+          color="medium"
+          class="status"
+          *ngIf="getCourtDateStatus(row.lastCourtDate) === 'empty'"
+          >MISSING</ion-badge
+        >
+        <ion-badge
+          color="success"
+          class="status"
+          *ngIf="getCourtDateStatus(row.lastCourtDate) === 'upcoming'"
+          >UPCOMING</ion-badge
+        >
+        <ion-badge
+          color="success"
+          class="status"
+          *ngIf="getCourtDateStatus(row.lastCourtDate) === 'revoked'"
+          >REVOKED</ion-badge
+        >
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row
+    *ngIf="courtDates.data.length < 1"
+    class="ion-text-center ion-margin-top"
+    style="font-size: 0.8rem; color: #555555"
+  >
+    <ion-col>
+      <em>No court dates found.</em>
+    </ion-col>
+  </ion-row>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more data..."
+    >
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

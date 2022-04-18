@@ -1,0 +1,105 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import "~@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+/* ngx-datatable imported css*/
+@import "~@swimlane/ngx-datatable/index.css";
+
+@import "~@swimlane/ngx-datatable/themes/dark.css";
+@import "~@swimlane/ngx-datatable/themes/bootstrap.css";
+@import "~@swimlane/ngx-datatable/themes/material.css";
+@import "~@swimlane/ngx-datatable/assets/icons.css";
+
+@import "../node_modules/croppie/croppie.css";
+
+ion-toolbar {
+  --background: #131313;
+}
+
+ion-menu-button {
+  --color: #404040;
+}
+
+ion-back-button,
+.sc-ion-back-button-ios-h,
+.sc-ion-back-button-md-h {
+  --color: #404040;
+}
+
+.my-custom-class .action-sheet-group {
+  --color: #929292;
+ }
+
+.filter-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #3171e0;
+  color: #fff;
+  height: 30px;
+  width: 30px;
+  border-radius: 50px;
+}
+
+// DRAGULA CSS
+/* in-flight clone */
+.gu-mirror {
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+  opacity: 0.8;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+  filter: alpha(opacity=80);
+  pointer-events: none;
+}
+/* high-performance display:none; helper */
+.gu-hide {
+  left: -9999px !important;
+}
+/* added to mirrorContainer (default = body) while dragging */
+.gu-unselectable {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+/* added to the source element while its mirror is dragged */
+.gu-transit {
+  opacity: 0.2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=20);
+}
+// DRAGULA CSS
+// To fix image not showing issue of ngx-ionic-image-viewer
+.swiper-wrapper .swiper-slide img {
+  z-index: 1
+}
+
+@media screen and (min-width:768px) {
+  .payment-form-modal{
+    --min-height: 650px;
+  } 
+}

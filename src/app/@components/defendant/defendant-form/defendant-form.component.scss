@@ -1,0 +1,26 @@
+h6{
+  color: #474747;
+}
+
+ion-label {
+  color: #525151 !important;
+}
+
+.avatar {
+    display: flex;
+    justify-content: center;
+    margin: 15px;
+
+  ion-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: aqua;
+  }
+    
+  img {
+    position: relative;
+    border-radius: 50%;
+    max-width: 100px;
+  }
+}

@@ -1,0 +1,235 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      Check Ins
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="checkin">
+    <ion-row>
+      <ion-col>
+        <ion-grid class="contact-table">
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <span>CHECK IN INFO</span>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <span>
+                <b>Defendant Name:</b> {{ checkin.defendant.name.first }} {{ checkin.defendant.name.middle }} {{
+                checkin.defendant.name.last }}
+              </span>
+            </ion-col>
+            <ion-col *ngIf="checkin.bond">
+              <span><b>Bond: </b> </span>
+              <span *ngIf="checkin.bond.power">{{ checkin.bond.power.prefix.name }}-{{ checkin.bond.power.number
+                }}</span>
+              <span *ngIf="!checkin.bond.power && checkin.bond.bondNumber">{{ checkin.bond.bondNumber }}</span>
+            </ion-col>
+            <ion-col *ngIf="checkin.nextCheckin">
+              <span *ngIf="checkin.notificationType !== 'Check in anytime'">
+                <b>Next Check In Date: </b>
+                {{ checkin.nextCheckin.date | date: 'MM/dd/yyyy @ hh:mm a' : timezone }}
+              </span>
+              <div *ngIf="checkin.notificationType === 'Check in anytime'">
+                <span>
+                  <b>Next Check In Date: </b> {{ checkin.nextCheckin.date | date: 'MM/dd/yyyy' : timezone }}
+                </span>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <span><b>Check In Type: </b> {{ checkin.type }}</span>
+            </ion-col>
+            <ion-col>
+              <span><b>Notification Type: </b> {{ checkin.notificationType }}</span>
+            </ion-col>
+            <ion-col>
+              <span><b>Status: </b>
+                <ion-badge color="primary" *ngIf="!checkin.completedAt">SCHEDULED</ion-badge>
+                <ion-badge color="success" *ngIf="checkin.completedAt">COMPLETED</ion-badge>
+              </span>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <span><b>Email: </b>
+                <ion-badge color="primary" *ngIf="!checkin.completedAt">SCHEDULED</ion-badge>
+                <ion-badge color="success" *ngIf="checkin.completedAt">COMPLETED</ion-badge>
+              </span>
+            </ion-col>
+            <ion-col *ngIf="checkin.imediateCheckin" style="color: #e0f1ff;">
+              <span style="font-size: 0.6rem;"><b>IMMEDIATE CHECK IN</b></span>
+            </ion-col>
+            <ion-col>
+              <span><b>Require Image: </b>
+                <ion-badge color="danger" *ngIf="!checkin.requireImage">NO</ion-badge>
+                <ion-badge color="success" *ngIf="checkin.requireImage">YES</ion-badge>
+              </span>
+            </ion-col>
+            <ion-col>
+              <span><b>Require Location: </b>
+                <ion-badge color="danger" *ngIf="!checkin.requireLocation">NO</ion-badge>
+                <ion-badge color="success" *ngIf="checkin.requireLocation">YES</ion-badge>
+              </span>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+    </ion-row>
+
+    <hr />
+
+    <ion-row *ngIf="checkin.schedule">
+      <ion-col>
+        <ion-grid class="contact-table">
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <span>SCHEDULE</span>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <span>Date</span>
+            </ion-col>
+            <ion-col>
+              <span>Status</span>
+            </ion-col>
+            <ion-col></ion-col>
+            <ion-col></ion-col>
+          </ion-row>
+          <div *ngFor="let date of checkin.schedule; let i = index">
+            <ion-row>
+              <ion-col>
+                <span *ngIf="checkin.notificationType !== 'Check in anytime'">
+                  {{ date.date | date: 'MM/dd/yyyy @ hh:mm a' : timezone }}
+                </span>
+                <span *ngIf="checkin.notificationType === 'Check in anytime'">
+                  {{ date.date | date: 'MM/dd/yyyy' : timezone }}
+                </span>
+              </ion-col>
+              <ion-col>
+                <div>
+                  <ion-badge color="primary" *ngIf="!date.completedAt && !date.missedAt">SCHEDULED</ion-badge>
+                  <ion-badge color="success" *ngIf="date.completedAt">CHECKED IN</ion-badge>
+                  <ion-badge color="danger" *ngIf="date.missedAt && !date.completedAt">MISSED</ion-badge>
+                  <div *ngIf="date.lateCheckin" style="margin-left: .5rem;">
+                    <ion-icon color="danger" name="notifications-outline"></ion-icon>
+                  </div>
+
+                  <ion-icon *ngIf="date.reminders && date.reminders.length > 0" color="primary"
+                    name="notifications-outline" (click)="openPopver(date.reminders)"></ion-icon>
+
+                </div>
+                <div *ngIf="date.checkedInBy" class="text-muted" style="font-size: 0.7rem;">
+                  {{ date.checkedInBy.name.first }} {{ date.checkedInBy.name.last }}
+                </div>
+              </ion-col>
+              <ion-col>
+                <div>
+                  <ion-icon style="margin-right: .5rem;" name="pin" [color]="date.location ? 'primary': 'basic'"
+                    (click)="toggleLocation(date.location, i)"></ion-icon>
+
+                  <ion-icon *ngIf="!date.images" color="danger" name="image"></ion-icon>
+                  
+                  <a *ngFor="let image of date.images" (click)="openFile(image.filename)">
+                    <ion-icon color="primary" name="image"></ion-icon>
+                  </a>
+                </div>
+              </ion-col>
+              <ion-col>
+                <ion-button style="font-size: .6rem;" color="primary" size="small"
+                  (click)="markCheckinAsComplete(date)">
+                  Mark As Complete</ion-button>
+                <ion-button style="font-size: .6rem;" color="success" size="small" (click)="resendReminder(date)">Send
+                  Check In Reminder</ion-button>
+              </ion-col>
+            </ion-row>
+            <div *ngIf="showLocationRow(i)">
+              <ion-row>
+                <ion-col size="10" style="display: flex;">
+                  <!-- <ion-label position="floating">Copy the url to share the check in location</ion-label> -->
+                  <input style="width: 100%;" type="text" readonly [value]="mapUrl" #mapUrlInput />
+                </ion-col>
+                <ion-col size="2">
+                  <ion-button (click)="copyLinkToClipboard(mapUrlInput)" color="success" size="small">
+                    Copy
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="12">
+                  <google-map [center]="center" [zoom]="16" width="360" height="300px">
+                    <map-marker *ngFor="let markerPosition of markerPositions" [position]="markerPosition"
+                      [options]="markerOptions"></map-marker>
+                  </google-map>
+                </ion-col>
+              </ion-row>
+            </div>
+          </div>
+        </ion-grid>
+      </ion-col>
+    </ion-row>
+
+    <hr />
+
+    <ion-row>
+      <ion-col>
+        <ion-grid class="contact-table">
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <span>CLIENT NOTE</span>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="checkin.clientNote">
+            <ion-col>
+              <span>{{ checkin.clientNote }}</span>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="!checkin.clientNote">
+            <ion-col>
+              <span><em>No note provided for client.</em></span>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+    </ion-row>
+
+    <hr />
+
+    <ion-row>
+      <ion-col>
+        <ion-grid class="contact-table">
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <span>IMAGES</span>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngFor="let image of checkin.images">
+            <ion-col>
+              <a *ngFor="let file of image.files; let i = index" href="" (click)="openFile(image.filename)"
+                [routerLink]="">
+                <span *ngIf="i === 0">{{ image.imgName }}</span>
+                <span *ngIf="i > 0">{{ image.imgName }} - {{ i+1 }}</span>
+              </a>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="!checkin.images || (checkin.images && checkin.images.length < 1)">
+            <ion-col>
+              <span><em>No image uploaded.</em></span>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>

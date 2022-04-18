@@ -1,0 +1,256 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Add Bond</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div class="stepper">
+          <div class="step" [ngClass]="{active: step === 1}" (click)="switchStep(1)">
+            1
+          </div>
+          
+          <div class="step" [ngClass]="{active: step === 2}" (click)="switchStep(2)">
+            2
+          </div>
+          
+          <div class="step" [ngClass]="{active: step === 3}" (click)="switchStep(3)">
+            3
+          </div>
+          
+          <div class="step" [ngClass]="{active: step === 4}" (click)="switchStep(4)">
+            4
+          </div>  
+          
+          <div class="step" [ngClass]="{active: step === 5}" (click)="switchStep(5)">
+            5
+          </div>  
+        </div>
+        
+        <!-- <button [ngClass]="darkMode ? 'custom-button' : 'bond-buttons'" size="small" (click)="goToPreviousStep()">
+          Previous
+        </button>
+
+        <ion-button
+          size="small"
+          (click)="goToNextStep()"
+          class="ion-float-right"
+        >
+          Next
+        </ion-button> -->
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <app-bond-info-form
+    *ngIf="step === 1"
+    [bond]="bond"
+    [bondId]="bondId"
+    (bondInfoSaved)="onBondInfoSaved($event)"
+    (bondAdded)="bondAdded($event)"
+    [defendantId]="defendantId"
+  ></app-bond-info-form>
+
+
+  <!-- STEP 2: COURT DATES  -->
+  <div *ngIf="step === 2">
+    <ion-grid>
+      
+      <ion-row>
+        <ion-col>
+            <h6>COURT DATES</h6>
+        </ion-col>
+      </ion-row>
+      
+      <ion-row>
+        <ion-col>
+          <ion-button
+            size="small"
+            color="success"
+            (click)="openCourtDateFormModal()"
+            class="ion-margin-top ion-float-right ion-margin-bottom"
+          >
+            Add Court Date
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      
+    </ion-grid>
+
+    <app-court-dates [bondId]="bondId" [courtDates]="courtDates"></app-court-dates>
+
+    <ion-grid class="ion-margin-top">      
+
+      <ion-row>
+        <ion-col>
+          <ion-button
+            color="success"
+            (click)="goToNextStep()"
+            expand="block"
+          >
+            Next
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      
+      <ion-row>
+        <ion-col>
+          <button
+            [ngClass]="darkMode ? 'custom-button' : 'bond-buttons'"
+            (click)="goToPreviousStep()"
+            expand="block"
+          >
+            Previous
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  <!-- STEP 2: COURT DATES  -->
+  
+  <!-- STEP 3: INDEMNITORS & COLLATERALS -->
+  <div *ngIf="step === 3">
+
+    <!-- <ion-grid>
+      <ion-row>
+        <ion-col>
+          <h6 class="ion-text-center">
+            INDEMNITORS 
+          </h6>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-button
+          size="small"
+          color="tertiary"
+          (click)="openIndemnitorsFormModal()"
+          class="ion-margin-top ion-float-right"
+        >
+          Add Indemnitors
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <app-bond-indemnitor-form 
+    [bondId]="bondId" 
+    [defendantId]="defendantId"
+    [bondIndemnitors]="bondIndemnitors"
+    [defendantIndemnitors]="defendantIndemnitors"
+    (indemnitorUpdated)="onIndemnitorUpdated($event)"></app-bond-indemnitor-form> -->
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <h6 class="ion-text-center">
+            COLLATERALS
+          </h6>
+        </ion-col>
+      </ion-row>
+      
+      <ion-row>  
+        <ion-col>
+          <ion-button
+            size="small"
+            color="tertiary"
+            (click)="openCollateralFormModal()"
+            class="ion-margin-top ion-float-right"
+          >
+            Add Collateral
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <app-bond-collaterals [bondId]="bondId"
+    [collaterals]="collaterals"
+    [bondIndemnitors]="defendantIndemnitors"
+    ></app-bond-collaterals>
+
+    <hr>
+
+    <!-- contract -->
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <h6 class="ion-text-center">
+            CONTRACTS
+          </h6>
+        </ion-col>
+      </ion-row>
+      
+      <ion-row>
+        <ion-col>
+          <ion-button
+            size="small"
+            color="tertiary"
+            (click)="openContractFormModal()"
+            class="ion-margin-top ion-float-right"
+          >
+            Add Contract
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <app-contract-list [bondId]='bondId'></app-contract-list>
+    <!-- end -->
+
+    <ion-grid class="ion-margin-top">
+      
+      <ion-row>
+        <ion-col>
+          <ion-button
+            color="success"
+            (click)="goToNextStep()"
+            expand="block"
+          >
+            Next
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      
+      <ion-row>
+        <ion-col>
+          <button
+           [ngClass]="darkMode ? 'custom-button' : 'bond-buttons'"
+            (click)="goToPreviousStep()"
+            expand="block"
+          >
+            Previous
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  <!-- STEP 3: INDEMNITORS & COLLATERALS -->
+  
+
+  <!-- STEP 4: PAYMENTS -->
+  <div *ngIf="step === 4">
+    <app-bond-payment-form 
+    [bondId]="bondId" 
+    [defendantId]="defendantId" 
+    (invoicesCreated)="onInvoicesCreated()" 
+    (goToPreviousStep)="goToPreviousStep()"></app-bond-payment-form>
+  </div>
+  <!-- STEP 4: PAYMENTS -->
+  
+  
+  <!-- STEP 5: REVIEW -->
+  <div *ngIf="step === 5">
+    <app-bond-review [bond]="bond"  [bonds]="bonds" [bondId]="bondId" [defendantId]="defendantId"></app-bond-review>
+  </div>
+  <!-- STEP 5: REVIEW -->
+
+
+</ion-content>

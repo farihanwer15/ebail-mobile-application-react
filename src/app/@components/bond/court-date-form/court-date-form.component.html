@@ -1,0 +1,144 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Court Date</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form novalidate (ngSubmit)="onSubmit()" #courtDateForm="ngForm">
+    <ion-grid>
+
+      <!-- COURT DATE -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+            [color]="courtDate.invalid && courtDate.touched ? 'danger':''" position="floating">
+              Court Date
+            </ion-label>
+            <ion-datetime
+            name="courtDate" [(ngModel)]="court.date"
+            displayFormat="MM/DD/YYYY hh:mm A"
+            required
+            #courtDate="ngModel"
+            max="2050-12-31"
+            >
+            </ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- COURT ROOM -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Court Room
+            </ion-label>
+            <ion-input
+            name="room" [(ngModel)]="court.roomNumber"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- COURT OFFICE -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Court Office
+            </ion-label>
+            <ion-input
+            name="office" [(ngModel)]="court.officeNumber"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      
+      <!-- PURPOSE -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Purpose
+            </ion-label>
+            <ion-input
+            name="purpose" [(ngModel)]="court.purpose"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!-- <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Purpose
+            </ion-label>
+            <ion-select
+            name="purpose" [(ngModel)]="court.purpose">
+            <ion-select-option value="Arraignment Hearing">Arraignment Hearing</ion-select-option>
+            <ion-select-option value="Consolidation">Consolidation</ion-select-option>
+            <ion-select-option value="Contempt">Contempt</ion-select-option>
+            <ion-select-option value="Court Trial">Court Trial</ion-select-option>
+            <ion-select-option value="First Appearance">First Appearance</ion-select-option>
+            <ion-select-option value="Jury Trial">Jury Trial</ion-select-option>
+            <ion-select-option value="Post Sentencing Hearing"
+              >Post Sentencing Hearing</ion-select-option
+            >
+            <ion-select-option value="Preliminary Hearing">Preliminary Hearing</ion-select-option>
+            <ion-select-option value="Sentencing Hearing">Sentencing Hearing</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row> -->
+
+      <!-- COURT OFFICE -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Case Number
+            </ion-label>
+            <ion-input
+            name="caseNumber" [(ngModel)]="court.caseNumber"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+
+      <!-- COMMENTS -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Comments
+            </ion-label>
+            <ion-textarea
+            name="comments" [(ngModel)]="court.comments">
+            </ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-button class="ion-float-right" color="success" type="submit">
+            Save
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

@@ -1,0 +1,21 @@
+.invoice{
+  font-size: .9rem;
+  color: #999;
+  border-bottom: .3px solid #333;
+  margin-bottom: .5rem;
+}
+
+.invoice .number, .invoice .amount{
+  color: #666666;
+  font-size: .8rem;
+}
+
+.invoice .right{
+  text-align: right;
+  color: #666666;
+  font-size: .8rem;
+}
+
+.invoice .status ion-badge{
+  font-size: .7rem;
+}

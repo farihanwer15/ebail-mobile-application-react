@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Map View</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+<google-map [center]="center" [zoom]="16" style="width: 100%; height: 100%;">
+  <map-marker *ngFor="let markerPosition of markerPositions"
+  [position]="markerPosition"
+  [options]="markerOptions"></map-marker>
+</google-map>
+</ion-content>

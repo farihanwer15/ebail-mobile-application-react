@@ -1,0 +1,583 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>
+        Dashboard
+      </ion-title>
+    </ion-toolbar>
+</ion-header>
+<!-- <ion-header translucent no-border>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="light">
+        <ion-icon slot="start" name="ios-arrow-back"></ion-icon>
+        Favorites
+      </ion-button>
+    </ion-buttons>
+    <ion-title>&nbsp;</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" src="../../assets/checkmark-filled.svg"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content class="ion-no-padding ion-no-margin">
+  <!-- <div class="ion-text-right">
+    <ion-button size="small" color="primary">Profile</ion-button>
+  </div> -->
+  <!-- <ion-card> -->
+
+  <ion-grid>
+
+    <ion-row>
+      <ion-col [size]="!userStore.getUser().roles.recoveryAgent ? 5 : 6">
+        <ion-card class="card ion-no-margin" routerLink="/tasks">
+          <ion-label style="font-size: .8rem; margin-bottom: .3rem;">
+            Open Tasks
+          </ion-label>
+          <div class="data">
+            <div class="icon">
+              <ion-icon name="list-box"></ion-icon>
+            </div>
+            <div class="value" style="font-size: 1.5rem">
+              {{ tasks.length }}
+            </div>
+          </div>
+        </ion-card>
+        <!-- <div class="card" (click)="goToTasksPage()">
+          <div class="icon">
+            <ion-icon name="list-box"></ion-icon>
+          </div>
+          <div class="data">
+            <div class="label">
+              Open Tasks
+            </div>
+            <div class="value">
+              {{ tasks.length }}
+            </div>
+          </div>
+        </div> -->
+      </ion-col>
+      <ion-col [size]="!userStore.getUser().roles.recoveryAgent ? 5 : 6">
+        <ion-card class="card ion-no-margin" routerLink="/defendants" *ngIf="!userStore.getUser().roles.recoveryAgent">
+          <ion-label style="font-size: .8rem; margin-bottom: .3rem;">
+            Active Bonds
+          </ion-label>
+          <div class="data">
+            <div class="icon">
+              <ion-icon name="paper"></ion-icon>
+            </div>
+            <div class="value" style="font-size: 1.5rem;">
+              {{ stats.activeBonds }}
+            </div>
+          </div>
+        </ion-card>
+
+        <ion-card class="card ion-no-margin" *ngIf="userStore.getUser().roles.recoveryAgent" routerLink="/cases">
+          <ion-label style="font-size: .8rem; margin-bottom: .3rem;">
+            Active Cases
+          </ion-label>
+          <div class="data">
+            <div class="icon">
+              <ion-icon name="paper"></ion-icon>
+            </div>
+            <div class="value" style="font-size: 1.5rem;">
+              {{ stats.activeCases }}
+            </div>
+          </div>
+        </ion-card>
+
+        <!-- <div class="card">
+          <div class="icon">
+            <ion-icon name="paper"></ion-icon>
+          </div>
+          <div class="data">
+            <div class="label">
+              Active Bonds
+            </div>
+            <div class="value">
+              {{ stats.activeBonds }}
+            </div>
+          </div>
+        </div> -->
+      </ion-col>
+      <ion-col size="2" class="add-button" *ngIf="!userStore.getUser().roles.recoveryAgent">
+        <button class="add-def-button" (click)="openModal()">
+          <ion-icon size="large" name="add"></ion-icon>
+        </button>
+      </ion-col>
+    </ion-row>
+    <ion-row style="margin-top: .5rem;">
+      <ion-col size="12" size-xl="8">
+        <ion-card class="card ion-no-margin">
+          <div style="display: block ion-padding-horizontal;">
+            <canvas
+            *ngIf="initChart"
+              baseChart
+              [datasets]="barChartData"
+              [labels]="barChartLabels"
+              [options]="barChartOptions"
+              [legend]="barChartLegend"
+              chartType="line"
+            ></canvas>
+          </div>
+        </ion-card>
+      </ion-col>
+      <ion-col size="4" class="upcoming-court-dates">
+        <ion-card class="card ion-no-margin" *ngIf="!userStore.getUser().roles.recoveryAgent">
+          <ion-segment (ionChange)="segmentChanged($event)">
+            <ion-segment-button value="court-dates">
+              <ion-label>Upcoming Court Dates</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="forfeiture">
+              <ion-label>Forfeiture</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+
+          <div class="inner">
+            <span *ngIf="segment === 'court-dates'">
+              <ion-row *ngFor="let def of upcomingCourtDates">
+                <ion-col>
+                  <div class="date">
+                    {{ def.lastCourtDate.date | date: 'MM/dd/yyyy hh:mm a' }}
+                  </div>
+                  <div *ngIf="def.bonds && def.bonds.court" class="court-name">
+                    <em>{{ def.bonds.court.name }}</em>
+                  </div>
+                </ion-col>
+                <ion-col>
+                  <div class="defendant">
+                    <span>
+                      {{ def.name.first }} {{ def.name.last }}
+                    </span>
+                  </div>
+                  <div class="power">
+                    <span *ngIf="def.bonds.power && def.bonds.power.prefix">
+                      <em>{{ def.bonds.power.prefix.name }}-{{ def.bonds.power.number }}</em>
+                    </span>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </span>
+            
+            <span class="bond" *ngIf="segment === 'forfeiture'">
+              <ion-row *ngFor="let def of forfeitureBonds">
+                <ion-col>
+                  <div class="defendant">
+                    {{ def.name.first }} {{ def.name.last }}
+                  </div>
+                  <div class="power" *ngIf="def.bonds.power && def.bonds.power.prefix">
+                    {{ def.bonds.power.prefix.name }}-{{ def.bonds.power.number }}
+                    <span class="bond-amount">
+                      ({{ def.bonds.bondAmount | currency }})
+                    </span>
+                  </div>
+                  
+                  <div>
+                    <ion-badge color="danger" class="status" *ngIf="def.bonds.forfeiture && def.bonds.forfeiture.status === 'opened'">OPEN</ion-badge>
+                    <ion-badge color="success" class="status" *ngIf="def.bonds.forfeiture && def.bonds.forfeiture.status === 'released'">RELEASED</ion-badge>
+                    <ion-badge color="primary" class="status" *ngIf="def.bonds.forfeiture && def.bonds.forfeiture.status === 'reinstated'">RENSTATED</ion-badge>
+                  </div>
+                </ion-col>
+                
+                <ion-col class="ion-text-end right">
+            
+                  <div class="date">
+                    Forfeiture Date: {{ def.bonds.forfeiture.date | date: 'MM/dd/yyyy' : "+0000"}}
+                  </div>
+                  <div class="date">
+                    Satisfy Date: {{ def.bonds.forfeiture.satisfyDate | date: 'MM/dd/yyyy' : "+0000"}}
+                  </div>
+                  <div class="days">
+                    <em>Days Left: {{ getRemainingDays(def.bonds) }}</em>
+                  </div>
+                  
+                </ion-col>
+              </ion-row>
+            </span>
+          </div>
+        </ion-card>
+
+        <ion-card class="card ion-no-margin" *ngIf="userStore.getUser().roles.recoveryAgent">
+          <h6 style="color:#777777">NEW CASES</h6>
+          <div class="inner">
+            <ion-row class="ion-text-center ion-margin-top"
+            style="font-size: .8rem; color: #555555;">
+            <ion-col>
+              <em>No new case.</em>
+            </ion-col>
+          </ion-row>
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="stats-1">
+      <ion-col>
+        <ion-card class="card ion-no-margin" *ngIf="!userStore.getUser().roles.recoveryAgent">
+          <ion-row>
+            <ion-col class="border-right" routerLink="/courts">
+              <div class="value" style="font-size: 1rem; margin-top: .35rem;">
+                <span *ngIf="nextCourtDate && nextCourtDate.lastCourtDate">
+                  {{ nextCourtDate.lastCourtDate.date | date: 'MM/dd/yyyy' }}
+                </span>
+                <span *ngIf="!nextCourtDate" class="ion-text-center">-</span>
+              </div>
+              <ion-label>
+                Next Court Date
+              </ion-label>
+            </ion-col>
+
+            <ion-col class="border-right">
+              <div class="value" *ngIf="stats.openLiability > 0">
+                ${{ stats.openLiability | shortNumber }}
+              </div>
+              <div class="value" *ngIf="stats.openLiability < 1">
+                {{ stats.openLiability | currency }}
+              </div>
+              <ion-label>
+                Open Liability
+              </ion-label>
+            </ion-col>
+
+            <ion-col routerLink="/forfeitures">
+              <div class="value" *ngIf="stats.openForfeitureLiability > 0">
+                ${{ stats.openForfeitureLiability | shortNumber }}
+              </div>
+              <div class="value" *ngIf="stats.openForfeitureLiability < 1">
+                {{ stats.openForfeitureLiability | currency }}
+              </div>
+              <ion-label>
+                Fort. Liability
+              </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-card>
+
+        <ion-card class="card ion-no-margin" *ngIf="userStore.getUser().roles.recoveryAgent">
+          <ion-row>
+            <ion-col class="border-right" routerLink="/payments">
+              <div class="value" style="font-size: 1rem; margin-top: .35rem;">
+                <span *ngIf="nextCourtDate && nextCourtDate.lastCourtDate">
+                  {{ nextCourtDate.lastCourtDate.date | date: 'MM/dd/yyyy' }}
+                </span>
+                <span *ngIf="!nextCourtDate" class="ion-text-center">-</span>
+              </div>
+              <ion-label>
+                Next Case Expiration
+              </ion-label>
+            </ion-col>
+
+            <ion-col class="border-right">
+              <div class="value" *ngIf="stats.openLiability > 0">
+                ${{ stats.openLiability | shortNumber }}
+              </div>
+              <div class="value" *ngIf="stats.openLiability < 1">
+                {{ stats.openLiability | currency }}
+              </div>
+              <ion-label>
+                Active Case Payments
+              </ion-label>
+            </ion-col>
+
+            <ion-col routerLink="/payments">
+              <div class="value" *ngIf="stats.openForfeitureLiability > 0">
+                ${{ stats.openForfeitureLiability | shortNumber }}
+              </div>
+              <div class="value" *ngIf="stats.openForfeitureLiability < 1">
+                {{ stats.openForfeitureLiability | currency }}
+              </div>
+              <ion-label>
+                Pending Payments
+              </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="stats-2">
+      <ion-col>
+        <ion-card class="card ion-no-margin" routerLink="/powers" *ngIf="!userStore.getUser().roles.recoveryAgent">
+          <ion-label style="padding-bottom: .3rem;">
+              Available Powers
+          </ion-label>
+          <div class="value border-bottom" style="padding-bottom: .5rem;">
+            {{ powers.length }}
+          </div>
+
+          <ion-label style="margin-top: .5rem; margin-bottom: .5rem;">
+            Available Powers Total
+          </ion-label>
+          <div class="value" *ngIf="powersTotal > 0">
+            ${{ powersTotal | shortNumber }}
+          </div>
+          <div class="value" *ngIf="powersTotal < 1">
+            {{ powersTotal | currency }}
+          </div>
+        </ion-card>
+
+        <ion-card class="card ion-no-margin" routerLink="/payments" *ngIf="userStore.getUser().roles.recoveryAgent">
+          <ion-label style="padding-bottom: .3rem;">
+              Case Requests
+          </ion-label>
+          <div class="value border-bottom" style="padding-bottom: .5rem;">
+            {{ stats.caseRequests }}
+          </div>
+
+          <ion-label style="margin-top: .5rem; margin-bottom: .5rem;">
+            Request Amount
+          </ion-label>
+          <div class="value" *ngIf="powersTotal > 0">
+            ${{ powersTotal | shortNumber }}
+          </div>
+          <div class="value" *ngIf="powersTotal < 1">
+            {{ powersTotal | currency }}
+          </div>
+        </ion-card>
+      </ion-col>
+      
+      <ion-col>
+        <ion-card class="card ion-no-margin" routerLink="/defendants" *ngIf="!userStore.getUser().roles.recoveryAgent">
+          <ion-label style="padding-bottom: .3rem;">
+            Bonds This Month
+          </ion-label>
+          <div class="value border-bottom" style="padding-bottom: .5rem;">
+            {{ stats.totalBondsThisMonth }}
+          </div>
+
+          <span *ngIf="userStore.getUser().roles.agencyOwner || userStore.getUser().roles.agencyManager">
+            <ion-label style="margin-top: .5rem; margin-bottom: .5rem;">
+              Premium This Month
+            </ion-label>
+            <div class="value" *ngIf="stats.totalPremiumAmount > 0">
+              ${{ stats.totalPremiumAmount | shortNumber }}
+            </div>
+            <div class="value" *ngIf="stats.totalPremiumAmount < 1">
+              {{ stats.totalPremiumAmount | currency }}
+            </div>
+          </span>
+          <span *ngIf="!userStore.getUser().roles.agencyOwner && !userStore.getUser().roles.agencyManager">
+            <ion-label style="margin-top: .5rem; margin-bottom: .5rem;">
+              Commission This Month
+            </ion-label>
+            <div class="value">
+              $0.00
+            </div>
+          </span>
+        </ion-card>
+
+        <ion-card class="card ion-no-margin 0" routerLink="/cases" *ngIf="userStore.getUser().roles.recoveryAgent">
+          <ion-label style="padding-bottom: .3rem;">
+            Cases Closed This Month
+          </ion-label>
+          <div class="value border-bottom" style="padding-bottom: .5rem;">
+            {{ stats.casesClosedThisMonth }}
+          </div>
+          
+          <ion-label style="margin-top: .5rem; margin-bottom: .5rem;">
+            Payments Cleared
+          </ion-label>
+          <div class="value" *ngIf="stats.totalPremiumAmount > 0">
+            {{ stats.totalPremiumAmount | shortNumber }}
+          </div>
+          <div class="value" *ngIf="stats.totalPremiumAmount < 1">
+            {{ stats.totalPremiumAmount | currency }}
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="!userStore.getUser().roles.recoveryAgent">
+      <ion-col>
+        <ion-card class="card defs-link" routerLink="/defendants">
+          DEFENDANTS
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- <ion-row class="stats border-top ion-padding-top">
+      <ion-col size="4">
+        <div class="value">
+          {{ stats.defendants.length }}
+        </div>
+        <div class="label">
+          Defendants
+        </div>
+      </ion-col>
+
+      <ion-col size="4">
+        <div class="value">
+          {{ stats.activeBonds }}
+        </div>
+        <div class="label">
+          Bonds this Month
+        </div>
+      </ion-col>
+
+      <ion-col size="4">
+        <div class="value">
+          {{ stats.activeForfeitures }}
+        </div>
+        <div class="label">
+          Active Forfeitures
+        </div>
+      </ion-col>
+    </ion-row> -->
+
+    <!-- <ion-row class="stats">
+      <ion-col size="6">
+        <div class="value" *ngIf="stats.openLiability > 0">
+          ${{ stats.openLiability | shortNumber }}
+        </div>
+        
+        <div class="value" *ngIf="stats.openLiability < 1">
+          {{ stats.openLiability | currency }}
+        </div>
+        <div class="label">
+          Open Liability
+        </div>
+      </ion-col>
+
+      <ion-col size="6">
+        <div class="value" *ngIf="stats.openForfeitureLiability > 0">
+          ${{ stats.openForfeitureLiability | shortNumber }}
+        </div>
+        <div class="value" *ngIf="stats.openForfeitureLiability < 1">
+          {{ stats.openForfeitureLiability | currency }}
+        </div>
+        <div class="label">
+          Forfeiture Liability
+        </div>
+      </ion-col>
+    </ion-row> -->
+
+    <!-- <ion-row class="stats border-bottom ion-padding-bottom">
+      <ion-col size="4">
+        <div class="value">
+          {{ stats.totalBonds }}
+        </div>
+        <div class="label">
+          Total Bonds
+        </div>
+      </ion-col>
+
+      <ion-col size="4">
+        <div class="value">
+          {{ stats.totalBondsThisMonth }}
+        </div>
+        <div class="label">
+          Bonds this Month
+        </div>
+      </ion-col>
+
+      <ion-col size="4">
+        <div class="value">
+          {{ tasks.length }}
+        </div>
+        <div class="label">
+          Open Tasks
+        </div>
+      </ion-col>
+    </ion-row> -->
+<!-- <hr> -->
+    <!-- <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Active Bonds</ion-label>
+          <ion-badge slot="end">155</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-label>Active Fofeitures</ion-label>
+          <ion-badge size="large" color="danger" slot="end">3</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-label>Fofeiture Amount</ion-label>
+          <ion-badge size="large" color="danger" slot="end">$24,000</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-label>Commissions</ion-label>
+          <ion-badge size="large" color="success" slot="end">$4,000</ion-badge>
+        </ion-item>
+      </ion-col>
+    </ion-row> -->
+
+    <!-- <ion-row class="shortcuts border-bottom ion-padding-bottom">
+      <ion-col class="border-right" routerLink="/defendants">
+        <ion-icon class="icon" name="people"></ion-icon>
+        <div class="label">Defendants</div>
+      </ion-col>
+      
+      <ion-col class="border-right" routerLink="/powers">
+        <ion-icon class="icon" name="paper"></ion-icon>
+        <div class="label">Powers</div>
+      </ion-col>
+
+      <ion-col>
+        <ion-icon class="icon" name="calendar" routerLink="/courts"></ion-icon>
+        <div class="label">Court Dates</div>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row class="shortcuts ion-padding-top">
+      <ion-col class="border-right" routerLink="/forfeitures">
+        <ion-icon class="icon" name="star-outline"></ion-icon>
+        <div class="label">Forfeitures</div>
+      </ion-col>
+      
+      <ion-col class="border-right" routerLink="/tasks">
+        <ion-icon class="icon" name="list-box"></ion-icon>
+        <div class="label">Tasks</div>
+      </ion-col>
+
+      <ion-col (click)="logout()" class="border-right">
+        <ion-icon class="icon" name="log-out"></ion-icon>
+        <div class="label">Logout</div>
+      </ion-col>
+    </ion-row> -->
+
+    <!-- <ion-row>
+      <ion-col>
+        <ion-button (click)="openModal()" expand="block"
+          >Add New Defendant</ion-button
+        > -->
+        <!-- <ion-button
+          style="margin-top: .5rem;"
+          expand="block"
+          color="light"
+          fill="outline"
+          (click)="goToTasksPage()"
+          >View Tasks</ion-button
+        >
+
+        <ion-button
+          expand="block"
+          color="light"
+          style="margin-top: .5rem;"
+          fill="outline"
+          (click)="goToLogsPage()"
+          >Recent Activity</ion-button
+        > -->
+
+        <!-- <ion-button
+          expand="block"
+          color="light"
+          style="margin-top: .5rem;"
+          fill="outline"
+          (click)="uploadImage()"
+          >Upload Image</ion-button
+        > -->
+      <!-- </ion-col>
+    </ion-row> -->
+
+  </ion-grid>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-title color="medium" class="ion-text-center">© eBail.app</ion-title>
+  </ion-toolbar>
+</ion-footer>

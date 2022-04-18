@@ -1,0 +1,202 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Fortfeiture Filter Form</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label 
+            position="floating"
+            >
+            Defendant Name
+            </ion-label>
+            <ion-input
+            [(ngModel)]="filters.defendantName"
+            name="defendantName"
+            id="defendantName"
+         >
+         <!--  -->
+         </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!--  -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+            >
+            Agent
+            </ion-label>
+
+            <ion-select
+            [(ngModel)]="filters.agentId"
+            name="agentId"
+            >
+              <ion-select-option *ngFor="let member of staffMembers.data" [value]="member._id">
+             {{ member.name.first | uppercase }} {{ member.name.last | uppercase }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+<!--  -->
+<ion-row>
+  <ion-col>
+    <ion-item>
+      <ion-label
+        position="floating"
+      >
+      Status
+      </ion-label>
+
+      <ion-select
+      [(ngModel)]="filters.status"
+      name="status"
+      >
+        <ion-select-option value="">All</ion-select-option>
+        <ion-select-option value="opened">Open</ion-select-option>
+        <ion-select-option value="released">Released</ion-select-option>
+        <ion-select-option value="reinstated">Reinstated</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-col>
+</ion-row>
+      <!--  -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+            >
+            Select State
+            </ion-label>
+
+            <ion-select
+            [(ngModel)]="filters.state"
+            name="state"
+            (ionChange)="getCounties()"
+            >
+              <ion-select-option *ngFor="let state of states" [value]="state.state">{{ state.state }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!--  -->
+    
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label
+                position="floating"
+              >
+              Select County
+              </ion-label>
+  
+              <ion-select
+              [(ngModel)]="filters.county"
+              (ionChange)="getCourts()"
+              name="county"
+              >
+                <ion-select-option  *ngFor="let county of counties"
+                [value]="county.county">{{county.county}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <!--  -->
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label
+                position="floating"
+              >
+              Court
+              </ion-label>
+  
+              <ion-select
+              [(ngModel)]="filters.courtId"
+              name="court"
+              >
+              <ion-select-option  *ngFor="let court of courts" [value]="court._id"
+              [value]="county.county"> {{ court.name }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+
+      <!--  -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              From Date
+            </ion-label>
+
+            <ion-datetime
+              name="fromDate"
+              [(ngModel)]="filters.fortDate.start"
+            >
+            </ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!--  -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              To Date
+            </ion-label>
+
+            <ion-datetime
+              name="toDate"
+              [(ngModel)]="filters.fortDate.end"
+            >
+            </ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!--  -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+            >
+            Agency
+            </ion-label>
+
+            <ion-select
+            [(ngModel)]="filters.agencyId"
+            (ionChange)="onAgencyChange()"
+            name="agentId"
+            >
+              <ion-select-option [value]="userStore.getUser().agencyId">{{ userStore.getUser().agency.dba }}</ion-select-option>
+              <ion-select-option *ngFor="let agency of subAgencies" [value]="agency._id">{{ agency.dba }}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="ion-margin">
+        <ion-col >
+          <ion-button expand="block" size='small' (click)="search()" color="success">
+            Search
+           </ion-button>
+         </ion-col>
+       </ion-row>
+      </ion-content>
+
+     <!--  -->
+       
+
+   

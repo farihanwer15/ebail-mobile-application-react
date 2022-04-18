@@ -1,0 +1,96 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{defendant.name.first | uppercase}} {{defendant.name.middle | uppercase}} {{defendant.name.last | uppercase}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment (ionChange)="segmentChanged($event)" [value]="segment" scrollable>
+    <ion-segment-button value="info">
+      <ion-label>
+        Info 
+      </ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="payments" *ngIf="!recoveryAgent">
+      <ion-label>
+        Payments
+      </ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="contracts" *ngIf="!recoveryAgent || (recoveryAgent && bond.recovery && bond.recovery.acceptedAt)">
+      <ion-label>
+        Contracts
+      </ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="documents" *ngIf="!recoveryAgent || (recoveryAgent && bond.recovery && bond.recovery.acceptedAt)">
+      <ion-label>
+        Bond Documents
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-grid>
+    <!-- BOND INFO -->
+    <ion-row *ngIf="segment === 'info'">
+      <ion-col size="12">
+        <ion-button
+        size="small"
+        color="tertiary"
+        expand="block"
+        (click)="openIndemnitorsModal()">
+          View Indemnitors
+        </ion-button>
+      </ion-col>
+      <ion-col size="12">
+        <ion-row *ngIf="!recoveryAgent">
+          <ion-col size="6">
+            <ion-button
+            size="small"
+            color="success"
+            expand="block"
+            (click)="openBondStatusModal()">
+              Update Status
+            </ion-button>
+          </ion-col>
+          <ion-col size="6">
+            <ion-button size="small" expand="block" (click)="editBond()" color="primary">
+              Edit
+            </ion-button>
+            <!-- <ion-button size="small" color="light" expand="block"
+            (click)="editBond()">
+              Edit
+            </ion-button> -->
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      <ion-col size="12">
+        <app-bond-info [bond]="bond" [defendantId]="defendant._id"></app-bond-info>
+      </ion-col>
+    </ion-row>
+    
+    <!-- BOND PAYMENTS -->
+    <ion-row *ngIf="segment === 'payments'">
+      <ion-col>
+        <app-bond-invoices [bondId]="bondId"></app-bond-invoices>
+      </ion-col>
+    </ion-row>
+    
+    <!-- BOND CONTRACTS -->
+    <ion-row *ngIf="segment === 'contracts'">
+      <ion-col>
+        <app-bond-contracts [bondId]="bondId" (closeModal)="closeModal()"></app-bond-contracts>
+      </ion-col>
+    </ion-row>
+
+    <!-- BOND DOCUMENTS -->
+    <ion-row *ngIf="segment === 'documents'">
+      <ion-col>
+        <app-defendant-documents [bondId]="bondId" [defendantId]="defendant._id"></app-defendant-documents>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

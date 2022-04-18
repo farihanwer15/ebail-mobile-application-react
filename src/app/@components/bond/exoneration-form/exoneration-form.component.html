@@ -1,0 +1,92 @@
+<form (ngSubmit)="onSubmit()" #exonerationForm="ngForm" novalidate>
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating" [color]="status.invalid && status.touched ? 'danger' : ''">
+          Exoneration/Discharge Status *
+        </ion-label>
+        <ion-select [(ngModel)]="exonerate.status" name="status" required #status="ngModel">
+          <ion-select-option value="Court Exonerated">Court Exonerated</ion-select-option>
+          <ion-select-option value="Forfeiture Exonerated">Forfeiture Exonerated</ion-select-option>
+          <ion-select-option value="Forfeiture Paid By Agency">Forfeiture Paid By Agency</ion-select-option>
+          <ion-select-option value="Forfeiture Paid By Co-Signer">Forfeiture Paid By Co-Signer</ion-select-option>
+          <ion-select-option value="Agent Revoked">Agent Revoked</ion-select-option>
+          <ion-select-option value="Court Revoked">Court Revoked</ion-select-option>
+          <ion-select-option value="Indemnitor Revoked">Indemnitor Revoked</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">
+          Discharged Date
+        </ion-label>
+        <ion-datetime name="dischargedDate" [(ngModel)]="exonerate.dischargedDate" max="2050-12-31"></ion-datetime>
+      </ion-item>
+
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">
+          Disposition *
+        </ion-label>
+        <ion-select [(ngModel)]="exonerate.disposition" name="disposition" required>
+          <ion-select-option value="Acquitted">Acquitted</ion-select-option>
+          <ion-select-option value="Charges Dropped">Charges Dropped</ion-select-option>
+          <ion-select-option value="Convicted">Convicted</ion-select-option>
+          <ion-select-option value="Dismissed">Dismissed</ion-select-option>
+          <ion-select-option value="Deffered Prosecution">Deffered Prosecution</ion-select-option>
+          <ion-select-option value="Expunged">Expunged</ion-select-option>
+          <ion-select-option value="Pending">Pending</ion-select-option>
+          <ion-select-option value="Sealed">Sealed</ion-select-option>
+          <ion-select-option value="Suspended Sentence">Suspended Sentence</ion-select-option>
+          <ion-select-option value="Vacated">Vacated</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngIf="exonerate.status === 'Forfeiture Paid By Co-Signer'">
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">
+          Indemnitor *
+        </ion-label>
+        <ion-select [(ngModel)]="exonerate.paidByIndemnitor" name="paidByIndemnitor" required>
+
+          <ion-select-option *ngFor="let indem of bondIndemnitors" [value]="indem._id">
+            {{ indem.name.first }} {{ indem.name.last }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+
+        <ion-label position="floating">Description</ion-label>
+        <ion-textarea [(ngModel)]="exonerate.description" [value]="exonerate.description" name="description"></ion-textarea>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+
+  <ion-row>
+    <ion-col>
+      <ion-button type="submit" color="success" expand="block">
+        Save
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</form>

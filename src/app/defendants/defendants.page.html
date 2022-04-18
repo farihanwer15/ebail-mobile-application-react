@@ -1,0 +1,108 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Defendants
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+
+  <form (ngSubmit)="getDefendants()" novalidate>
+  <ion-row>
+    <ion-col size="9">
+      <ion-searchbar
+      class="ion-no-padding"
+        debounce="500"
+        (ionChange)="onSearchInput($event)"
+        
+        placeholder="Enter defendant name"
+      >
+      </ion-searchbar>
+    </ion-col>
+    <ion-col size="3"style="display: flex;justify-content:space-around;align-items: center;">
+      <div class="filter-icons" (click)="getDefendants()">
+        <ion-icon name="search"></ion-icon>
+      </div>
+      <div class="filter-icons" (click)="openFilterModal()">
+        <ion-icon src="assets/icons/filter-outline.svg"></ion-icon>
+      </div>
+    </ion-col>
+    <!-- <ion-col class="no-padding" size="2" style="display: flex;justify-content: center;align-items: center;">
+      <div class="filter-icon" (click)="openFilterModal()">
+        <ion-icon src="assets/icons/filter-outline.svg"></ion-icon>
+      </div>
+    </ion-col> -->
+  </ion-row>
+</form>
+
+  <ion-list>
+    <ion-row class="defendant" *ngFor="let defendant of defendants.data"
+      [routerLink]="['./defendant-profile', defendant._id]">
+      <ion-col class="left">
+        <div class="name">
+          {{ defendant.name.first }} {{ defendant.name.last }}
+        </div>
+        <div class="date">
+          Added Date: {{ defendant.createdAt | date: 'MM/dd/yyyy'}}
+        </div>
+        <div>
+          <ion-badge color="danger" class="status" *ngIf="defendant.deceasedAt">
+            DECEASED</ion-badge>
+            <ion-badge color="secondary" class="status" *ngIf="defendant.voidedAt && !defendant.deceasedAt">
+              VOIDED</ion-badge>
+          <ion-badge color="warning" class="status" *ngIf="
+          !defendant.onBoardedAt && !defendant.deceasedAt && !defendant.declinedAt && !defendant.voidedAt
+          ">
+          PROSPECT</ion-badge>
+          
+          <ion-badge class="status lead-status"
+          *ngIf="!defendant.onBoardedAt && !defendant.deceasedAt && !defendant.declinedAt && defendant.source === 'lead-form'">
+          LEAD FORM</ion-badge>
+            <ion-badge color="success" class="status" *ngIf="
+            defendant.onBoardedAt && !defendant.declinedAt && !defendant.voidedAt && !defendant.deceasedAt
+            ">ON
+            BOARDED</ion-badge>
+              <ion-badge color="danger" class="status" *ngIf="defendant.declinedAt && !defendant.deceasedAt">
+                DECLINED</ion-badge>
+        </div>
+      </ion-col>
+
+      <ion-col class="ion-text-end right">
+        <div class="email">
+          {{ defendant.email }}
+        </div>
+        <div class="contacts">
+          {{ getPhone(defendant) }}
+        </div>
+        <div *ngIf = 'defendant.monitoringCheck'>
+          <ion-badge color="danger" class="arrest-status">MONITORING ON</ion-badge>
+        </div>
+      </ion-col>
+    </ion-row>
+
+
+    <ion-row *ngIf="defendants.data.length < 1" class="ion-text-center ion-margin-top"
+      style="font-size: .8rem; color: #555555;">
+      <ion-col>
+        <em>No defendant found.</em>
+      </ion-col>
+    </ion-row>
+
+  </ion-list>
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button color="success" (click)="openAddDefendantModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

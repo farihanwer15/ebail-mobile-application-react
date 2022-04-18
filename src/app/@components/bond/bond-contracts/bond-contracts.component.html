@@ -1,0 +1,163 @@
+<ion-row *ngIf="!contractForm">
+  <ion-col>
+    <ion-button size="small" color="success" (click)="toggleContractForm()" expand="block">
+      Upload Contract
+    </ion-button>
+  </ion-col>
+  <ion-col>
+    <ion-button size="small" color="tertiary" (click)="openContractFormModal()" expand="block">
+      Add Contract
+    </ion-button>
+  </ion-col>
+</ion-row>
+
+<ion-row *ngIf="contractForm" class="ion-margin-bottom" style="border-bottom: 1px solid #2c3858;">
+  <ion-col>
+    <form novalidate (ngSubmit)="saveContracts()" #documentForm="ngForm">
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">File Name *</ion-label>
+            <ion-input name="docName" [(ngModel)]="document.name" #docName="ngModel" required
+              [color]="docName.invalid && docName.touched ? 'danger' : ''"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div>
+            <label for="actual-btn">Select Files</label>
+            <input id="actual-btn" type="file"  (change)="processFile($event)" hidden />
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-grid>
+        <ion-row class="img-style">
+          <ion-col class="no-padding"  size="6">
+            <ng-container *ngIf="image">
+              <ion-img (click)='imageView(image)' class="crop-img no-padding" [src]="image"></ion-img>
+              <ion-col size="12" class="warning-text-align ion-padding-start ion-padding-end">
+                <span class="warning-text">
+                  Click to view Image
+                </span>
+              </ion-col>
+  
+            </ng-container>
+            <ng-container *ngIf="isPdfFile">
+              <ion-img (click)='ViewDoc()' class="crop-img no-padding" src="assets/images/pdf-icon.png" ></ion-img>
+              <ion-col size="12" class="warning-text-align ion-padding-start ion-padding-end">
+                <span class="warning-text">
+                  Click to view Pdf
+                </span>
+              </ion-col>
+            </ng-container>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-row>
+        <ion-col>
+          <ion-button size="small" color="danger" type="button" (click)="hideForm()" expand="block">
+            Cancel
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button size="small" color="success" type="submit" expand="block">
+            Save
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </form>
+  </ion-col>
+</ion-row>
+
+<ion-row>
+  <ion-col class="ion-text-center" style="color: #566694;">
+    <h6>CONTRACTS</h6>
+  </ion-col>
+</ion-row>
+
+<app-contract-list [bondId]="bondId" (closeModal)="closeModal.emit()"></app-contract-list>
+
+<!-- <ion-row *ngFor="let contract of contracts.data" class="contract" (click)="presentActionSheet(contract)"
+  style="border-bottom: 1px solid #444444; margin-top: 5px; margin-bottom: 5px;">
+  <ion-col size="12">
+    <div class="folderName">
+      {{ contract.folderName }}
+    </div>
+  </ion-col>
+  <ion-col size="12">
+    <ion-row *ngFor="let party of contract.parties">
+      <ion-col size="6">
+        <div class="party-name">
+          {{ party.firstName }} {{ party.lastName }}
+        </div>
+        <div class="email">
+          {{ party.emailId }}
+        </div>
+      </ion-col>
+      <ion-col size="6" class="ion-text-right">
+        <ion-badge color="success" *ngIf="party.signatureStatus === 'signed'">SIGNED</ion-badge>
+        <ion-badge color="warning" *ngIf="party.signatureStatus === 'pending'">PENDING</ion-badge>
+        <ion-badge color="info" *ngIf="party.signatureStatus === 'viewed'">VIEWD</ion-badge>
+      </ion-col>
+    </ion-row>
+  </ion-col>
+</ion-row> -->
+
+<ion-row>
+  <ion-col style="color: #566694;">
+    <h6 class="ion-text-center ion-padding-top ion-no-margin">MANUAL CONTRACTS</h6>
+  </ion-col>
+  <ion-col *ngIf='isIos' size="12" class="warning-align ion-padding-start ion-padding-end">
+    <span class="warning">
+      To view PDFs please turn off pop-up block within Settings > Safari > Pop-Up Blocker
+    </span>
+  </ion-col>
+</ion-row>
+
+<ion-row *ngFor="let file of manualContracts; let i = index"
+  style="border-bottom: 1px solid #444444; margin-top: 5px; margin-bottom: 5px;">
+  <ion-col class="contract-name" size='6'>
+    <div *ngIf="i === 0">{{ file.name }}</div>
+    <div *ngIf="i > 0">{{ file.name }} - {{ i+1 }}</div>
+  </ion-col>
+  <ion-col size='6'>
+    <!-- <div class="date">
+      {{ manualContracts.createdAt | date: 'MM/dd/yyyy @ hh:mm a' }}
+    </div> -->
+  </ion-col>
+  <ion-col size="10">
+    <span>
+      <a class="contract-name" [routerLink]="" href="" (click)="viewActionSheet(file)">
+        
+        <img
+        *ngIf="file.extension === 'jpg' || file.extension === 'jpeg' || file.extension === 'png'"
+          class="receipt-thumb"
+          src="assets/images/image-icon.png"
+        />
+        <img
+        *ngIf="file.extension === 'pdf'"
+          class="receipt-thumb"
+          src="assets/images/pdf-icon.png"
+        />
+      </a>
+    </span>
+  </ion-col>
+  <ion-col size="2">
+    <ion-button (click)="deleteContractFile(file._id)" color="medium" fill="clear" size="default">
+      <ion-icon name="trash"></ion-icon>
+    </ion-button>
+  </ion-col>
+</ion-row>
+
+<ng2-pdfjs-viewer #externalPdfViewer [externalWindow]="true"></ng2-pdfjs-viewer>
+
+<ion-row *ngIf="manualContracts.length === 0">
+  <ion-col>
+    <p class="ion-text-center ion-text-medium" style="color: #566694;">
+      <em>No documents found.</em>
+    </p>
+  </ion-col>
+</ion-row>

@@ -1,0 +1,102 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Note</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form novalidate (ngSubmit)="onSubmit()" #noteForm="ngForm">
+    <ion-grid>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating"
+            [color]="tag.invalid && tag.touched ? 'danger' : ''">
+              Tags
+            </ion-label>
+            <ion-select name="status1" [(ngModel)]="note.tags"
+              #tag="ngModel"
+              multiple="true"
+              required
+            >
+              <ion-select-option *ngFor="let tag of tags" [value]="tag">{{tag}}</ion-select-option>
+            
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+     
+      <ion-row *ngIf="showField('Forfeiture') || showField('Court') || showField('Collection') || showField('Recovery')">
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Bond
+            </ion-label>
+            <ion-select name="status2" [(ngModel)]="note.bondId"
+              #bondId="ngModel"
+              required
+              [ngClass]="{'is-invalid': tagsRef.invalid && tagsRef.touched}"
+              #tagsRef="ngModel"
+            >
+              <ion-select-option *ngFor="let bond of bonds" [value]="bond._id">
+                <span *ngIf="bond.power && bond.power.prefix">
+                  {{ bond.power.prefix.name }}-{{bond.power.number}}
+                </span>
+                <span *ngIf="!bond.power && bond.bondNumber">
+                  {{ bond.bondNumber }}
+                </span>
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="showField('Invoice') || showField('Payment')">
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating"
+            [color]="invoice.invalid && invoice.touched ? 'danger' : ''">
+            Invoice
+            </ion-label>
+            <ion-select name="status" [(ngModel)]="note.invoiceId"
+              #invoice="ngModel"
+              multiple="true"
+              required
+            >
+              <ion-select-option *ngFor="let invoice of invoices" [value]="tag">{{ invoice.number }} | <i class="text-muted">{{ invoice.totalAmount | currency }}</i></ion-select-option>
+            
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Note
+            </ion-label>
+            <ion-textarea [(ngModel)]="note.text" name="text"
+            required
+            #noteText="ngModel"
+            autoGrow="true"
+            [color]="noteText.invalid && noteText.touched ? 'danger' : ''"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-button expand="block" type="submit" color="success">
+            Save
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

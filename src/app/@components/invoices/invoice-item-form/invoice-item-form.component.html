@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Invoice Item Form</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-top">
+  <form class="ion-margin-top ion-padding-top" novalidate nbSpinnerStatus="primary"  #billableItemForm="ngForm">
+    <!-- <nb-alert status="danger" *ngIf="errors.length > 0">
+      <div *ngFor="let error of errors">
+        {{ error }}
+      </div>
+    </nb-alert> -->
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked">Item Name *</ion-label>
+          <ion-input type="text" placeholder="Enter Billable Item" [(ngModel)]="billableItem.name" name="name"
+            id="billable-item" required #name="ngModel" [color]="name.invalid && name.touched ? 'danger' : ''">
+          </ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked">Item Amount</ion-label>
+          <ion-input type="text" [(ngModel)]="billableItem.price" placeholder="Enter Item Amount" name="price"
+            id="billable-item-amount"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked">Description</ion-label>
+          <ion-textarea size="small" [(ngModel)]="billableItem.description" name="description"
+            placeholder="Item Description" rows="2" cols="8"></ion-textarea>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <hr />
+
+    <ion-row>
+      <ion-col>
+        <ion-button size="small" color="success" (click)="onSubmit()" expand="block">
+          Save
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+
+</ion-content>

@@ -1,0 +1,169 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{defendant.name.first | uppercase}} {{defendant.name.middle | uppercase}} {{defendant.name.last | uppercase}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'status' : 'status-light'">Status:<ion-badge  [color]="order?.status==='COMPLETE'? 'success' : 'warning'">
+              {{order?.status}}
+            </ion-badge>
+          </span>
+        </ion-col>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'status' : 'status-light'">Substatus: <ion-badge color="medium">
+              {{order?.substatus}}
+            </ion-badge></span>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div [ngClass]="darkMode ? 'heading' : 'heading-light'">RESULTS</div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="!order.booking.results || order.booking.results.length === 0">
+        <ion-col>
+          <div [ngClass]="darkMode ? 'no-result' : 'no-result-light'">No results yet.</div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div  *ngFor="let item of order.booking.results">
+
+      <ion-grid class="backgound-style" >
+        <ion-row>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size-date' : 'font-size-date-light'">Arrest Date: {{item?.arrestDate | date: 'MM/dd/yyyy hh:mm a'}}</span>
+        </ion-col>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size-date' : 'font-size-date-light'">Bokking Date: {{item?.bookingDate | date: 'MM/dd/yyyy hh:mm a'}}</span>
+        </ion-col>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size' : 'font-size-light'">Booking Id: {{item?.bookingId }}</span>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size-date' : 'font-size-date-light'">Release Date: {{item?.releaseDate | date: 'MM/dd/yyyy hh:mm a'}}</span>
+        </ion-col>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size' : 'font-size-light'">Release Reason: {{item?.releaseReason}}</span>
+        </ion-col>
+        <ion-col>
+          <span></span>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size' : 'font-size-light'">Charges: {{item?.charges[0].chargeDescription}}</span>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div [ngClass]="darkMode ? 'heading' : 'heading-light'">SOURCE</div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <span  [ngClass]="darkMode ? 'font-size' : 'font-size-light'">City: {{item?.source?.city}}</span>
+        </ion-col>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size' : 'font-size-light'">County: {{item?.source?.county}}</span>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size' : 'font-size-light'">Description: {{item?.source?.description}}</span>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+      <div class="main-divider">
+        <div class="divider"></div>
+      </div>
+  </div>
+
+    <!-- <div class="main-divider">
+      <div class="divider"></div>
+    </div> -->
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div [ngClass]="darkMode ? 'heading' : 'heading-light'">JURISDICTION</div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size' : 'font-size-light'">Country: {{order?.jurisdiction?.country}}</span>
+        </ion-col>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size' : 'font-size-light'">County: {{order?.jurisdiction?.county}}</span>
+        </ion-col>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size' : 'font-size-light'">State: {{order?.jurisdiction?.state}}</span>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div [ngClass]="darkMode ? 'heading' : 'heading-light'">Arrest Alert Activity</div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="order.activity.length === 0">
+        <ion-col>
+          <div [ngClass]="darkMode ? 'no-result' : 'no-result-light'">No activity yet.</div>
+        </ion-col>
+      </ion-row>
+    
+      <ion-row *ngIf="order.activity.length > 0">
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size' : 'font-size-light'">Note</span>
+        </ion-col>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size' : 'font-size-light'">Date</span>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngFor="let item of order.activity">
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size' : 'font-size-light'">{{item?.note}}</span>
+        </ion-col>
+        <ion-col>
+          <span [ngClass]="darkMode ? 'font-size-date' : 'font-size-date-light'">{{item?.addedDate | date: 'MM/dd/yyyy hh:mm a'}}</span>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  <!-- <div class="arrest-alerts">
+    <ion-row *ngFor="let data of data" class="arrest-alert" (click)="openActionSheet(courtDate)">
+      <ion-col class="left">
+        <div class="date">
+          {{ courtDate.date | date: 'MM/dd/yyyy @ hh:mm a' }}
+        </div>
+        <div class="purpose">
+          {{ courtDate.purpose }}
+        </div>
+      </ion-col>
+      <ion-col class="right">
+        <div class="room">
+          <em>Room #:</em> {{ courtDate.roomNumber }}
+        </div>
+        <div class="office">
+          <em>Office #:</em> {{ courtDate.officeNumber }}
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="courtDates.length === 0" style="color: #666666">
+      <ion-col class="ion-text-center">
+        <em>No arrest alerts found.</em>
+      </ion-col>
+    </ion-row>
+  </div> -->
+
+</ion-content>

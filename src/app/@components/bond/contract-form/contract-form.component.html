@@ -1,0 +1,129 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Contract</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form novalidate (ngSubmit)="saveContract()" #contractForm="ngForm">
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating" [color]="template.invalid && template.touched ? 'danger' : ''">
+            Select Contract Template*
+          </ion-label>
+
+          <ion-select name="gender" [(ngModel)]="templateId" required #template="ngModel"
+            (ionChange)="onTemplateChange()">
+            <ion-select-option *ngFor="let temp of templates" [value]="temp.templateId"> {{ temp.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <div class="row mb-2" style="text-align: center;margin-top: 10px;font-size: small;" *ngIf="selectedTemplate">
+      <div class="col-12">
+        <span>
+          <em style="color: red;">Maximum <b>{{selectedTemplate.totalIndemsPerContract}}</b>  {{ selectedTemplate.totalIndemsPerContract <= 1 ? 'cosigner' : 'cosigners'}} is allowed in this
+            template.</em>
+        </span>
+      </div>
+    </div>
+
+    <ion-row class="ion-margin-top">
+      <!-- LEFT PANE -->
+      <ion-col size="6">
+        <div class="drag-container" dragula="CONTRACT_INDEMNITORS" [(dragulaModel)]="defIndemnitors"
+          id="def-indemnitors">
+          <div class="drag-item" *ngFor="let indem of defIndemnitors"
+            [attr.data-has-email]="indem.email ? true : false">
+            <div class="name">
+              {{ indem.name.first }} {{ indem.name.last }} {{ indem.name.suffix }}
+              <span class="relation" *ngIf="indem.relation !== 'Self'">| {{ indem.relation }}</span>
+              <span class="relation" *ngIf="indem.relation === 'Self'">| Defendant</span>
+            </div>
+            <div class="email" *ngIf="indem.email">{{ indem.email }}</div>
+            <div class="email email-missing" *ngIf="!indem.email">
+              Email is missing
+            </div>
+          </div>
+        </div>
+      </ion-col>
+
+
+      <!-- RIGHT PANE -->
+      <ion-col size="6">
+        <div class="drag-container" style="min-height: auto; margin-bottom: .5rem;" *ngIf="filingAgent">
+          <div class="drag-item agent-item">
+            <div class="name">
+              {{ filingAgent.name.first }} {{ filingAgent.name.last }}
+              <span class="party">(Party # 1 |</span>
+              <span class="relation">Agent)</span>
+            </div>
+            <div class="name">
+              {{ filingAgent.email }}
+            </div>
+          </div>
+        </div>
+        <div class="drag-container" style="min-height: 222px;" dragula="CONTRACT_INDEMNITORS"
+          [(dragulaModel)]="bondIndemnitors" id="contract-indemnitors">
+
+          <div class="ion-padding-top" style="font-size: small;text-align: center;" *ngIf="bondIndemnitors.length < 1">
+            <em style="font-size: smaller;">Drop here to add as signing party.</em>
+          </div>
+          <div class="drag-item" *ngFor="let indem of bondIndemnitors; let i = index">
+            <div class="name">
+              {{ indem.name.first }} {{ indem.name.last }} {{ indem.name.suffix }}
+              <span class="party">(Party # {{ i+2 }} |</span>
+              <span class="relation" *ngIf="indem.relation !== 'Self'">{{ indem.relation }})</span>
+              <span class="relation" *ngIf="indem.relation === 'Self'">Defendant)</span>
+            </div>
+            <div class="email" *ngIf="indem.email">{{ indem.email }}</div>
+          </div>
+        </div>
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row class="ion-margin-top">
+
+      <ion-col size="12">
+        <ion-item>
+          <ion-label class="font-size">
+            Enable Email Notifications
+          </ion-label>
+          <ion-toggle [(ngModel)]="sendEmail" name="sendEmail"></ion-toggle>
+        </ion-item>
+      </ion-col>
+      <ion-col size="12">
+        <ion-item>
+          <ion-label class="font-size">
+            Enable SMS Notifications
+          </ion-label>
+          <ion-toggle [disabled]="!allowSMS" [(ngModel)]="sendSMS" name="sendSMS"></ion-toggle>
+        </ion-item>
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row class="ion-margin-top">
+      <ion-col>
+        <ion-button type='submit' color="success" expand="block" size="small">
+          Save
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="send" class="ion-margin-top">
+      <ion-col>
+        <ion-button (click)="sendContract()" color="success" expand="block" size="small">
+          Save & Send
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>

@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>OCR Camera</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid>
+    <ion-row>
+    <ion-col size="6" 
+      *ngFor="let photo of photoService.photos; index as position">
+        <ion-img [src]="photo.webviewPath" (click)="showActionSheet(photo, position)"></ion-img>
+    </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-content class="ion-padding">
+    <ion-img *ngIf="image" [src]="image" style="width: 50%; height: auto;"></ion-img>
+    <ion-button expand="full" (click)="captureImage()">Capture image</ion-button>
+    <!-- <ion-button expand="full" (click)="recognizeImage()" [disabled]="!workerReady">Recognize image</ion-button> -->
+    <ion-card *ngIf="workerReady && captureProgress > 0">
+      <ion-card-header>
+        <ion-card-title>
+          Capture progress: {{ captureProgress }}%
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        {{ ocrResult }}
+      </ion-card-content>
+    </ion-card>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col sizeSm="6">
+          <div>
+            <label for="actual-btn">Select image</label>
+            <input id="actual-btn" type="file" clearInput (change)="processFile($event)" accept="image/*" hidden/>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+
+  <ion-fab color="primary" vertical="bottom" horizontal="center" slot="fixed">
+    <ion-fab-button (click)="addPhotoToGallery()">
+      <ion-icon name="camera"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

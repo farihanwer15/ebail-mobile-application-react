@@ -1,0 +1,90 @@
+.contract{
+  font-size: .9rem;
+  color: #999999;
+}
+
+.contract .title{
+  font-weight: 600;
+}
+
+.contract .party-name{
+  font-size: .8rem;
+  color: #888888;
+}
+
+.contract .email{
+  font-size: .75rem;
+  color: #666666;
+}
+
+.contract ion-badge{
+  font-size: .7rem;
+}
+label {
+  background-color: #3b5dbd;
+  display: inline-block;
+  color: white;
+  padding: 5px 30px;
+  font-family: sans-serif;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  width: 100%;
+  text-align: center;
+}
+
+#file-chosen{
+  margin-left: 0.3rem;
+  font-family: sans-serif;
+}
+
+.img-style{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.crop-img{
+  height: 140px;
+  width: 160px;
+  padding:0px !important;
+}
+.contract-name {
+  text-decoration: none;
+  color: #666666;
+}
+
+.receipt-thumb{
+  width: 40px;
+  height: 40px;
+  border-radius: 2px;
+}
+.warning-align {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -10px;
+}
+
+.warning {
+  color: red;
+  font-size: .7rem;
+  text-align: center;
+  font-style: italic;
+}
+
+.warning-text-align {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+ 
+
+}
+
+.warning-text {
+  //color: red;
+  font-size: .7rem;
+  text-align: center;
+  font-style: italic;
+  margin-right: 5px;
+}

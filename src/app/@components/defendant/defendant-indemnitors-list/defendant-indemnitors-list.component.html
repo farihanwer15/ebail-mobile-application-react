@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Indemnitors</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" size="small" (click)="openIndemnitorForm()">
+          Add Indemnitor
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row class="indem-item" *ngFor="let indem of indemnitors" (click)="openActionSheet(indem)">
+      <ion-col class="left ml-1" size="8">
+        <div class="name">
+          {{ indem.name.first }} {{ indem.name.last }} {{ indem.name.suffix }}
+
+        </div>
+        <div class="email">
+          <em>{{ indem.email }}</em>
+        </div>
+        <div class="relation">
+          Relation: {{ indem.relation }}
+        </div>
+      </ion-col>
+      <ion-col class="right" size="4">
+        <div *ngIf="indem.badInfo">
+          <ion-badge color="danger" class="info">BAD INFO</ion-badge>
+        </div>
+
+        <div>
+          <div *ngFor="let contact of indem.contacts" class="mr-2">
+            <div class="relation" *ngIf="contact.display">
+              Phone#: {{ contact.value }}
+            </div>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+    <div *ngIf="indemnitors.length < 1" class="ion-text-center mt-2" style="color: #666666">
+      <em>No defendant Indemnitor found.</em>
+    </div>
+  </ion-grid>
+</ion-content>

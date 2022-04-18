@@ -1,0 +1,88 @@
+ 
+
+      <ion-row>
+        <ion-col>
+          <div class="floating-label">
+            <input type="text" #addressText [(ngModel)]="address.line1" placeholder=" " name="addressLine1" class="address-input"/>
+            <label for="address">Address</label>
+          </div>
+        </ion-col>
+      </ion-row>
+      <!--  -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label
+              position="floating"
+            >
+            Select State
+            </ion-label>
+
+            <ion-select
+            [(ngModel)]="address.state"
+            name="state"
+            (ionChange)="getCounties()"
+            >
+              <ion-select-option *ngFor="let state of states" [value]="state.state">{{ state.state }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!--  -->
+      <div *ngIf="!hideCounty">
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label
+                position="floating"
+              >
+              Select County
+              </ion-label>
+  
+              <ion-select
+              [(ngModel)]="address.county"
+              name="county"
+              >
+                <ion-select-option  *ngFor="let county of counties"
+                [value]="county.county">{{county.county}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        </div>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label 
+              position="floating"
+              >
+                City Name
+              </ion-label>
+              <ion-input
+              [(ngModel)]="address.city"
+              name="city"
+              id="city"
+           >
+           </ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <!--  -->
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label   position="floating">
+                Zip Code
+              </ion-label>
+              <ion-input
+              [(ngModel)]="address.zipcode"
+              name="zipcode"
+              id="zipcode"
+           >
+           </ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+   

@@ -1,0 +1,223 @@
+<ion-grid class="defendant-profile">
+  <ion-row class="header">
+    <ion-col class="ion-text-center" size="4">
+      <div class="avatar">
+        <img *ngIf='avatar' [src]="avatar" class="mx-auto d-block" style="width: 100px; max-height: 100px" />
+        <img *ngIf="!avatar"
+          src="https://img.favpng.com/17/3/18/computer-icons-user-profile-male-png-favpng-ZmC9dDrp9x27KFnnge0jKWKBs.jpg"
+          class="mx-auto d-block" style="width: 100px; max-height: 100px" />
+         
+      </div>
+      <div class="name">
+        {{ defendant.name.first }} {{ defendant.name.last }}
+      </div>
+      <div class="dob">{{ defendant.dob | date: 'MM/dd/yyyy' }}</div>
+      <div class="status">
+        <ion-badge *ngIf="!defendant.onBoardedAt && !defendant.declinedAt && !defendant.deceasedAt" color="warning">
+          PROSPECT
+        </ion-badge>
+        <ion-badge *ngIf="defendant.onBoardedAt && !defendant.declinedAt && !defendant.deceasedAt" color="success">
+          ON BOARDED
+        </ion-badge>
+        <ion-badge *ngIf="defendant.declinedAt && !defendant.deceasedAt" color="danger">
+          DECLINED
+        </ion-badge>
+        <ion-badge *ngIf="defendant.deceasedAt" color="danger">
+          DECEASED
+        </ion-badge>
+      </div>
+    </ion-col>
+    <ion-col size="8">
+      <ion-row class="details" *ngFor="let contact of defendant.contacts">
+        <ion-col>
+          <ion-icon name="call"></ion-icon> {{ contact.value }}
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="details">
+        <ion-col>
+          <ion-icon name="mail"></ion-icon> {{ defendant.email }}
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="details" *ngIf="defendant.address">
+        <ion-col>
+          <ion-icon name="pin"></ion-icon>
+          {{ defendant.address.line1 }},
+          {{ defendant.address.city }},
+          {{ defendant.address.state }},
+          {{ defendant.address.zipcode }}
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="defendant.onBoardedAt">
+        <ion-col>
+          <button [ngClass]="darkMode ? 'edit-button-dark' : 'edit-button-light'" (click)="openDefendantEditForm()"
+            size="small" expand="block">
+            Edit
+          </button>
+          <!-- <ion-button color="primary" size="small" expand="block">
+            Edit
+          </ion-button> -->
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="!defendant.onBoardedAt">
+        <!-- ON BOARD BUTTON -->
+        <ion-col>
+          <ion-button color="success" size="small" expand="block" (click)="onBoardDefendant()">
+            On Board
+          </ion-button>
+        </ion-col>
+        <!-- DECLINE BUTTON -->
+        <ion-col>
+          <ion-button color="danger" size="small" expand="block">
+            Decline
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="stats">
+    <ion-col size="12">
+      Total Bonds: {{ bonds.length }}
+    </ion-col>
+    <ion-col size="12">
+      Balance Owed: {{ balanceOwed | currency }}
+    </ion-col>
+    <!-- <ion-col size="12">
+      Missed Courts: <ion-badge color="success">NO MISSED COURTS</ion-badge>
+    </ion-col> -->
+    <!-- <ion-col size="12">
+      Application Uploaded: <ion-badge color="danger">NO</ion-badge>
+    </ion-col> -->
+  </ion-row>
+
+  <ion-row class="stats">
+    <ion-col class="align">
+      <span class="ion-margin-end">
+        Active Forfeiture: 
+      </span>
+      <ion-badge color="danger" *ngFor="let bond of activeForfeitureBonds"
+      style="margin-right: 5px;">
+      <span *ngIf="bond.power && bond.power.prefix">
+        {{ bond.power.prefix.name }}-{{ bond.power.number }}
+      </span>
+      <span *ngIf="!bond.power && bond.bondNumber">
+        {{ bond.bondNumber }}
+      </span>
+      </ion-badge>
+      
+      <ion-badge
+      color="success"
+      *ngIf="activeForfeitureBonds.length === 0">
+      NO BONDS IN FORFEITURE
+      </ion-badge>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="stats">
+    <ion-col class="align">
+      <span class="ion-margin-end">
+        Past Forfeiture: 
+      </span>
+      <ion-badge color="light" *ngFor="let bond of pastForfeitureBonds"
+      style="margin-right: 5px;">
+      <span *ngIf="bond.power && bond.power.prefix">
+        {{ bond.power.prefix.name }}-{{ bond.power.number }}
+      </span>
+      <span *ngIf="!bond.power && bond.bondNumber">
+        {{ bond.bondNumber }}
+      </span>
+      </ion-badge>
+      
+      <ion-badge
+      color="success"
+      *ngIf="pastForfeitureBonds.length === 0">
+        None
+      </ion-badge>
+    </ion-col>
+  </ion-row>
+  <!-- bail recovery -->
+  <ion-row class="stats" *ngIf="defendant.inRecovery">
+    <ion-col class="ion-text-center" size="12">  
+      <span style="color: #ff6464;">IN BAIL RECOVERY</span>
+    </ion-col>
+  </ion-row>
+
+
+
+
+
+  <ion-row class="stats" *ngIf="userStore.getAgency() && userStore.getAgency().enableArrestAlerts">
+    <ion-col class="ion-no-padding ion-justify-content-around">
+      <div class="arrest-toggle">
+        <ion-label>
+          {{defendant.monitoringCheck ? "Arrest Alert On" : "Arrest Alert Off"}}
+        </ion-label>
+        <ion-toggle [checked]="defendant.monitoringCheck" [(ngModel)]="defendant.monitoringCheck"
+          (click)="onMonitoringToggle($event, defendant)" name="arest-alert"></ion-toggle>
+      </div>
+    </ion-col>
+    <!-- <ion-col size="12">
+        <button  [ngClass]="darkMode ? 'custom-button' : 'bond-buttons'" *ngIf="!defendant.monitoring || (defendant.monitoring && defendant.monitoring.status === 'disabled')" 
+        expand="block"  (click)="startMonitoring()">
+        Start Arrest Alert
+        </button>
+          <button  [ngClass]="darkMode ? 'custom-button' : 'bond-buttons'" *ngIf="defendant.monitoring && defendant.monitoring.status === 'enabled'"  expand="block"  (click)="cancelOrder()">
+            Arrest Alert On
+          </button>
+      </ion-col> -->
+  </ion-row>
+
+  <ion-row *ngIf="defendant.onBoardedAt">
+    <ion-col size="12">
+      <ion-button class="bond-button" expand="block" color="success" (click)="addBond()">
+        Add Bond
+      </ion-button>
+    </ion-col>
+
+    <ion-col size="12">
+      <button [ngClass]="darkMode ? 'custom-button' : 'bond-buttons'" expand="block" (click)="viewBonds()">
+        View Bonds
+      </button>
+    </ion-col>
+
+    <ion-col size="12">
+      <button [ngClass]="darkMode ? 'custom-button' : 'bond-buttons'" expand="block" (click)="viewIndemintors()">
+        View Indemnitors
+      </button>
+    </ion-col>
+    
+    <ion-col size="12">
+      <button [ngClass]="darkMode ? 'custom-button' : 'bond-buttons'" expand="block" (click)="openNoteModal()">
+        View Notes
+      </button>
+    </ion-col>
+
+    <ion-col size="12">
+      <button [ngClass]="darkMode ? 'custom-button' : 'bond-buttons'" expand="block" (click)="openAddDocumentModal()">
+        Documents
+      </button>
+    </ion-col>
+
+    <ion-col *ngIf="defendant.monitoring" size="12">
+      <button [ngClass]="darkMode ? 'custom-button' : 'bond-buttons'" expand="block" (click)="openArrestAlertModal()">
+        Arrest Alert Activity
+      </button>
+    </ion-col>
+    <ion-col size="12">
+      <button [ngClass]="darkMode ? 'custom-button' : 'bond-buttons'" expand="block" (click)="collectPaiment()">
+        Collect Payment
+      </button>
+    </ion-col>
+    <ion-col *ngIf="!defendant.declinedAt" size="12">
+      <button [ngClass]="darkMode ? 'custom-button' : 'bond-buttons'" expand="block" (click)="createInvoice()">
+        Create Invoice
+      </button>
+    </ion-col>
+
+
+  </ion-row>
+</ion-grid>

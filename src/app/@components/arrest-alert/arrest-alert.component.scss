@@ -1,0 +1,118 @@
+.arrest-alerts {
+    font-size: .9rem;
+    padding: 0;
+  }
+  
+  .arrest-alerts .arrest-alert{
+    border-bottom: .3px solid #555555;
+  }
+  
+  .arrest-alerts .date{
+    color: #999999;
+  }
+  
+  .arrest-alerts .court-name, .arrest-alerts .purpose{
+    font-size: .8rem;
+    color: #666666;
+  }
+  
+  .arrest-alerts .right{
+    text-align: right;
+    color: #666666;
+    font-size: .8rem;
+  }
+
+  ion-grid {
+    --ion-grid-column-padding: 5px;
+    border-collapse: collapse;
+    border-style: hidden;
+    
+    ion-row:first-child {  
+      font-size: .8rem;  
+      font-weight: bold;
+    }
+    ion-col {
+      border: 1px solid #999999;
+      border-bottom: 0;
+      border-right: 0;
+    }
+    ion-col:last-child {
+      border-right: 1px solid #999999;
+    }
+    
+    ion-row:last-child {
+      border-bottom: 1px solid #999999;
+    }
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+  }
+  .status-light {
+    display: flex;
+    align-items: center;
+    color:#494A4A
+  }
+
+  ion-badge {
+    font-size: .6rem;
+    margin-left: 5px;
+  }
+
+  .heading {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+  }
+  .heading-light {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    color:#494A4A
+  }
+
+  .backgound-style {
+    background-color: #FFFFD9;
+    padding: 0;
+    margin: 5px;
+  }
+  .font-size-light {
+    font-size: .7rem;
+    color:#494A4A
+}
+  .font-size {
+      font-size: .7rem;
+     // font-weight: bold;
+  }
+  .font-size-date-light {
+    font-size: .7rem;
+    color:#494A4A
+    //font-weight: bold;
+}
+.font-size-date {
+  font-size: .7rem;
+  //font-weight: bold;
+}
+  .no-result {
+    font-size: .8rem;
+   text-align: center;
+   //font-weight: bold;
+  }
+  .no-result-light {
+    font-size: .8rem;
+   text-align: center;
+   color:#494A4A
+   //font-weight: bold;
+  }
+  .main-divider {
+    display: flex;
+    justify-content:center;
+    margin: 10px 0;
+  }
+
+  .divider {
+    border-top: 1px solid #999999;
+    width: 90%;
+    text-align: center;
+  }

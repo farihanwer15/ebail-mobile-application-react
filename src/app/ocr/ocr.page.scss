@@ -1,0 +1,23 @@
+ion-input[type="file"] {
+    background: rgba(230, 230, 230, 1);
+    padding: 1em;
+  }
+
+  label {
+    background-color: #3b5dbd;
+    display: inline-block;
+    color: white;
+    padding: 0.5rem;
+    font-family: sans-serif;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    width: 100%;
+    text-align: center;
+  }
+  
+  #file-chosen{
+    width: 100%;
+    margin-left: 0.3rem;
+    font-family: sans-serif;
+  }

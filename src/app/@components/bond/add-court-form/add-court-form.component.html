@@ -1,0 +1,172 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add New Court</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form novalidate (ngSubmit)="onSubmit()" #courtForm="ngForm">
+    <ion-grid>
+
+      <!-- COURT NAME -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating"
+            [color]="name.invalid && name.touched ? 'danger' : ''"
+            >
+              Court Name *
+            </ion-label>
+            <ion-input
+            required
+            #name="ngModel"
+            name="name" [(ngModel)]="court.name"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- COURT Email -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label [color]="email.invalid && email.touched ? 'danger':''" position="floating">
+              Email
+            </ion-label>
+            <ion-input
+            name="email"
+           [(ngModel)]="court.email"
+            #email="ngModel"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      
+      <!-- PHONE -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Phone Number
+             </ion-label>
+            <ion-input
+            name="phone"
+           [(ngModel)]="court.phone"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!--  -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">
+              Fax
+             </ion-label>
+            <ion-input
+            name="fax"
+           [(ngModel)]="court.fax"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!--  -->
+
+    <!-- ADRESS FIELD -->
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Address
+           </ion-label>
+          <ion-input
+          name="addressLine1"
+         [(ngModel)]="court.address.line1"
+          >
+          </ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <!--  -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating"
+          [color]="state.invalid && state.touched ? 'danger':''">Select State *</ion-label>
+          <ion-select name="state"  [(ngModel)]="court.address.state"
+          required
+          (ionChange)="getCounties()"
+          #state="ngModel">
+            <ion-select-option *ngFor="let state of states" [value]="state.state">
+              {{ state.state }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <!--  -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating"
+          [color]="countyRef.invalid && countyRef.touched ? 'danger':''">Select County *</ion-label>
+          <ion-select name="county"  [(ngModel)]="court.address.county"
+          required
+          #countyRef="ngModel">
+            <ion-select-option  *ngFor="let county of counties" [value]="county.county">
+              {{county.county }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <!--  -->
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            City
+           </ion-label>
+          <ion-input
+          name="city"
+         [(ngModel)]="court.address.city"
+          >
+          </ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Zip Code
+           </ion-label>
+          <ion-input
+          name="zipcode"
+         [(ngModel)]="court.address.zipcode"
+          >
+          </ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button class="ion-float-right" color="success" type="submit">
+            Save
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

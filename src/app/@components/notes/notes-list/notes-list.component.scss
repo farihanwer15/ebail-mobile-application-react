@@ -1,0 +1,31 @@
+.note-item {
+	border-bottom: 1px solid #333333;
+	margin-bottom: .5rem;
+	padding-bottom: .5rem;
+	overflow: hidden;
+}
+
+.note-text {
+	font-size: .9rem;
+	color: #999999;
+}
+
+.note-time {
+	color: #666666;
+	font-size: .8rem;
+	clear: left;
+}
+
+.note-staff {
+	color: #666666;
+	font-size: .8rem;
+}
+
+.tags{
+	margin-top: .5rem;
+}
+
+.tags ion-badge{
+	font-size: .6rem;
+	margin-right: .3rem;
+}

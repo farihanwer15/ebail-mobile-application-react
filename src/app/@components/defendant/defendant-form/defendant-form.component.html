@@ -1,0 +1,451 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Edit Defendant</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form novalidate #defendantForm="ngForm">
+    <ion-row>
+      <ion-col>
+        <input type="file" (change)="onFileChange($event)" accept="image/*" hidden #imageUpload>
+        <div class="avatar" (click)="imageUpload.click()">
+          <img *ngIf='avatar' [src]="avatar" class="mx-auto d-block" style="width: 100px; max-height: 100px" />
+          <img *ngIf="!avatar"
+            src="https://img.favpng.com/17/3/18/computer-icons-user-profile-male-png-favpng-ZmC9dDrp9x27KFnnge0jKWKBs.jpg"
+            class="mx-auto d-block" style="width: 100px; max-height: 100px" />
+            <!-- <div *ngIf='avatar'>
+              <button class="close-btn" size="small" (click)="deleteAvatar()">
+                <nb-icon icon="close-outline"></nb-icon>
+                delete
+              </button>
+            </div> -->
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">First Name *</ion-label>
+          <ion-input
+            name="firtsName"
+            [(ngModel)]="defendant.name.first"
+            required
+            #firtsName="ngModel"
+            [color]="
+            firtsName.invalid && firtsName.touched ? 'danger' : ''
+            "
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Middle Name</ion-label>
+          <ion-input
+            name="middleName"
+            [(ngModel)]="defendant.name.middle"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Last Name *</ion-label>
+          <ion-input
+            name="lastName"
+            [(ngModel)]="defendant.name.last"
+            required
+            #lastName="ngModel"
+            [color]="
+            lastName.invalid && lastName.touched ? 'danger' : ''
+            "
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Maiden Name</ion-label>
+          <ion-input
+            name="lastNameName"
+            [(ngModel)]="defendant.name.maiden"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Alias</ion-label>
+          <ion-input
+            name="alias"
+            [(ngModel)]="defendant.name.alias"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input
+            name="email"
+            [(ngModel)]="defendant.email"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Phone</ion-label>
+          <ion-input
+            name="phone"
+            [(ngModel)]="defendant.phone"
+            mask="999-999-9999"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Gender
+          </ion-label>
+          <ion-select name="gender" [(ngModel)]="defendant.gender">
+            <ion-select-option value="female">Female</ion-select-option>
+            <ion-select-option value="male">Male</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Date of Birth *</ion-label>
+          <ion-datetime
+            name="dob"
+            [(ngModel)]="defendant.dob"
+            required
+            #dob="ngModel"
+          ></ion-datetime>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">SSN</ion-label>
+          <ion-input
+            name="alias"
+            [(ngModel)]="defendant.ssn"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Citizenship
+          </ion-label>
+          <ion-select name="citizenship" [(ngModel)]="defendant.citizenship">
+            <ion-select-option value="US Citizen">US Citizen</ion-select-option>
+            <ion-select-option value="Resident">Resident</ion-select-option>
+            <ion-select-option value="Non Legal Resident">Non Legal Resident</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <hr>
+
+    <!-- ADDRES DETAILS -->
+    <h6 class="ion-text-center">ADDRESS</h6>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Address</ion-label>
+          <ion-input
+            name="addressLine1"
+            [(ngModel)]="defendant.address.line1"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            State
+          </ion-label>
+          <ion-select name="state" (ionChange)="getCounties()" [(ngModel)]="defendant.address.state">
+            <ion-select-option *ngFor="let state of states" [value]="state.state">{{ state.state }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            County
+          </ion-label>
+          <ion-select name="county" [(ngModel)]="defendant.drivingLicense.state">
+            <ion-select-option *ngFor="let county of counties" [value]="county.county">{{ county.county }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">City</ion-label>
+          <ion-input
+            name="city"
+            [(ngModel)]="defendant.address.city"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Zipcode</ion-label>
+          <ion-input
+            name="zipcode"
+            [(ngModel)]="defendant.address.zipcode"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+
+    <hr>
+
+    <!-- FEATURES -->
+    <h6 class="ion-text-center">FEATURES</h6>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Height (feet)
+          </ion-label>
+          <ion-select name="heightFeet" [(ngModel)]="defendant.features.height.feet">
+            <ion-select-option value="3">3'</ion-select-option>
+            <ion-select-option value="4">4'</ion-select-option>
+            <ion-select-option value="5">5'</ion-select-option>
+            <ion-select-option value="6">6'</ion-select-option>
+            <ion-select-option value="7">7'</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Height (inches)
+          </ion-label>
+          <ion-select name="heightInches" [(ngModel)]="defendant.features.height.inches">
+            <ion-select-option value="0">0"</ion-select-option>
+            <ion-select-option value="1">1"</ion-select-option>
+            <ion-select-option value="2">2"</ion-select-option>
+            <ion-select-option value="3">3"</ion-select-option>
+            <ion-select-option value="4">4"</ion-select-option>
+            <ion-select-option value="5">5"</ion-select-option>
+            <ion-select-option value="6">6"</ion-select-option>
+            <ion-select-option value="7">7"</ion-select-option>
+            <ion-select-option value="8">8"</ion-select-option>
+            <ion-select-option value="9">9"</ion-select-option>
+            <ion-select-option value="10">10"</ion-select-option>
+            <ion-select-option value="11">11"</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Weight (lbs)</ion-label>
+          <ion-input
+            name="weight"
+            [(ngModel)]="defendant.features.weight"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Race
+          </ion-label>
+          <ion-select name="race" [(ngModel)]="defendant.features.race">
+            <ion-select-option value="Asian">Asian</ion-select-option>
+            <ion-select-option value="Black">Black</ion-select-option>
+            <ion-select-option value="Hispanic">Hispanic</ion-select-option>
+            <ion-select-option value="Native American">Native American</ion-select-option>
+            <ion-select-option value="Pacific Islander">Pacific Islander</ion-select-option>
+            <ion-select-option value="White">White</ion-select-option>
+            <ion-select-option value="Unknown">Unknown</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Skin Color
+          </ion-label>
+          <ion-select name="skinColor" [(ngModel)]="defendant.features.skinColor">
+            <ion-select-option value="Light/Pale White">Light/Pale White</ion-select-option>
+            <ion-select-option value="White/Fair">White/Fair</ion-select-option>
+            <ion-select-option value="Light Brown">Light Brown</ion-select-option>
+            <ion-select-option value="Brown">Brown</ion-select-option>
+            <ion-select-option value="Dark Brown">Dark Brown</ion-select-option>
+            <ion-select-option value="Very Dark Brown/Black">Very Dark Brown/Black</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Hair Color
+          </ion-label>
+          <ion-select name="hairColor" [(ngModel)]="defendant.features.hairColor">
+            <ion-select-option value="Blue">Blue</ion-select-option>
+            <ion-select-option value="Black">Black</ion-select-option>
+            <ion-select-option value="Bald">Bald</ion-select-option>
+            <ion-select-option value="Blonde">Blonde</ion-select-option>
+            <ion-select-option value="Brown">Brown</ion-select-option>
+            <ion-select-option value="Green">Green</ion-select-option>
+            <ion-select-option value="Grey">Grey</ion-select-option>
+            <ion-select-option value="Orange">Orange</ion-select-option>
+            <ion-select-option value="Red">Red</ion-select-option>
+            <ion-select-option value="Shaved">Shaved</ion-select-option>
+            <ion-select-option value="White">White</ion-select-option>
+            <ion-select-option value="Yellow">Yellow</ion-select-option>
+            <ion-select-option value="Unknown">Unknown</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Eye Color
+          </ion-label>
+          <ion-select name="eyeColor" [(ngModel)]="defendant.features.eyeColor">
+            <ion-select-option value="Blue">Blue</ion-select-option>
+            <ion-select-option value="Brown">Brown</ion-select-option>
+            <ion-select-option value="Green">Green</ion-select-option>
+            <ion-select-option value="Grey">Grey</ion-select-option>
+            <ion-select-option value="Hazel">Hazel</ion-select-option>
+            <ion-select-option value="Other">Other</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Features Description
+          </ion-label>
+          <ion-textarea [(ngModel)]="defendant.features.description" name="text"
+          #noteText="ngModel"
+          autoGrow="true"></ion-textarea>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <hr>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Driving License #</ion-label>
+          <ion-input
+            name="DLNumber"
+            [(ngModel)]="defendant.drivingLicense.number"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">
+            Driving License State
+          </ion-label>
+          <ion-select name="DLState" [(ngModel)]="defendant.drivingLicense.state">
+            <ion-select-option *ngFor="let state of states" [value]="state.state">{{ state.state }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">DL Expiry Date</ion-label>
+          <ion-datetime
+            name="DLExpiryDate"
+            [(ngModel)]="defendant.drivingLicense.expiryDate"
+            #dob="ngModel"
+            max="2050-12-31"
+          ></ion-datetime>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <hr>
+
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" color="success" (click)="onSubmit()">
+          Save
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+
+  </form>
+</ion-content>

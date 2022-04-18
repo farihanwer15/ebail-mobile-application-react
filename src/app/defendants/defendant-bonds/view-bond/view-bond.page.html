@@ -1,0 +1,185 @@
+<ion-header>
+  <div>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>
+        Bond #
+      </ion-title>
+    </ion-toolbar>
+  </div>
+
+</ion-header>
+<ion-content>
+  <div class="ion-padding-horizontal">
+    <!-- <ion-segment color="primary">
+      <ion-segment-button checked layout="icon-bottom">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <ion-label>Information</ion-label>
+      </ion-segment-button>
+      <ion-segment-button layout="icon-bottom">
+        <ion-icon name="attach"></ion-icon>
+        <ion-label>Paperwork</ion-label>
+      </ion-segment-button>
+      <ion-segment-button layout="icon-bottom">
+        <ion-icon name="clipboard"></ion-icon>
+        <ion-label>Notes</ion-label>
+      </ion-segment-button>
+    </ion-segment> -->
+  </div>
+  <ion-card>
+    <ion-item>
+      <ion-icon name="person" slot="start"></ion-icon>
+      <h2>
+        <ion-label>
+          Dan Henry
+        </ion-label>
+      </h2>
+      <ion-button color="success" fill="outline" slot="end">Edit Bond</ion-button>
+
+    </ion-item>
+
+
+    <ion-card-content>
+      <!-- <ion-card>
+
+
+
+      </ion-card> -->
+      <table class="">
+        <tbody>
+          <tr>
+            <th class="text-center" colspan="6">INDEMNITORS</th>
+          </tr>
+          <tr>
+            <th class="text-center" colspan="6">COURT DATES</th>
+          </tr>
+        </tbody>
+      </table>
+      <ion-segment>
+        <ion-segment-button checked>
+          <ion-label>Info</ion-label>
+        </ion-segment-button>
+        <ion-segment-button>
+          <ion-label>Contracts</ion-label>
+        </ion-segment-button>
+        <ion-segment-button>
+          <ion-label>Payments</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+      <ion-item>
+        <ion-label>Next Court Date:</ion-label>
+
+        <table class="ion-text-left">
+          <tbody>
+            <tr>
+              <th colspan="2">Bond Information</th>
+            </tr>
+            <tr>
+              <th>Power</th>
+              <td>B5-1234567</td>
+            </tr>
+            <tr>
+              <th>Bond Type</th>
+              <td>Standard</td>
+            </tr>
+
+            <tr>
+              <th>Bond Number</th>
+              <td>77616</td>
+            </tr>
+
+            <tr>
+              <th>Bond Date</th>
+              <td>04/27/2019</td>
+            </tr>
+
+            <tr>
+              <th>Bond Amount</th>
+              <td>{{ 5000 | currency }}</td>
+            </tr>
+
+            <tr>
+              <th>Premium Amnt</th>
+              <td>{{ 500 | currency }}</td>
+            </tr>
+
+            <tr>
+              <th>Filing Fee</th>
+              <td>{{ 52 | currency }}</td>
+            </tr>
+
+            <tr>
+              <th>State Tax Fee</th>
+              <td>{{ 0 | currency }}</td>
+            </tr>
+
+            <tr>
+              <th>Posting Agent</th>
+              <td>Miriam Zlitni</td>
+            </tr>
+
+            <tr>
+              <th>Added By </th>
+              <td>Miriam Zlitni</td>
+            </tr>
+
+            <tr>
+              <th>State</th>
+              <td>Colorado</td>
+            </tr>
+
+            <tr>
+              <th>County</th>
+              <td>Jefferson</td>
+            </tr>
+            <tr>
+              <th>Facility</th>
+              <td>Jefferson County Jail</td>
+            </tr>
+            <tr>
+              <th>Charges</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th>Case Number</th>
+              <td>19CR544</td>
+            </tr>
+            <tr>
+              <th>Application Number</th>
+              <td>654654</td>
+            </tr>
+            <tr>
+              <th>NYSID Number</th>
+              <td>Jefferson</td>
+            </tr>
+            <tr>
+              <th>Indictment Number</th>
+              <td>213123</td>
+            </tr>
+            <tr>
+              <th>Docket Number</th>
+              <td>23432342</td>
+            </tr>
+            <tr>
+              <th>Booking Number</th>
+              <td>456546</td>
+            </tr>
+          </tbody>
+        </table>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+  <div class="col-12 col-sm-8">
+    <div class="row">
+      <div class="col-12 ion-padding-horizontal">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 ">
+
+      </div>
+    </div>
+  </div>
+</ion-content>

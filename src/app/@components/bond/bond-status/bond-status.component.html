@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Update Bond Status</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment (ionChange)="segmentChanged($event)" [value]="segment" scrollable>
+    <ion-segment-button value="court-dates">
+      <ion-label>Court Dates</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="forfeiture">
+      <ion-label>Forfeiture</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="exonerate">
+      <ion-label>Exonerate</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-grid>
+    
+    <ion-row  *ngIf="segment === 'court-dates'">
+      <ion-col>
+
+        <ion-button color="warning" size="small" class="ion-float-left" (click)="openNotesModal()">
+          Notes
+        </ion-button>  
+
+        <ion-button color="success" size="small" class="ion-float-right" (click)="openAddCourtDateModal()">
+          Add Court Date
+        </ion-button>  
+      </ion-col>
+    </ion-row>
+
+    <ion-row  *ngIf="segment === 'court-dates'">
+      <ion-col>
+        <app-court-dates [bondId]="bond._id" [courtDates]="courtDates"></app-court-dates>
+      </ion-col>
+    </ion-row>
+
+    <app-forfeiture-form [bond]="bond" [defendantId]="defendantId" *ngIf="segment === 'forfeiture'"></app-forfeiture-form>
+    <app-exoneration-form [bond]="bond" [defendantId]="defendantId" *ngIf="segment === 'exonerate'"></app-exoneration-form>
+  </ion-grid>
+</ion-content>

@@ -1,0 +1,65 @@
+
+
+.card {
+    margin: 0 auto;
+
+    .header {
+        height: 70px;
+      
+
+        .avatar {
+            width: 160px;
+            height: 160px;
+            position: relative;
+            margin: 0px auto -15px auto;
+            
+
+            img {
+                display: block;
+                border-radius: 50%;
+                position: absolute;
+                bottom: calc(-1*(20px + 4px));
+                // border: 8px solid #9Dc912;
+                background-color: #fff;
+                
+            }
+        }
+    }
+}
+.vertical-align-content > *
+{
+     display: flex!important;
+     align-content: center!important;
+     align-items: center!important;
+}
+.card-body {
+    background-color: #ffffff;
+    padding: 20px 20px 10px 20px;
+    height: calc(120vh - (200px + 56px));
+    overflow: hidden;
+
+    .user-meta {
+        padding-top: 5px;
+
+        .playername {
+            font-size: 24px;
+            font-weight: 600;
+            color: #303940;
+        }
+
+        .information {
+            font-size: 90%;
+            color: #242e36;
+            text-transform: uppercase;
+            margin: 0 auto;
+            text-align: left;
+            display: flex!important;
+     align-content: center!important;
+     align-items: center!important;
+            
+        }
+       
+    }
+   
+}
+

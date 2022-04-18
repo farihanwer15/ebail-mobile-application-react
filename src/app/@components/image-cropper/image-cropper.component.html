@@ -1,0 +1,49 @@
+<!-- <div style="height: 100%;" class="ion-text-center">
+  <div style="max-height: 70%; width: 90%; margin: auto" id="image"></div>
+
+  <img style="margin: auto" *ngIf="croppedImage" [src]="croppedImage" alt="">
+
+  <ion-grid *ngIf="!croppedImage">
+    <ion-row>
+      <ion-col>
+        <ion-button color="success" expand="block" (click)="saveImage()">
+          Save
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</div> -->
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Resize Image</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-row>
+    <ion-col>
+      <image-cropper [imageBase64]="imageBase64" [maintainAspectRatio]="false" [aspectRatio]="16 / 9" [containWithinAspectRatio]='false'
+        format="png" [resizeToWidth]="'2000'" [resizeToHeight] = "'2000'" [roundCropper]="false" (imageCropped)="imageCropped($event)">
+
+      </image-cropper>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col></ion-col>
+  </ion-row>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button color="success" [disabled]="!imageBase64" (click)="dismissModal(croppedImageBase64)">
+        Continue
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

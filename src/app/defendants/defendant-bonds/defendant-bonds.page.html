@@ -1,0 +1,136 @@
+<ion-header>
+  <div>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="home" text=""></ion-back-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>
+        {{defendant && defendant.name.first | uppercase}} {{defendant &&defendant.name.middle | uppercase}} {{defendant && defendant.name.last | uppercase}}
+      </ion-title>
+    </ion-toolbar>
+  </div>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row *ngFor="let bond of bonds">
+      <ion-col>
+        <div class="bond">
+          <ion-row *ngIf="bond.power && bond.power.prefix">
+            <ion-col class="left">
+              Power Number:
+            </ion-col>
+            <ion-col class="right">
+              {{ bond.power.prefix.name }}-{{ bond.power.number }}
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="bond.bondNumber">
+            <ion-col class="left">
+              Bond Number:
+            </ion-col>
+            <ion-col class="right">
+              {{ bond.bondNumber }}
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col class="left">
+              Status:
+            </ion-col>
+            <ion-col class="right">
+              <ion-badge
+                color="danger"
+                *ngIf="bond && !bond.voidedAt && bond.forfeiture && bond.forfeiture.status === 'opened' && !bond.exoneration"
+              >
+              FORFEITURE OPEN
+              </ion-badge>
+              <ion-badge
+                color="success"
+                *ngIf="bond && !bond.voidedAt && bond.activatedAt && !bond.exoneration && !bond.forfeiture && (!bond.revoke || (bond.revoke && bond.revoke.status !== 'revoked')) "
+              >
+              ACTIVATED
+              </ion-badge>
+              <ion-badge color="primary" *ngIf="bond && !bond.voidedAt && bond.exoneration">
+                EXONERATED
+              </ion-badge>
+
+              <ion-badge color="medium" *ngIf="bond && bond.voidedAt">
+                VOIDED
+              </ion-badge>
+              <ion-badge color="danger" *ngIf="bond && ((bond.revocation && bond.revocation.status === 'Open') || (!bond.revocation && bond.revoke && bond.revoke.status === 'revoked'))">
+                REVOKED
+              </ion-badge>
+              <ion-badge color="danger" *ngIf="inCustody">
+                IN CUSTODY
+              </ion-badge>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col class="left">
+              Bond Amount:
+            </ion-col>
+            <ion-col class="right">
+              {{ bond.bondAmount | currency }}
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col class="left">
+              Next Court Date:
+            </ion-col>
+            <ion-col class="right" *ngIf="bond.nextCourtDate">
+              {{ bond.nextCourtDate.date | date: 'MM/dd/yyyy hh:mm a'}}
+            </ion-col>
+            <ion-col class="right" *ngIf="!bond.nextCourtDate">
+              -
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-button
+                size="small"
+                color="primary"
+                expand="block"
+                (click)="openBondDetailsModal(bond._id)"
+              >
+                View
+              </ion-button>
+            </ion-col>
+            <ion-col>
+              <button [ngClass]="darkMode ? 'edit-button-dark' : 'edit-button-light'" size="small" expand="block" (click)="editBond(bond._id)" >
+                Edit
+              </button>
+              <!-- <ion-button class="edit-button" size="small" color="light" expand="block"
+              (click)="editBond(bond._id)">
+                Edit
+              </ion-button> -->
+            </ion-col>
+          </ion-row>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    
+    <ion-row *ngIf="bonds.length < 1">
+      <ion-col>
+        <p class="ion-text-center" style="color: #666666;">
+          <em>No bond added for this defendant.</em>
+        </p>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="bonds.length < 1">
+      <ion-col>
+        <ion-button expand="block" color="success" (click)="addBond()">
+          Add Bond
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

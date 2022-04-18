@@ -1,0 +1,51 @@
+.defendant{
+    border-bottom: 1px solid #333333;
+    padding: .5rem;
+  }
+  
+  .defendant .right{
+    line-height: 17px;
+  }
+  
+  .defendant .date{
+    font-size: .8rem;
+    color: #999999;
+  }
+  
+  .defendant .name{
+    font-size: .85rem;
+    margin-bottom: .3rem;
+  }
+  
+  .defendant .email, .defendant .contacts{
+    font-size: .8rem;
+    color: #999999;
+    margin-bottom: .3rem;
+  }
+  
+  .defendant .status{
+    font-size: .65rem;
+    margin-top: .4rem;
+  }
+  label {
+    background-color: #3b5dbd;
+    display: inline-block;
+    color: white;
+    padding: 10px 30px;
+    font-family: sans-serif;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    width: 100%;
+    text-align: center;
+  }
+  
+  #file-chosen{
+    margin-left: 0.3rem;
+    font-family: sans-serif;
+  }
+
+  .red-text {
+    color: red;
+  }
+  

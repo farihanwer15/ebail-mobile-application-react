@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Forfeitures
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-row>
+    <ion-col size="9">
+      <ion-searchbar
+        debounce="500"
+        (ionChange)="onSearchInput($event)"
+        placeholder="Enter defendant name"
+      >
+      </ion-searchbar>
+    </ion-col>
+    <ion-col size="3"style="display: flex;justify-content:space-around;align-items: center;">
+      <div class="filter-icons" (click)="search()">
+        <ion-icon name="search"></ion-icon>
+      </div>
+      <div class="filter-icons" (click)="openFilterModal()">
+        <ion-icon src="assets/icons/filter-outline.svg"></ion-icon>
+      </div>
+    </ion-col>
+    <!-- <ion-col size="2" style="display: flex;justify-content: center;align-items: center;">
+      <div class="filter-icon" (click)="openFilterModal()">
+        <ion-icon src="assets/icons/filter-outline.svg"></ion-icon>
+      </div>
+    </ion-col> -->
+  </ion-row>
+  
+  <ion-row class="bond" *ngFor="let def of bonds.data" (click)="openBondModal(def)">
+    <ion-col>
+      <div class="defendant">
+        {{ def.name.first }} {{ def.name.last }}
+      </div>
+      <div class="power" *ngIf="def.bonds.power && def.bonds.power.prefix">
+        {{ def.bonds.power.prefix.name }}-{{ def.bonds.power.number }}
+        <span class="bond-amount">
+          ({{ def.bonds.bondAmount | currency }})
+        </span>
+      </div>
+      
+      <div>
+        <ion-badge color="danger" class="status" *ngIf="def.bonds.forfeiture && def.bonds.forfeiture.status === 'opened'">OPEN</ion-badge>
+        <ion-badge color="success" class="status" *ngIf="def.bonds.forfeiture && def.bonds.forfeiture.status === 'released'">RELEASED</ion-badge>
+        <ion-badge color="primary" class="status" *ngIf="def.bonds.forfeiture && def.bonds.forfeiture.status === 'reinstated'">RENSTATED</ion-badge>
+      </div>
+    </ion-col>
+    
+    <ion-col class="ion-text-end right">
+
+      <div class="date">
+        Forfeiture Date: {{ def.bonds.forfeiture.date | date: 'MM/dd/yyyy' : "+0000"}}
+      </div>
+      <div class="date">
+        Satisfy Date: {{ def.bonds.forfeiture.satisfyDate | date: 'MM/dd/yyyy' : "+0000"}}
+      </div>
+      <div class="days">
+        <em>Days Left: {{ getRemainingDays(def.bonds) }}</em>
+      </div>
+      
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngIf="bonds.data.length < 1" class="ion-text-center ion-margin-top" 
+  style="font-size: .8rem; color: #555555;">
+    <ion-col>
+      <em>No forfeiture found.</em>
+    </ion-col>
+  </ion-row>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

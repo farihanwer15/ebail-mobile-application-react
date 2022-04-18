@@ -1,0 +1,35 @@
+input[type="text"]{
+  padding-left:15px;
+}
+
+.floating-label { 
+    position:relative; 
+  }
+  .address-input {
+    font-size:16px;
+    padding-left: 15px;
+    padding:4px 6px;
+    display:block;
+    width:100%;
+    height:35px;
+    background-color: transparent;
+    border:none;
+    border-bottom:2px solid #666666;
+  }
+  .address-input:focus {
+       outline:none;
+  }
+  label {
+    font-size:17px;
+    position:absolute;
+    left:15px;
+    top:6px;
+    transition:0.2s ease all; 
+    -moz-transition:0.2s ease all; 
+    -webkit-transition:0.2s ease all;
+  }
+  .address-input:focus ~ label, .address-input:not(:placeholder-shown) ~ label {
+    color: #4c8dff;
+    top:-10px;
+    font-size:13px;
+  }

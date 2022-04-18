@@ -1,0 +1,122 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title> Petty Cash </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-row>
+  <ion-col>
+    <ion-button expand="block" size="small" (click)="openFormModal()" color="success">
+      Add Petty Cash
+    </ion-button>
+  </ion-col>
+</ion-row>
+
+<ion-content>
+
+  <ion-row class="ion-align-items-end">
+    <!-- <ion-col size="5">
+      <ion-item class="ion-no-padding">
+        <ion-label position="floating">Sort By</ion-label>
+        <ion-select size="small" placeholder="Select Sorting Order" [(ngModel)]="filters.sortBy" name="sortBy">
+          <ion-select-option value="number">
+            Power Number
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col> -->
+    <ion-col size="9">
+      <ion-item class="ion-no-padding">
+        <ion-label position="floating">Order By</ion-label>
+        <ion-select size="small" placeholder="Select Sorting Order" [(ngModel)]="filter.orderBy" name="orderBy">
+          <ion-select-option value="ASC">Ascending</ion-select-option>
+          <ion-select-option value="DESC">Descending</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size="3">
+      <div>
+        <ion-button color="primary" size="small" expand="block" (click)="getPettyCash()">
+          Sort
+        </ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <table class="table table-style ion-margin-bottom">
+    <ion-item class="ion-no-padding">
+        <tr>
+          <th class="tab-header">
+            <b>Total Issued:</b> {{ stats.totalIssued | currency }}
+          </th>
+          <th class="tab-header">
+            <b>Total Spent:</b> {{ stats.totalSpent | currency }}
+          </th>
+          <th class="tab-header">
+            <b>Owed:</b> {{ stats.totalIssued - stats.totalSpent | currency }}
+          </th>
+        </tr>
+      </ion-item>
+    </table>
+    
+    <ion-list>
+    <ion-row class="patty-cash" *ngFor="let cash of pettyCash" (click)="presentActionSheet(cash)">
+      <ion-col class="left">
+        <div class="name" *ngIf="cash.issuedToUser">
+          {{ cash.issuedToUser.name.first }} {{ cash.issuedToUser.name.last }}
+        </div>
+        <div class="cash">
+          {{ cash.category }} <em *ngIf="cash.otherCategory">({{ cash.otherCategory }})</em>
+        </div>
+        <div>
+          <ion-badge *ngIf="cash.status === 'spent'" color="danger" class="status">
+            - {{ cash.amount | currency }}
+          </ion-badge>
+          <ion-badge *ngIf="cash.status === 'issued'" color="success" class="status">
+            + {{ cash.amount | currency }}
+          </ion-badge>
+        </div>
+        <div>
+          <span *ngIf="cash.defendant" style="font-size: smaller;">
+            {{ cash.defendant.name.first }} {{ cash.defendant.name.last }}
+          </span>
+          <span *ngIf="cash.bond && cash.bond.power">
+            <em>({{ cash.bond.power.prefix.name }} - {{ cash.bond.power.number }})</em>
+          </span>
+          <span *ngIf="cash.bond && !cash.bond.power && cash.bond.bondNumber">
+            <em>({{ cash.bond.bondNumber }})</em>
+          </span>
+        </div>
+      </ion-col>
+
+      <ion-col class="ion-text-end right">
+        <div style="display: flex;flex-direction: column;">
+          <span class="date" style="font-size: small;">
+            {{ cash.createdAt | date: 'MM/dd/yyyy @ hh:mm a'}}
+          </span>
+          <span class="email" style="font-size: smaller;">
+            {{ cash.description }}
+          </span>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="pettyCash.length === 0" class="ion-text-center ion-margin-top"
+      style="font-size: .8rem; color: #555555;">
+      <ion-col>
+        <em>No petty cash record found.</em>
+      </ion-col>
+    </ion-row>
+
+  </ion-list>
+</ion-content>
+<!-- <ion-col size="2" style="display: flex;justify-content: center;align-items: center;">
+  <div class="filter-icon" (click)="openFormModal()">
+    <ion-icon src="assets/icons/filter-outline.svg"></ion-icon>
+  </div>
+</ion-col> -->

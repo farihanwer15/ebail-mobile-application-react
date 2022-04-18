@@ -1,0 +1,26 @@
+ion-label:not(.ion-color-danger){
+  color: #666666 !important;
+}
+.bond-info-form{
+  font-size: .9rem;
+}
+
+h6{
+  text-align: center;
+  color: #444444;
+}
+
+hr{
+  background-color: #555555;
+}
+
+.ionic-selectable-icon-inner {
+  position: absolute;
+  /* top: 20px; */
+  left: 5px;
+  border-top: 5px solid;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  pointer-events: none;
+  color: var(--icon-color,#666666);
+}

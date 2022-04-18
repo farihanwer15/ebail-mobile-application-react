@@ -1,0 +1,8 @@
+{
+  "name": "ebail-agent-mobile",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}

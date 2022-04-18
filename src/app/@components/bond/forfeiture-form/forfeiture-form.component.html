@@ -1,0 +1,63 @@
+<form (ngSubmit)="onSubmit()" #fortForm="ngForm" novalidate>
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating" [color]="status.invalid && status.touched ? 'danger' : ''">
+          Status *
+        </ion-label>
+        <ion-select [(ngModel)]="forfeiture.status" name="status"
+        required
+        #status="ngModel">
+          <ion-select-option value="opened">Open</ion-select-option>
+          <ion-select-option value="released">Released</ion-select-option>
+          <ion-select-option value="reinstated">Reinstated</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">
+          Mailing Date
+        </ion-label>
+        <ion-datetime name="mailingDate" [(ngModel)]="forfeiture.mailingDate" max="2050-12-31"></ion-datetime>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating" [color]="fortDate.invalid && fortDate.touched ? 'danger' : ''">
+          Forfieture Date
+        </ion-label>
+        <ion-datetime 
+        required
+        (ionChange)="onForfitureDateChange()" name="forfeitureDate" [(ngModel)]="forfeiture.forfeitureDate" #fortDate="ngModel" max="2050-12-31"></ion-datetime>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating" [color]="satisfyDate.invalid && satisfyDate.touched ? 'danger' : ''">
+          Satisfy Date
+        </ion-label>
+        <ion-datetime 
+        required
+        name="satisfyDate" [(ngModel)]="forfeiture.satisfyDate" #satisfyDate="ngModel" max="2050-12-31"></ion-datetime>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-button type="submit" color="success" expand="block">
+        Save
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</form>

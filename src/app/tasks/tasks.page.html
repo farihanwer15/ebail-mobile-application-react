@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Tasks
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-row class="task" *ngFor="let task of tasks.data" (click)="openActionSheet(task)">
+    <ion-col size="12">
+      <div class="description" [innerHTML]="task.description"></div>
+    </ion-col>
+    <ion-col size="6">
+      <div class="priority">
+        <ion-badge color="success" *ngIf="task.priority === 'high'">HIGH</ion-badge>
+        <ion-badge color="warning" *ngIf="task.priority === 'medium'">MEDIUM</ion-badge>
+        <ion-badge color="primary" *ngIf="task.priority === 'low'">Low</ion-badge>
+      </div>
+    </ion-col>
+    <ion-col size="6">
+      <div class="status ion-float-right">
+        <ion-badge color="success" *ngIf="task.status === 'completed'">COMPLETED</ion-badge>
+        <ion-badge color="warning" *ngIf="task.status === 'pending'">PENDING</ion-badge>
+      </div>
+      <br>
+      <div class="duedate ion-float-right">
+        {{ task.dueDate | date: 'MM/dd/yyyy' }}
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngIf="tasks.data.length < 1" class="ion-text-center ion-margin-top" 
+  style="font-size: .8rem; color: #555555;">
+    <ion-col>
+      <em>No tasks found.</em>
+    </ion-col>
+  </ion-row>
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

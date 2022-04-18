@@ -1,0 +1,34 @@
+<ion-row *ngFor="let invoice of invoices.data" class="invoice" (click)="presentActionSheet(invoice)">
+  <ion-col class="left">
+    <div class="title">{{ invoice.title }}</div>
+    <div class="number"><em>Invoice #:</em> {{ invoice.number }}</div>
+    <div class="amount">{{ invoice.totalAmount | currency }}</div>
+  </ion-col>
+  <ion-col class="right">
+    <div class="status">
+      <ion-badge color="warning" *ngIf="invoice.status === 'pending'">
+        PENDING
+      </ion-badge>
+      <ion-badge color="success" *ngIf="invoice.status === 'paid'">
+        PAID
+      </ion-badge>
+      <ion-badge color="medium" *ngIf="
+          invoice.status === 'merged' || invoice.status === 'split' 
+          || invoice.status === 'refunded' || invoice.status === 'voided'
+          || invoice.status === 'partial-refund' || invoice.status === 'partial-void'
+        ">
+        {{ invoice.status | uppercase }}
+      </ion-badge>
+      <ion-badge color="danger"
+        *ngIf="invoice.status === 'cancelled' || invoice.status === 'canceled'">
+        {{ invoice.status | uppercase }}
+      </ion-badge>
+    </div>
+    <div class="dueDate"><em>Due Date:</em> {{ invoice.dueDate | date: 'MM/dd/yyyy' : "+0000" }}</div>
+    <div class="payers">
+      <div *ngFor="let payer of invoice.payers">
+        {{ payer?.name?.first }} {{ payer?.name?.last }}
+      </div>
+    </div>
+  </ion-col>
+</ion-row>

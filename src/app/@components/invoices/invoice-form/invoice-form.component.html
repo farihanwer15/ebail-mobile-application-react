@@ -1,0 +1,565 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Create Invoice</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div class="stepper">
+          <div class="step" [ngClass]="{active: step === 1}" (click)="switchStep(1)">
+            1
+          </div>
+
+          <div class="step" [ngClass]="{active: step === 2}" (click)="switchStep(2)">
+            2
+          </div>
+
+          <div class="step" [ngClass]="{active: step === 3}" (click)="switchStep(3)">
+            3
+          </div>
+        </div>
+
+        <!-- <button [ngClass]="darkMode ? 'custom-button' : 'bond-buttons'" size="small" (click)="goToPreviousStep()">
+        Previous
+      </button>
+
+      <ion-button
+        size="small"
+        (click)="goToNextStep()"
+        class="ion-float-right"
+      >
+        Next
+      </ion-button> -->
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <form novalidate (ngSubmit)="onSubmit()" #invoiceForm="ngForm">
+
+  <div *ngIf="step === 1">
+    <ion-row *ngIf="true">
+      <ion-col>
+        <h6 class="step-title-1">Invoice Items</h6>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <p class="text-info ion-padding-horizontal">
+          <em>Please add individual items for each bond. This will make it easier to understand reports.</em>
+        </p>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-align-items-end">
+      <ion-col size="9">
+        <ion-item>
+          <ion-label position="floating">
+            Item
+          </ion-label>
+          <ion-select name="status" [(ngModel)]="invoiceItem.id" id="invoice-item" placeholder="Select Item"
+            class="compact-select" (ionChange)="onItemSelected()">
+            <ion-select-option *ngFor="let item of billableItems.data" [value]="item._id"> {{ item.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="3">
+        <ion-button size="small" (click)="openAddItemWindow()">
+          <ion-icon slot="icon-only" name="add"></ion-icon>
+        </ion-button>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="stacked">Amount *</ion-label>
+          <ion-input type="text" [(ngModel)]="invoiceItem.amount" name="itemAmount" placeholder="Enter item amount."
+            id="item-amount"></ion-input>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="stacked">Description</ion-label>
+          <ion-textarea size="small" [(ngModel)]="invoiceItem.description" name="description" id="description"
+            placeholder="Enter item description..." rows="2" cols="8"></ion-textarea>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="9">
+        <ion-item>
+          <ion-label position="floating">Attach Bond</ion-label>
+          <ion-select [(ngModel)]="invoiceItem.bondId" name="bondId" id="bond-id" placeholder="Select bond to attach">
+            <ion-select-option *ngFor="let bond of bonds" [value]="bond._id"> {{ bond.tabValue }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="3">
+        <ion-button size="small" color="success" (click)="addItem()" type="button">
+          Save Item
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-grid class="contact-table">
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <span>INVOICE ITEMS</span>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <span>Item</span>
+            </ion-col>
+            <ion-col>
+              <span>Amount</span>
+            </ion-col>
+            <ion-col></ion-col>
+          </ion-row>
+          <ion-row *ngFor="let item of invoice.items; let i = index">
+            <ion-col>
+              <span>{{ item.name }}</span>
+              <span class="text-info" *ngIf="item.bondId" style="font-size: 0.7rem">
+                <em><b>BOND: </b>{{ getBondNumber(item.bondId).number }} ({{ getBondNumber(item.bondId).amount |
+                  currency }})</em>
+              </span>
+              <span class="text-muted" *ngIf="item.description" style="font-size: 0.7rem">
+                <em><b>Description: </b>{{ item.description }}</em>
+              </span>
+            </ion-col>
+            <ion-col class="ion-text-center">
+              {{ item.amount | currency }}
+            </ion-col>
+            <ion-col>
+              <span class="button" size="tiny" status="danger" (click)="removeItem(i)">Remove</span>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="invoice.items.length === 0">
+            <ion-col class="ion-text-center">
+              <small>
+                <em>Please fill the above form to add invoice item.</em>
+              </small>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+    </ion-row>
+
+    <hr>
+
+    <ion-row class="ion-text-center">
+      <ion-col>
+        <small class="text-muted">Total Amount: {{ getInvoiceTotal() | currency }}</small>
+      </ion-col>
+    </ion-row>
+    <hr>
+
+    <ion-row>
+      <ion-col style="display: flex;justify-content: end;">
+        <ion-button size="small" color="primary" type="button" (click)="goToStep2()">
+          Next
+          <ion-icon name="arrow-round-forward"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <div *ngIf="step === 2">
+    <ion-row *ngIf="true">
+      <ion-col>
+        <h6 class="step-title-2">Payer Details</h6>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="false">
+      <ion-col>
+        <ion-item>
+          <ion-label position="floating">Payer *</ion-label>
+          <ion-select name="selectedPayer" [(ngModel)]="selectedPayer" id="payment-payer" placeholder="Select Payer"
+            class="compact-select" (ionChange)="addPayer()" [value]="selectedPayer">
+            <ion-select-option *ngFor="let indem of indemnitors" [value]="indem._id"> {{ indem.name.first }} {{
+              indem.name.last }}
+              <em class="text-muted" *ngIf="indem.defendant">(Defendant)</em>
+              <em class="text-muted" *ngIf="!indem.defendant">(Indemnitor)</em>
+            </ion-select-option>
+            <ion-select-option value="custom">Enter Details</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="!showCustomPayerForm">
+      <ion-col class="ion-float-right">
+        <ion-button size="small" color="warning" (click)="showCustomPayerForm = true" type="button">
+          Add Another Payer
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <!-- ---------------- CUSTOM PAYER DETAILS -------------- -->
+    <ion-row class="ion-margin-horizontal" *ngIf="showCustomPayerForm"
+      style="border: 1px solid #ddd; background-color: #fffdec;">
+      <ion-col size="6">
+        <ion-item>
+          <ion-label position="stacked">Payer Name *</ion-label>
+          <ion-input type="text" [(ngModel)]="customPayer.name.first" name="initialPayerName"
+            placeholder="Enter payer name." id="initial-payer-name" required #initialPayerName="ngModel" [color]="
+              initialPayerName.invalid && initialPayerName.touched ? 'danger' : ''
+            "></ion-input>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-item>
+          <ion-label position="stacked">Payer Email *</ion-label>
+          <ion-input type="text" [(ngModel)]="customPayer.email" name="initialPayerEmail"
+            placeholder="Enter payer email." id="initial-payer-email" required #initialPayerEmail="ngModel" [color]="
+              initialPayerEmail.invalid && initialPayerEmail.touched
+                ? 'danger'
+                : ''
+            "></ion-input>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-item>
+          <ion-label position="stacked">Payer Phone</ion-label>
+          <ion-input type="text" [(ngModel)]="customPayer.phone" name="initialPayerPhone" placeholder="Enter phone #"
+            id="initial-payer-phone"></ion-input>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="6" class="form-buttons">
+        <ion-button size="small" color="success" (click)="saveCustomPayer()" type="button">
+          Save Payer
+        </ion-button>
+        <ion-button size="small" color="danger" (click)="cancelCustomPayer()" type="button">
+          Cancel
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <!-- ---------------- CUSTOM PAYER DETAILS -------------- -->
+
+    <ion-row>
+      <ion-col>
+        <ion-grid class="contact-table">
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <span>SELECT PAYERS</span>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col></ion-col>
+            <ion-col>
+              <span>Name</span>
+            </ion-col>
+            <ion-col>
+              <span>Notify</span>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngFor="let payer of indemnitors; let i=index">
+            <ion-col>
+              <ion-checkbox color="primary" (ionChange)="addToSelectedPeople($event, payer)"
+                [disabled]="!payer.notifyEmail && !payer.notifySMS" [(ngModel)]="payer.checked" [name]="'payer' + i">
+              </ion-checkbox>
+            </ion-col>
+            <ion-col class="payers">
+              <small>
+                {{ payer.name.first }} {{ payer.name.last }} |
+              </small>
+              <small class="text-muted" *ngIf="payer.defendant">Defendant</small>
+              <small class="text-muted" *ngIf="!payer.defendant">Indemnitor</small>
+
+              <small class="text-muted" *ngIf="payer.email">{{ payer.email }}</small>
+              <small color="danger" *ngIf="!payer.email"><em>Missing email</em></small>
+
+              <small *ngFor="let contact of payer.contacts" class="text-muted">
+                <em>{{ contact.value }}</em>
+              </small>
+              <small color="danger" *ngIf="!payer.contacts || (payer.contacts && payer.contacts.length < 1)"><em>Missing
+                  contact number</em></small>
+            </ion-col>
+            <ion-col>
+              <ion-item lines="none">
+                <ion-checkbox color="primary" [disabled]="!payer.email" [(ngModel)]="payer.notifyEmail"
+                  [name]="'notifyEmail'+i">Email</ion-checkbox>
+                <ion-label>Email</ion-label>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-checkbox color="primary"
+                  [disabled]="!payer.contacts || (payer.contacts && payer.contacts.length < 1)"
+                  [(ngModel)]="payer.notifySMS" [name]="'notifySMS'+i"></ion-checkbox>
+                <ion-label>SMS</ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="invoice.items.length === 0">
+            <ion-col class="ion-text-center">
+              <small>
+                <em>Please fill the above form to add invoice item.</em>
+              </small>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+    </ion-row>
+    <hr>
+
+    <ion-row class="ion-text-center">
+      <ion-col>
+        <small class="text-muted">Total Amount: {{ getInvoiceTotal() | currency }}</small>
+      </ion-col>
+    </ion-row>
+
+    <hr>
+
+    <ion-row>
+      <ion-col>
+        <ion-button size="small" color="primary" type="button" (click)="goBack()">
+          <ion-icon name="arrow-round-back"></ion-icon>
+          Go Back
+        </ion-button>
+      </ion-col>
+      <ion-col style="display: flex;justify-content: end;">
+        <ion-button size="small" color="primary" type="button" (click)="goToStep3()">
+          Next
+          <ion-icon name="arrow-round-forward"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+
+
+  <div *ngIf="step === 3">
+    <ion-row *ngIf="true">
+      <ion-col>
+        <h6 class="step-title-3">Invoice Details</h6>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="6">
+        <ion-item>
+          <ion-label [color]="
+          dueDateRef.invalid && dueDateRef.touched ? 'danger' : ''
+          " position="stacked">Due Date *</ion-label>
+          <ion-datetime [(ngModel)]="invoice.dueDate" name="dueDateRef" required  #dueDateRef="ngModel"   ></ion-datetime>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-item>
+          <ion-label [color]="
+          status.invalid && status.touched ? 'danger' : ''
+          " position="stacked">Invoice Status *</ion-label>
+          <ion-select [(ngModel)]="invoice.status" name="status" id="status" #status="ngModel" required
+          
+            (ionChange)="onStatusChange()">
+            <ion-select-option value="adjustment">Adjustment</ion-select-option>
+            <ion-select-option value="pending">Pending</ion-select-option>
+            <ion-select-option value="paid">Paid</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="invoice.status === 'paid'">
+      <ion-col>
+        <ion-item>
+          <ion-label  [color]="
+          receivedDateRef.invalid && receivedDateRef.touched ? 'danger' : ''
+          " position="stacked">Received Date *</ion-label>
+          <ion-datetime [(ngModel)]="invoice.payment.receivedDate" name="receivedDateRef" required
+            #receivedDateRef="ngModel"
+           
+            ></ion-datetime>
+        </ion-item>
+      </ion-col>
+
+      <ion-col>
+        <ion-item>
+          <ion-label  [color]="
+          receivedByUserId.invalid && receivedByUserId.touched ? 'danger' : ''
+          " position="stacked">Received By *</ion-label>
+          <ion-select [(ngModel)]="invoice.payment.receivedByUserId" name="receivedByUserId" id="received-by-user"
+            #receivedByUserId="ngModel" required  placeholder="Select Agent"
+           
+            [ngClass]="{
+            'is-invalid':
+              receivedByUserId.invalid && receivedByUserId.touched
+          }">
+            <ion-select-option *ngFor="let member of staff" [value]="member._id">{{ member.name.first | uppercase }} {{
+              member.name.last | uppercase }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <ion-col>
+        <ion-item>
+          <ion-label  [color]="
+          method.invalid && method.touched ? 'danger' : ''
+          " position="stacked">Payment Method *</ion-label>
+          <ion-select [(ngModel)]="invoice.payment.method" name="paymentMethod" id="method" #method="ngModel" required
+          
+         
+          >
+            <ion-select-option value="Cash">Cash</ion-select-option>
+            <ion-select-option value="Card">Card</ion-select-option>
+            <ion-select-option value="Check">Check</ion-select-option>
+            <ion-select-option value="Certified Check">Certified Check</ion-select-option>
+            <ion-select-option value="Money Order">Money Order</ion-select-option>
+            <ion-select-option value="Wire Transfer">Wire Transfer</ion-select-option>
+            <ion-select-option value="Direct Deposit">Direct Deposit</ion-select-option>
+            <ion-select-option value="Other">Other</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="invoice.status === 'pending'">
+      <ion-col>
+        <ion-item>
+          <ion-checkbox color="primary" (ionChange)="saveCardCheckedChange($event)" [(ngModel)]="invoice.saveCard"
+            name="saveCard">Email</ion-checkbox>
+          <ion-label>Save Card Details for Future Installment Payments</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <hr *ngIf="payment">
+
+    <ion-row *ngIf="payment">
+      <ion-col>
+        <ion-grid class="contact-table" style="background-color: #ffffdf;">
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <span>SELECTED PAYMENT</span>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <span>Date</span>
+            </ion-col>
+            <ion-col>
+              <span>Amount</span>
+            </ion-col>
+            <ion-col>
+              <span>Status</span>
+            </ion-col>
+            <ion-col>
+              <span>Method</span>
+            </ion-col>
+            <ion-col>
+              <span>Payer</span>
+            </ion-col>
+            <ion-col>
+              <span>Collected By</span>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="payment">
+            <ion-col>
+              <div>{{ payment.createdAt | date: 'MM/dd/yyyy' }}</div>
+              <div>{{ payment.createdAt | date: 'hh:mm a' }}</div>
+            </ion-col>
+            <ion-col>
+              <small>
+                {{ payment.amount | currency }}
+              </small>
+            </ion-col>
+            <ion-col>
+              <span *ngIf="payment.status === 'settled'" class="badge badge-success">
+                SETTLED
+              </span>
+              <span *ngIf="payment.status === 'declined'" class="badge badge-danger">
+                DECLINED
+              </span>
+              <span
+                *ngIf="payment.status === 'refunded' || payment.status === 'partial-refund' || payment.status === 'voided' || payment.status === 'partial-void'"
+                class="badge badge-secondary">
+                <span *ngIf="!payment.manualRefund">{{ payment.status | uppercase }}</span>
+                <span *ngIf="payment.manualRefund">MARKED AS REFUNDED</span>
+              </span>
+            </ion-col>
+            <ion-col>
+              <small>
+                <span>{{ payment.method | uppercase }}</span>
+              </small>
+            </ion-col>
+            <ion-col>
+              <small>
+                <div *ngIf="payment.receivedByUser">
+                  {{ payment.receivedByUser.name.first }} {{ payment.receivedByUser.name.last }}
+                </div>
+              </small>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+    </ion-row>
+
+    <hr>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked">Notes</ion-label>
+          <ion-textarea size="small" [(ngModel)]="invoice.notes" name="notes" id="notes"
+            placeholder="Write notes for this invoice..." rows="2" cols="8"></ion-textarea>
+        </ion-item>
+        <small class="text-muted">
+          <em>This note will be added inside notes section of the defendant profile.</em>
+        </small>
+      </ion-col>
+    </ion-row>
+
+    <hr>
+
+    <ion-row class="ion-text-center">
+      <ion-col>
+        <small class="text-muted">Total Amount: {{ getInvoiceTotal() | currency }}</small>
+      </ion-col>
+    </ion-row>
+
+    <hr>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label *ngIf="invoice.status !== 'paid'">Send Invoice Now</ion-label>
+          <ion-label *ngIf="invoice.status === 'paid'">Send Payment Confirmation</ion-label>
+          <ion-toggle [(ngModel)]="sendInvoice" name="sendInvoice"></ion-toggle>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button size="small" color="primary" type="button" (click)="goBack()">
+          <ion-icon name="arrow-round-back"></ion-icon>
+          Go Back
+        </ion-button>
+      </ion-col>
+      <ion-col style="display: flex;justify-content: end;">
+        <ion-button size="small" color="success" (click)="onSubmit()" type="button">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <span *ngIf="sendInvoice">Save & Send</span>
+          <span *ngIf="!sendInvoice">Save</span>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+  </form>
+
+</ion-content>

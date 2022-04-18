@@ -1,0 +1,210 @@
+<ion-content>  
+  <div class="ion-text-center">
+    <ng-container *ngIf='isDark'>
+      <img class="logo" src="assets/ebail-logo-white.png" alt="logo">
+    </ng-container>
+    <ng-container *ngIf='!isDark'>
+      <img class="logo" src="assets/ebail-logo-black.png" alt="logo">
+    </ng-container>
+
+
+  </div>
+
+  <ion-grid *ngIf="form === 'login'">
+
+    <ion-row>
+      <ion-col class="ion-text-center">
+        <h1 class="login-title">Login</h1>
+      </ion-col>
+    </ion-row>
+
+    <form novalidate (ngSubmit)="onSubmit()" #loginForm ="ngForm">
+
+      <ion-row>
+        <ion-col>
+          <ion-item style="margin-right: 15px;">
+            <ion-label position="floating">Enter Email</ion-label>
+            <ion-input type="text" [(ngModel)]="email" name="email"
+              required
+              #emailRef="ngModel"
+              [color]="emailRef.invalid && emailRef.touched ? 'danger' : ''"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item style="margin-right: 15px;">
+            <ion-label position="floating">Enter Password</ion-label>
+            <ion-input
+              type="password"
+              [(ngModel)]="password"
+              name="password"
+              required
+              #passwordRef="ngModel"
+              [color]="passwordRef.invalid && passwordRef.touched ? 'danger' : ''"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-button style="margin-top: 10%;" expand="block" type="submit" class="ion-margin-horizontal login-button">
+            Login
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="ion-text-center"  (click)="openForgotPasswordForm()">
+        <ion-col>
+          Forgot password? Recover it here
+        </ion-col>
+      </ion-row>
+    </form>
+  </ion-grid>
+
+  <ion-grid *ngIf="form === 'token'">
+    
+    <ion-row>
+      <ion-col class="ion-text-center">
+        <h1 class="login-title">Verify Code</h1>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <p class="ion-text-center" style="color: #666666;">
+          <em>Please check your inbox for verification code.</em>
+        </p>
+      </ion-col>
+    </ion-row>
+
+    <form novalidate (ngSubmit)="verifyToken()" #verifyTokenForm="ngForm">
+      <ion-row>
+        <ion-col>
+          <ion-item class="ion-margin-horizontal">
+            <ion-label position="floating">Enter Code</ion-label>
+            <ion-input type="text" [(ngModel)]="token" name="token"
+            required
+            #tokenRef="ngModel"
+            [color]="tokenRef.invalid && tokenRef.touched ? 'danger' : ''"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      
+      <ion-row>
+        <ion-col>
+          <ion-button expand="block" type="submit">
+            Verify
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      
+      <ion-row>
+        <ion-col>
+          <ion-button expand="block" type="button" (click)="resendCode()" fill="clear" size="small">
+            Resend Code
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+    </form>
+
+  </ion-grid>
+
+  <ion-grid *ngIf="form === 'reset-pasword'">
+    <ion-row>
+      <ion-col class="ion-text-center">
+        <h1 class="login-title">Reset Password</h1>
+      </ion-col>
+    </ion-row>
+
+    <form (ngSubmit)="requestPassword()" *ngIf="passForm === 'request'">
+
+      <ion-row>
+        <ion-col>
+          <ion-item style="margin-right: 15px;">
+            <ion-label position="floating">Enter Email</ion-label>
+            <ion-input type="text" [(ngModel)]="resetEmail" name="resetEmail"
+              required
+              #resetEmailRef="ngModel"
+              [color]="resetEmailRef.invalid && resetEmailRef.touched ? 'danger' : ''"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-button style="margin-top: 10%;" expand="block" type="submit">
+            Next
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+    </form>
+
+    <form (ngSubmit)="verifyPassCode()" *ngIf="passForm === 'verify-code'">
+
+      <ion-row>
+        <ion-col>
+          <ion-item style="margin-right: 15px;">
+            <ion-label position="floating">Enter verification code</ion-label>
+            <ion-input type="text" [(ngModel)]="passVerificationCode" name="passVerificationCode"
+              required
+              #passVerificationCodeRef="ngModel"
+              [color]="passVerificationCodeRef.invalid && passVerificationCodeRef.touched ? 'danger' : ''"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item style="margin-right: 15px;">
+            <ion-label position="floating">Enter new password</ion-label>
+            <ion-input type="password" [(ngModel)]="newPassword" name="newPassword"
+              required
+              #newPasswordRef="ngModel"
+              [color]="newPasswordRef.invalid && newPasswordRef.touched ? 'danger' : ''"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <div style="color:#8e8d8d; font-size:.9rem;padding:20px;">
+            Your password must match the following criteria:
+            <ul style="padding-left: 25px;">
+              <li>Minimum length 8 characters.</li>
+              <li>Must contain one uppercase character.</li>
+              <li>Must contain one lowercase character.</li>
+              <li>Must contain one special character.</li>
+              <li>Must contain numbers.</li>
+            </ul>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-button style="margin-top: 10%;" expand="block" type="submit">
+            Reset Password
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+    </form>
+
+    <ion-row class="ion-text-center" style="color: #dddddd; font-size: .9rem;" (click)="goToLogin()">
+      <ion-col>
+        Go back to login
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  
+</ion-content>

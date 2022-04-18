@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ebail</string>
+    <string name="title_activity_main">ebail</string>
+    <string name="package_name">com.ebail.app</string>
+    <string name="custom_url_scheme">com.ebail.app</string>
+</resources>

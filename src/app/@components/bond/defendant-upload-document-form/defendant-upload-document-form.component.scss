@@ -1,0 +1,64 @@
+label {
+    background-color: #3b5dbd;
+    display: inline-block;
+    color: white;
+    padding: 6px 25px;
+    font-family: sans-serif;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    width: 98%;
+    text-align: center;
+    font-size: small;
+  }
+  
+  #file-chosen{
+    margin-left: 0.3rem;
+    font-family: sans-serif;
+  }
+  .choose-file{
+      display: flex;
+justify-content: center;
+align-items: center;
+  }
+  .take-pic{
+    margin-top: 16px;
+  }
+
+  .img-style{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .crop-img{
+    height: 140px;
+    width: 160px;
+    padding:0px !important;
+  }
+
+  .ionPadding{
+padding-left: 16px;
+padding-right: 16px;
+  }
+  .content-center {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  .warning-align {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+   
+  
+  }
+  
+  .warning {
+    //color: red;
+    font-size: .7rem;
+    text-align: center;
+    font-style: italic;
+    margin-right: 5px;
+  }
